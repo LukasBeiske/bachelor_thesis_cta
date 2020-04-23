@@ -1,0 +1,55 @@
+# random seed
+seed: 0
+
+# this should be a list of column_name: [operator, value]
+# all cuts are combined with logical AND
+selection:
+  - intensity: [">", 50]
+  - leakage: ["<", 0.2]
+#  - n_islands: ["<", 8]    #liefert kleineren AUC ROC Wert (n ~ Wert) ?!
+
+#features:
+#disp_angle  MC Wahrheit über Quellpositoin
+#disp_dx       MC Wahrheit über Quellpositoin
+#disp_dy       MC Wahrheit über Quellpositoin
+#disp_norm MC Wahrheit über Quellpositoin
+#disp_sign    MC Wahrheit über Quellpositoin
+#event_id     
+#gps_time    timestamp
+#intensity     Menge licht im Schauer
+#intercept    Zeit entlang der Hauptachse wird linear gefittet, das hier ist das b aus a * t + b
+#kurtosis      kurtosis der Lichtverteilung entlang der Hauptachse
+#leakage       Anteil Licht am Rand der Kamera, Hinweis auf nicht vollständige Events in der Kamera
+#length         Std. Abw. der Lichtverteilung entlang der Hauptachse
+#log_intensity  log von intensity
+#log_mc_energy  log der wahren energy
+#mc_alt            herkunft altitude (0° = horziont, 90° = zenith)
+#mc_alt_tel      Telescope pointing
+#mc_az           
+#mc_az_tel
+#mc_core_distance  Auftreffpunkt des showers (distance)
+#mc_core_x    Auftreffpunkt des showers (x)
+#mc_core_y   Auftreffpunkt des showers (y)
+#mc_energy  wahre energy (Ziel für Energy-Regression)
+#mc_h_first_int  First interaction height des schauers
+#mc_type            Particle???
+#mc_x_max        Höhe auf der der shower seine maximale ausdehung hatte
+#n_islands          aus wie vielen "Pixel-Inseln" das Schauerbild bestand
+#num_trig_pix   Wie viele Pixel getriggered haben
+#obs_id              Run id
+#phi                    Polarkoordinate des cog
+#psi                   Orientierungswinkel der Hauptachse
+#r                      Polarkoordiante des cog
+#skewness       Skewness entlang der Hauptachse
+#src_x               Quellposition in Kamerakoordinaten
+#src_y
+#tel_id
+#tel_pos_x
+#tel_pos_y
+#tel_pos_z
+#time_gradient         Zeit entlang der Hauptachse wird linear gefittet, das hier ist das a aus a * t + b
+#trigger_type
+#width                    std dev orthogonal zur Hauptachse
+#wl                           width / length 
+#x                            cog der Lichtverteilung (x)
+#y                            cog der Lichtverteilung (y)
