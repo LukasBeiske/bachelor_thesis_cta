@@ -16,8 +16,8 @@ separator:
     )
 
   # randomly sample the data if you dont want to use the whole set
-  n_background: 150000
-  n_signal: 150000
+  n_background: 50000
+  n_signal: 50000
 
   # define the number of cross validations to perform
   n_cross_validations : 5

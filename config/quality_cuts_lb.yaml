@@ -4,9 +4,8 @@ seed: 0
 # this should be a list of column_name: [operator, value]
 # all cuts are combined with logical AND
 selection:
-  - intensity: [">", 50]
-  - leakage: ["<", 0.2]
-#  - n_islands: ["<", 8]    #liefert kleineren AUC ROC Wert (n ~ Wert) ?!
+  - intensity: [">", 50]  #lst aktuell: > 50
+  - leakage: ["<", 0.2]   #lst aktuell: < 0.2
 
 #features:
 #disp_angle  MC Wahrheit über Quellpositoin
@@ -47,7 +46,7 @@ selection:
 #tel_pos_x
 #tel_pos_y
 #tel_pos_z
-#time_gradient         Zeit entlang der Hauptachse wird linear gefittet, das hier ist das a aus a * t + b
+#time_gradient         Zeit entlang der Hauptachse wird linear gefittet, das hier ist das a aus a * t + b  Notiz: entspricht "Geschw." des Schauers (s. Präsentation)
 #trigger_type
 #width                    std dev orthogonal zur Hauptachse
 #wl                           width / length 

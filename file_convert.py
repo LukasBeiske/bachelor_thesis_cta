@@ -1,11 +1,21 @@
 import pandas as pd
 from fact.io import to_h5py
+import numpy as np
+import click
 
-df = pd.read_hdf('/home/lukas/Bachelorarbeit/bachelor_thesis_cta_analysis/dl1_gamma_south_pointing_20200316_v0.4.5__EG2_DL1_training.h5', key='dl1/event/telescope/parameters/LST_LSTCam')
-to_h5py(df, 'gamma_training.hdf5', key='events')
+@click.command()
+@click.argument('infile', type=click.Path(exists=True, dir_okay=False))
+@click.argument('outfile', type=click.Path(exists=False, dir_okay=False))
+@click.argument('inkey')
+def main(infile, outfile, inkey):
+    df = pd.read_hdf(infile, key = inkey)
+    df['pointing_azimuth'] = np.rad2deg(df.mc_az_tel)
+    df['pointing_zenith'] = 90 - np.rad2deg(df.mc_alt_tel)
+    df['source_azimuth'] = np.rad2deg(df.mc_az)
+    df['source_zenith'] = 90 - np.rad2deg(df.mc_alt)
+    df['psi_deg'] = np.rad2deg(df.psi)
+    df['focal_length'] = 28
+    to_h5py(df, outfile, key='events', mode = 'w')
 
-df = pd.read_hdf('/home/lukas/Bachelorarbeit/bachelor_thesis_cta_analysis/dl1_gamma-diffuse_south_pointing_20200316_v0.4.5__EG2_DL1_training.h5', key='dl1/event/telescope/parameters/LST_LSTCam')
-to_h5py(df, 'gamma-diffuse_training.hdf5', key='events')
-
-df = pd.read_hdf('/home/lukas/Bachelorarbeit/bachelor_thesis_cta_analysis/dl1_proton_south_pointing_20200316_v0.4.5__EG2_DL1_training.h5', key='dl1/event/telescope/parameters/LST_LSTCam')
-to_h5py(df, 'proton_training.hdf5', key='events')
+if __name__ == '__main__':
+    main()

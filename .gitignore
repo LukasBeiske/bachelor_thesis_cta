@@ -1,5 +1,7 @@
 data
 plots
+console_save.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
