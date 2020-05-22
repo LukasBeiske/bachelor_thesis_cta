@@ -1,6 +1,5 @@
 data
-plots
-console_save.py
+old_scripts_backups
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

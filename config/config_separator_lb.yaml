@@ -45,9 +45,9 @@ separator:
   # List all columns that have to be read from the input files
   # in `needed_columns`.
   # features must be a mapping of feature name -> expression
-  #feature_generation:
-  #  needed_columns:
-  #    - width
-  #    - length
-  #  features:
-  #    area: width * length * @pi
+  feature_generation:
+    needed_columns:
+      - width
+      - length
+    features:
+      area: width * length * @pi

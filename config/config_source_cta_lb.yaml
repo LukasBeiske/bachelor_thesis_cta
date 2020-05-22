@@ -47,7 +47,7 @@ disp:
   n_signal : 50000
 
   features:
-    #- num_pixel_in_shower #?
+    #- num_pixel_in_shower
     - intensity
     - width
     - length
@@ -57,7 +57,7 @@ disp:
     - skewness
     - time_gradient
     - intercept
-    #- deviation   #?
+    #- deviation
 
   feature_generation:
     needed_columns:
