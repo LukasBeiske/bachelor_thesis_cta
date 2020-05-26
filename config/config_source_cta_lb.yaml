@@ -44,24 +44,32 @@ disp:
 
 
   # randomly sample the data if you dont want to use the whole set
-  n_signal : 50000
+  n_signal : 250000
 
   features:
-    #- num_pixel_in_shower
     - intensity
+    - log_intensity
     - width
     - length
-    - leakage
+    - n_pixels
+    - leakage1_intensity
+    - leakage1_pixel
+    - leakage2_intensity
+    - leakage2_pixel
     - r
     - kurtosis
     - skewness
+    - concentration_cog
+    - concentration_core
     - time_gradient
     - intercept
-    #- deviation
 
   feature_generation:
     needed_columns:
       - width
       - length
+      - log_intensity
     features:
       elongation: width / length
+      area: width * length * @pi
+      log_intensity_area: log_intensity / (width * length * @pi)

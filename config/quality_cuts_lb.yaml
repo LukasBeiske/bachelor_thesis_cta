@@ -5,7 +5,8 @@ seed: 0
 # all cuts are combined with logical AND
 selection:
   - intensity: [">", 50]  #lst aktuell: > 50
-  - leakage: ["<", 0.2]   #lst aktuell: < 0.2
+  - leakage1_intensity: ["<", 0.2]   #lst aktuell: < 0.2
+  - leakage2_intensity: ["<", 0.2]   #lst aktuell: < 0.2
 
 #features:
 #disp_angle  MC Wahrheit über Quellpositoin

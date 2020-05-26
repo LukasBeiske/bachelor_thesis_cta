@@ -16,8 +16,8 @@ separator:
     )
 
   # randomly sample the data if you dont want to use the whole set
-  n_background: 50000
-  n_signal: 50000
+  n_background: 250000
+  n_signal: 250000
 
   # define the number of cross validations to perform
   n_cross_validations : 5
@@ -32,6 +32,7 @@ separator:
 
   features:
     - intensity
+    - log_intensity
     - intercept
     - time_gradient
     - length
@@ -39,7 +40,14 @@ separator:
     - skewness
     - kurtosis
     - n_islands
-    - leakage
+    - n_pixels
+    - leakage1_intensity
+    - leakage1_pixel
+    - leakage2_intensity
+    - leakage2_pixel
+    - concentration_cog
+    - concentration_core
+    - concentration_pixel
 
   # Generate some features using pd.DataFrame.eval
   # List all columns that have to be read from the input files
@@ -49,5 +57,8 @@ separator:
     needed_columns:
       - width
       - length
+      - intensity
     features:
       area: width * length * @pi
+      intensity_area: intensity / (width * length * @pi)
+      area_intensity_cut_var: (width * length * @pi) / log(intensity)**2

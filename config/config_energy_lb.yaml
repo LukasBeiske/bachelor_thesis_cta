@@ -12,7 +12,7 @@ energy:
     )
 
   # randomly sample the data if you dont want to use the whole set
-  n_signal: 50000
+  n_signal: 250000
 
   # define th number of cross validations to perform
   n_cross_validations: 5
@@ -26,14 +26,20 @@ energy:
   output_name: gamma_energy_prediction
 
   features:
-    #- size
+    - intensity
+    - log_intensity
     - length
     - width
     - n_islands
-    - leakage
+    - n_pixels
     - skewness
-    #- concentration_cog
-    #- concentration_core
+    - leakage1_intensity
+    - leakage1_pixel
+    - leakage2_intensity
+    - leakage2_pixel
+    - concentration_cog
+    - concentration_core
+    - concentration_pixel
 
   # Generate some features using pd.DataFrame.eval
   # List all keys that have to be read from the input files
@@ -43,5 +49,7 @@ energy:
     needed_columns:
       - width
       - length
+      - intensity
     features:
       area: width * length * @pi
+      intensity_area: intensity / (width * length * @pi)
