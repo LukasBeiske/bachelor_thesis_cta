@@ -1,5 +1,6 @@
 # seed for the random number generators, to make things reproducible
 seed: 0
+true_energy_column: mc_energy
 
 # define th number of cross validations to perform
 n_cross_validations : 5
@@ -39,12 +40,13 @@ disp:
 
   cog_x_column: x  
   cog_y_column: y  
-  delta_column: psi_deg
+  delta_column: psi
+  delta_unit: deg
   #array_event_column: array_event_id
 
 
   # randomly sample the data if you dont want to use the whole set
-  n_signal : 250000
+  n_signal : 50000
 
   features:
     - intensity

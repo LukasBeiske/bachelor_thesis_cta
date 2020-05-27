@@ -2,6 +2,7 @@
 
 # seed for the random number generators, to make things reproducible
 seed: 0
+true_energy_column: mc_energy
 
 separator:
   #the classifier to use
@@ -16,8 +17,8 @@ separator:
     )
 
   # randomly sample the data if you dont want to use the whole set
-  n_background: 250000
-  n_signal: 250000
+  n_background: 50000
+  n_signal: 50000
 
   # define the number of cross validations to perform
   n_cross_validations : 5
