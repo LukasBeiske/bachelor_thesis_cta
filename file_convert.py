@@ -21,7 +21,7 @@ def main(infile, outfile, inkey):
         df['pointing_azimuth'] = np.rad2deg(df.az_tel)
         df['pointing_zenith'] = 90 - np.rad2deg(df.alt_tel)
     
-    df['psi_deg'] = np.rad2deg(df.psi)
+    #df['psi_deg'] = np.rad2deg(df.psi)
     df['focal_length'] = 28
     to_h5py(df, outfile, key='events', mode = 'w')
 

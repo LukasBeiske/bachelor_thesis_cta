@@ -10,7 +10,7 @@ PROTON_FILE_TE=$(INDIR)/dl1_proton_south_pointing_20200514_v0.5.1_v01_DL1_testin
 KEY=dl1/event/telescope/parameters/LST_LSTCam
 
 all: $(OUTDIR)/cv_separation.hdf5 $(OUTDIR)/cv_disp.hdf5 $(OUTDIR)/cv_regressor.hdf5 
-all: apply_gamma-diffuse_testing apply_proton_testing apply_gamma_testing
+apply: apply_gamma-diffuse_testing apply_proton_testing apply_gamma_testing
 
 #file convertion
 $(OUTDIR)/gamma_training.hdf5: $(GAMMA_FILE_TR) | $(OUTDIR)
@@ -111,8 +111,9 @@ $(OUTDIR)/regressor.pkl $(OUTDIR)/cv_regressor.hdf5: config/config_energy_lb.yam
 		$(OUTDIR)/regressor.pkl
 
 #apply models
-apply_gamma-diffuse_testing: config/config_separator_lb.yaml $(OUTDIR)/gamma-diffuse_testing_precuts.hdf5
-apply_gamma-diffuse_testing: $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl
+apply_gamma-diffuse_testing: config/config_separator_lb.yaml config/config_source_cta_lb.yaml config/config_energy_lb.yaml
+apply_gamma-diffuse_testing: $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl $(OUTDIR)/regressor.pkl
+apply_gamma-diffuse_testing: $(OUTDIR)/gamma-diffuse_testing_precuts.hdf5 | $(OUTDIR)
 	aict_apply_separation_model \
 		config/config_separator_lb.yaml \
 		$(OUTDIR)/gamma-diffuse_testing_precuts.hdf5 \
@@ -122,27 +123,44 @@ apply_gamma-diffuse_testing: $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR
 		$(OUTDIR)/gamma-diffuse_testing_precuts.hdf5 \
 		$(OUTDIR)/disp.pkl \
 		$(OUTDIR)/sign.pkl
+	aict_apply_energy_regressor \
+		config/config_energy_lb.yaml \
+		$(OUTDIR)/gamma-diffuse_testing_precuts.hdf5 \
+		$(OUTDIR)/regressor.pkl
 
-apply_proton_testing: config/config_separator_lb.yaml $(OUTDIR)/proton_testing_precuts.hdf5 $(OUTDIR)/separator.pkl
+apply_proton_testing: config/config_separator_lb.yaml config/config_source_cta_lb.yaml config/config_energy_lb.yaml
+apply_proton_testing: $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl $(OUTDIR)/regressor.pkl
+apply_proton_testing: $(OUTDIR)/proton_testing_precuts.hdf5 | $(OUTDIR)
 	aict_apply_separation_model \
 		config/config_separator_lb.yaml \
 		$(OUTDIR)/proton_testing_precuts.hdf5 \
 		$(OUTDIR)/separator.pkl
-
-apply_gamma_testing: config/config_energy_lb.yaml $(OUTDIR)/gamma_testing_precuts.hdf5 $(OUTDIR)/regressor.pkl
+	aict_apply_disp_regressor \
+		config/config_source_cta_lb.yaml \
+		$(OUTDIR)/proton_testing_precuts.hdf5 \
+		$(OUTDIR)/disp.pkl \
+		$(OUTDIR)/sign.pkl
 	aict_apply_energy_regressor \
 		config/config_energy_lb.yaml \
-		$(OUTDIR)/gamma_testing_precuts.hdf5 \
+		$(OUTDIR)/proton_testing_precuts.hdf5 \
 		$(OUTDIR)/regressor.pkl
+
+apply_gamma_testing: config/config_separator_lb.yaml config/config_source_cta_lb.yaml config/config_energy_lb.yaml
+apply_gamma_testing: $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl $(OUTDIR)/regressor.pkl
+apply_gamma_testing: $(OUTDIR)/gamma_testing_precuts.hdf5 | $(OUTDIR)
+	aict_apply_separation_model \
+		config/config_separator_lb.yaml \
+		$(OUTDIR)/gamma_testing_precuts.hdf5 \
+		$(OUTDIR)/separator.pkl
 	aict_apply_disp_regressor \
 		config/config_source_cta_lb.yaml \
 		$(OUTDIR)/gamma_testing_precuts.hdf5 \
 		$(OUTDIR)/disp.pkl \
 		$(OUTDIR)/sign.pkl
-	aict_apply_separation_model \
-		config/config_separator_lb.yaml \
+	aict_apply_energy_regressor \
+		config/config_energy_lb.yaml \
 		$(OUTDIR)/gamma_testing_precuts.hdf5 \
-		$(OUTDIR)/separator.pkl
+		$(OUTDIR)/regressor.pkl
 
 
 

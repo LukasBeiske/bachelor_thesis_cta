@@ -34,14 +34,18 @@ disp:
   coordinate_transformation: CTA
 
   source_az_column: source_azimuth
+  source_az_unit: deg
   source_zd_column: source_zenith 
+  source_zd_unit: deg
   pointing_az_column: pointing_azimuth
-  pointing_zd_column: pointing_zenith 
+  pointing_az_unit: deg
+  pointing_zd_column: pointing_zenith
+  pointing_zd_unit: deg
 
   cog_x_column: x  
   cog_y_column: y  
   delta_column: psi
-  delta_unit: deg
+  delta_unit: rad
   #array_event_column: array_event_id
 
 
