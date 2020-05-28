@@ -33,14 +33,14 @@ disp:
 
   coordinate_transformation: CTA
 
-  source_az_column: source_azimuth
-  source_az_unit: deg
+  source_az_column: mc_az  #mc_az  #source_azimuth
+  source_az_unit: rad
   source_zd_column: source_zenith 
-  source_zd_unit: deg
-  pointing_az_column: pointing_azimuth
-  pointing_az_unit: deg
+  source_zd_unit: rad
+  pointing_az_column: mc_az_tel  #mc_az_tel  #pointing_azimuth
+  pointing_az_unit: rad
   pointing_zd_column: pointing_zenith
-  pointing_zd_unit: deg
+  pointing_zd_unit: rad
 
   cog_x_column: x  
   cog_y_column: y  
