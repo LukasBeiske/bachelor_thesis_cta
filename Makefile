@@ -13,37 +13,37 @@ all: $(OUTDIR)/cv_separation.hdf5 $(OUTDIR)/cv_disp.hdf5 $(OUTDIR)/cv_regressor.
 apply: apply_gamma-diffuse_testing apply_proton_testing apply_gamma_testing
 
 #file convertion
-$(OUTDIR)/gamma_training.hdf5: $(GAMMA_FILE_TR) | $(OUTDIR)
+$(OUTDIR)/gamma_training.hdf5: $(GAMMA_FILE_TR) file_convert.py | $(OUTDIR)
 	python file_convert.py \
 		$(GAMMA_FILE_TR)\
 		$(OUTDIR)/gamma_training.hdf5 \
 		$(KEY)
 
-$(OUTDIR)/gamma_testing.hdf5: $(GAMMA_FILE_TE) | $(OUTDIR)
+$(OUTDIR)/gamma_testing.hdf5: $(GAMMA_FILE_TE) file_convert.py | $(OUTDIR)
 	python file_convert.py \
 		$(GAMMA_FILE_TE)\
 		$(OUTDIR)/gamma_testing.hdf5 \
 		$(KEY)
 
-$(OUTDIR)/gamma-diffuse_training.hdf5: $(GAMMA_DIFFUSE_FILE_TR) | $(OUTDIR)
+$(OUTDIR)/gamma-diffuse_training.hdf5: $(GAMMA_DIFFUSE_FILE_TR) file_convert.py | $(OUTDIR)
 	python file_convert.py \
 		$(GAMMA_DIFFUSE_FILE_TR)\
 		$(OUTDIR)/gamma-diffuse_training.hdf5 \
 		$(KEY)
 
-$(OUTDIR)/gamma-diffuse_testing.hdf5: $(GAMMA_DIFFUSE_FILE_TE) | $(OUTDIR)
+$(OUTDIR)/gamma-diffuse_testing.hdf5: $(GAMMA_DIFFUSE_FILE_TE) file_convert.py | $(OUTDIR)
 	python file_convert.py \
 		$(GAMMA_DIFFUSE_FILE_TE)\
 		$(OUTDIR)/gamma-diffuse_testing.hdf5 \
 		$(KEY)
 
-$(OUTDIR)/proton_training.hdf5: $(PROTON_FILE_TR) | $(OUTDIR)
+$(OUTDIR)/proton_training.hdf5: $(PROTON_FILE_TR) file_convert.py | $(OUTDIR)
 	python file_convert.py \
 		$(PROTON_FILE_TR)\
 		$(OUTDIR)/proton_training.hdf5 \
 		$(KEY)
 
-$(OUTDIR)/proton_testing.hdf5: $(PROTON_FILE_TE) | $(OUTDIR)
+$(OUTDIR)/proton_testing.hdf5: $(PROTON_FILE_TE) file_convert.py | $(OUTDIR)
 	python file_convert.py \
 		$(PROTON_FILE_TE)\
 		$(OUTDIR)/proton_testing.hdf5 \
@@ -167,7 +167,7 @@ apply_gamma_testing: $(OUTDIR)/gamma_testing_precuts.hdf5 | $(OUTDIR)
 #apply to observations (For direct call via '$make <path>')
 apply_runON: config/quality_cuts_lb.yaml config/config_separator_lb.yaml config/config_source_cta_lb.yaml config/config_energy_lb.yaml
 apply_runON: $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl $(OUTDIR)/regressor.pkl
-apply_runON: $(INDIR)/dl1_v0.5.1_LST-1.Run01832.h5 | $(OUTDIR)
+apply_runON: $(INDIR)/dl1_v0.5.1_LST-1.Run01832.h5 file_convert.py | $(OUTDIR)
 	python file_convert.py \
 		$(INDIR)/dl1_v0.5.1_LST-1.Run01832.h5 \
 		$(OUTDIR)/run01832.hdf5 \
@@ -192,7 +192,7 @@ apply_runON: $(INDIR)/dl1_v0.5.1_LST-1.Run01832.h5 | $(OUTDIR)
 
 apply_runOFF: config/quality_cuts_lb.yaml config/config_separator_lb.yaml config/config_source_cta_lb.yaml config/config_energy_lb.yaml
 apply_runOFF: $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl $(OUTDIR)/regressor.pkl
-apply_runOFF: $(INDIR)/dl1_v0.5.1_LST-1.Run01837.h5 | $(OUTDIR)
+apply_runOFF: $(INDIR)/dl1_v0.5.1_LST-1.Run01837.h5 file_convert.py | $(OUTDIR)
 	python file_convert.py \
 		$(INDIR)/dl1_v0.5.1_LST-1.Run01837.h5 \
 		$(OUTDIR)/run01837.hdf5 \
