@@ -37,15 +37,17 @@ disp:
   source_az_unit: rad
   source_alt_column: mc_alt 
   source_alt_unit: rad
-  pointing_az_column: mc_az_tel
+  pointing_az_column: az_tel
   pointing_az_unit: rad
-  pointing_alt_column: mc_alt_tel
+  pointing_alt_column: alt_tel
   pointing_alt_unit: rad
 
   cog_x_column: x  
   cog_y_column: y  
   delta_column: psi
   delta_unit: rad
+  focal_length_column: focal_length
+  focal_length_unit: m
   #array_event_column: array_event_id
 
 
