@@ -183,7 +183,3 @@ with PdfPages('build/distance_plot.pdf') as pdf:
     for fig in figures:
         fig.tight_layout()
         pdf.savefig(fig)
-
-
-
-#data: lbeiske@phobos:/net/cta-tank/POOL/projects/cta/LST/Data/DL1/v0.5.1
