@@ -79,24 +79,24 @@ $(OUTDIR)/dl2_%.h5: $(OUTDIR)/dl1_%_aict.h5 config/quality_cuts_lb.yaml \
 		$< $@ \
 		--chunksize=100000
 	aict_apply_separation_model \
-		config/config_separator_lb.yaml \
+		$(AICT_CONFIG) \
 		$@ \
 		$(OUTDIR)/separator.pkl \
 		--chunksize=100000
 	aict_apply_disp_regressor \
-		config/config_source_cta_lb.yaml \
+		$(AICT_CONFIG) \
 		$@ \
 		$(OUTDIR)/disp.pkl \
 		$(OUTDIR)/sign.pkl \
 		--chunksize=100000
 	aict_apply_energy_regressor \
-		config/config_energy_lb.yaml \
+		$(AICT_CONFIG) \
 		$@ \
 		$(OUTDIR)/regressor.pkl \
 		--chunksize=100000
 
 
-$(OUTDIR)/regressor_plots.pdf: config/config_energy_lb.yaml $(OUTDIR)/cv_regressor.hdf5 | $(OUTDIR)
+$(OUTDIR)/regressor_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_regressor.hdf5 | $(OUTDIR)
 	aict_plot_regressor_performance \
 		$(AICT_CONFIG) \
 		$(OUTDIR)/cv_regressor.hdf5 \
