@@ -31,6 +31,7 @@ all: $(OUTDIR)/cv_separation.h5 \
 	$(OUTDIR)/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5 \
 	$(OUTDIR)/dl2_gamma-diffuse_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5 \
 	$(OUTDIR)/dl2_proton_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5 \
+	$(OUTDIR)/theta2_plot.pdf
 	
 
 
@@ -123,6 +124,14 @@ $(OUTDIR)/disp_plots.pdf: $(AICT_CONFIG)  $(OUTDIR)/cv_disp.h5 $(OUTDIR)/$(GAMMA
 		$(OUTDIR)/sign.pkl \
 		-o $@
 
+$(OUTDIR)/theta2_plot.pdf: theta2_plot.py $(OUTDIR)/dl2_gamma-diffuse_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5 \
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01832.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01833.h5 \
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01834.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01835.h5 \
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01836.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01837.h5 \
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01840.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01841.h5 \
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01842.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01843.h5 \
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01844.h5  | $(OUTDIR)
+	python theta2_plot.py
 
 
 $(OUTDIR):
