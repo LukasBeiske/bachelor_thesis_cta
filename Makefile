@@ -10,6 +10,7 @@ PROTON_FILE_TE = dl1_proton_south_pointing_20200514_v0.5.1_v01_DL1_testing
 TEL_NAME = LST_LSTCam
 
 AICT_CONFIG=config/aict.yaml
+CUTS_CONFIG=config/quality_cuts_lb.yaml
 
 all: $(OUTDIR)/cv_separation.h5 \
 	$(OUTDIR)/cv_disp.h5 \
@@ -42,14 +43,14 @@ $(OUTDIR)/%_aict.h5: $(INDIR)/%.h5 file_convert.py | $(OUTDIR)
 		$(TEL_NAME)
 
 #precuts
-$(OUTDIR)/%_precuts.h5: $(OUTDIR)/%_aict.h5 config/quality_cuts_lb.yaml | $(OUTDIR)
+$(OUTDIR)/%_precuts.h5: $(OUTDIR)/%_aict.h5 $(CUTS_CONFIG) | $(OUTDIR)
 	aict_apply_cuts \
-		config/quality_cuts_lb.yaml \
+		$(CUTS_CONFIG) \
 		$< \
 		$@
 
 #train models
-$(OUTDIR)/separator.pkl $(OUTDIR)/cv_separation.h5: $(AICT_CONFIG) $(OUTDIR)/$(PROTON_FILE_TR)_precuts.h5 
+$(OUTDIR)/separator.pkl $(OUTDIR)/cv_separation.h5: $(CUTS_CONFIG) $(AICT_CONFIG) $(OUTDIR)/$(PROTON_FILE_TR)_precuts.h5 
 $(OUTDIR)/separator.pkl $(OUTDIR)/cv_separation.h5: $(OUTDIR)/$(GAMMA_DIFFUSE_FILE_TR)_precuts.h5
 	aict_train_separation_model \
 		$(AICT_CONFIG) \
@@ -58,7 +59,7 @@ $(OUTDIR)/separator.pkl $(OUTDIR)/cv_separation.h5: $(OUTDIR)/$(GAMMA_DIFFUSE_FI
 		$(OUTDIR)/cv_separation.h5 \
 		$(OUTDIR)/separator.pkl
 
-$(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl $(OUTDIR)/cv_disp.h5: $(AICT_CONFIG) $(OUTDIR)/$(GAMMA_DIFFUSE_FILE_TR)_precuts.h5
+$(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl $(OUTDIR)/cv_disp.h5: $(CUTS_CONFIG) $(AICT_CONFIG) $(OUTDIR)/$(GAMMA_DIFFUSE_FILE_TR)_precuts.h5
 	aict_train_disp_regressor \
 		$(AICT_CONFIG) \
 		$(OUTDIR)/$(GAMMA_DIFFUSE_FILE_TR)_precuts.h5 \
@@ -66,21 +67,20 @@ $(OUTDIR)/disp.pkl $(OUTDIR)/sign.pkl $(OUTDIR)/cv_disp.h5: $(AICT_CONFIG) $(OUT
 		$(OUTDIR)/disp.pkl \
 		$(OUTDIR)/sign.pkl
 
-$(OUTDIR)/regressor.pkl $(OUTDIR)/cv_regressor.h5: $(AICT_CONFIG) $(OUTDIR)/$(GAMMA_FILE_TR)_precuts.h5
+$(OUTDIR)/regressor.pkl $(OUTDIR)/cv_regressor.h5: $(CUTS_CONFIG) $(AICT_CONFIG) $(OUTDIR)/$(GAMMA_FILE_TR)_precuts.h5
 	aict_train_energy_regressor \
 		$(AICT_CONFIG) \
 		$(OUTDIR)/$(GAMMA_FILE_TR)_precuts.h5 \
 		$(OUTDIR)/cv_regressor.h5 \
 		$(OUTDIR)/regressor.pkl
 
+#apply models
 $(OUTDIR)/%_aict.h5: $(INDIR)/%.h5 file_convert.py
 	python file_convert.py $< $@ $(TEL_NAME)
 
-$(OUTDIR)/dl2_%.h5: $(OUTDIR)/dl1_%_aict.h5 config/quality_cuts_lb.yaml \
-  $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/regressor.pkl \
-  config/*
+$(OUTDIR)/dl2_%.h5: $(OUTDIR)/dl1_%_aict.h5 $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/regressor.pkl config/*
 	aict_apply_cuts \
-		config/quality_cuts_lb.yaml \
+		$(CUTS_CONFIG) \
 		$< $@ \
 		--chunksize=100000
 	aict_apply_separation_model \
@@ -100,7 +100,7 @@ $(OUTDIR)/dl2_%.h5: $(OUTDIR)/dl1_%_aict.h5 config/quality_cuts_lb.yaml \
 		$(OUTDIR)/regressor.pkl \
 		--chunksize=100000
 
-
+#performance plots
 $(OUTDIR)/regressor_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_regressor.h5 | $(OUTDIR)
 	aict_plot_regressor_performance \
 		$(AICT_CONFIG) \
@@ -108,14 +108,14 @@ $(OUTDIR)/regressor_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_regressor.h5 | $(OUTD
 		$(OUTDIR)/regressor.pkl \
 		-o $@
 
-$(OUTDIR)/separator_plots.pdf: $(AICT_CONFIG)  $(OUTDIR)/cv_separation.h5 | $(OUTDIR)
+$(OUTDIR)/separator_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_separation.h5 | $(OUTDIR)
 	aict_plot_separator_performance \
 		$(AICT_CONFIG) \
 		$(OUTDIR)/cv_separation.h5 \
 		$(OUTDIR)/separator.pkl \
 		-o $@
 
-$(OUTDIR)/disp_plots.pdf: $(AICT_CONFIG)  $(OUTDIR)/cv_disp.h5 $(OUTDIR)/$(GAMMA_DIFFUSE_FILE_TR)_precuts.h5 | $(OUTDIR)
+$(OUTDIR)/disp_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_disp.h5 $(OUTDIR)/$(GAMMA_DIFFUSE_FILE_TR)_precuts.h5 | $(OUTDIR)
 	aict_plot_disp_performance \
 		$(AICT_CONFIG) \
 		$(OUTDIR)/cv_disp.h5 \
