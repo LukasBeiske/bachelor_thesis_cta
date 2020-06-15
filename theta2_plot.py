@@ -68,23 +68,24 @@ ax.set_title('Furthest $10\%$ scaling')
 
 
 #test plots
-gamma = read_h5py('build/dl2_gamma-diffuse_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
+gamma = read_h5py('build/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
+gamma_diff = read_h5py('build/dl2_gamma-diffuse_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-ax.hist(gamma.disp_prediction, bins=100, histtype='step')
+ax.hist(gamma_diff.disp_prediction, bins=100, histtype='step')
 ax.set_xlabel('disp prediction')
 ax.set_title('gamma-diffuse testing')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-ax.hist(gamma.gammaness, bins=100, histtype='step')
+ax.hist(gamma_diff.gammaness, bins=100, histtype='step')
 ax.set_xlabel('gammaness')
 ax.set_title('gamma-diffuse testing')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(gamma, ax, range=None)
+plotting.theta2(gamma_diff, ax=ax, range=None)
 ax.set_title('gamma-diffuse testing')
 
 #angular resolustion

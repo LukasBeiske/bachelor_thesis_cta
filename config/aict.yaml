@@ -144,6 +144,7 @@ energy:
 
   # define the name of the regression target
   target_column: mc_energy
+  log_target: true
 
   # Define the name of the variable you want estimate by regression.
   # The default is 'gamma_energy_energy'.

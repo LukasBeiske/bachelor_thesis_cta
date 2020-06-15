@@ -7,26 +7,27 @@ def theta2(df_on, df_off=None, ax=None, range=[0,1], alpha='total_time'):
 
     ax = ax or plt.gca()
     df_on_selected = df_on.query('gammaness > 0.7')
-    df_on_selected = df_on_selected.query('concentration_cog > 0.0025')
 
     dist_on = df_on_selected.source_x_prediction**2 + df_on_selected.source_y_prediction**2
     theta2_on = np.rad2deg(np.sqrt(dist_on) / df_on.focal_length)**2
 
-    if isinstance(df_off, pd.DataFrame):
+    if df_off is not None:
         df_off_selected = df_off.query('gammaness > 0.7')
-        df_off_selected = df_off_selected.query('concentration_cog > 0.0025')
         
         dist_off = df_off_selected.source_x_prediction**2 + df_off_selected.source_y_prediction**2
         theta2_off = np.rad2deg(np.sqrt(dist_off) / df_off.focal_length)**2
 
-        if alpha == 'total_time':
-            time_on = df_on.dragon_time
-            total_time_on = time_on.max() - time_on.min()
-            print(f'Total time ON = {total_time_on}')
-            time_off = df_off.dragon_time
-            total_time_off = time_off.max() - time_off.min()
-            print(f'Total time OFF = {total_time_off}')
+        delta_on = np.diff(df_on.dragon_time.sort_values())
+        delta_on = delta_on[np.abs(delta_on) < 10]
+        total_time_on = len(df_on) * delta_on.mean() 
+        print(f'Total time ON = {total_time_on}')
 
+        delta_off = np.diff(df_off.dragon_time.sort_values())
+        delta_off = delta_off[np.abs(delta_off) < 10]
+        total_time_off = len(df_off) * delta_off.mean() 
+        print(f'Total time OFF = {total_time_off}')
+
+        if alpha == 'total_time':
             scaling = total_time_on/total_time_off
         else:
             norm_range = range[1]-range[1]/10
@@ -50,14 +51,27 @@ def theta2(df_on, df_off=None, ax=None, range=[0,1], alpha='total_time'):
     ax.legend()
     ax.figure.tight_layout()
 
-    if isinstance(df_off, pd.DataFrame):
+    if df_off is not None:
         cut = 0.065
         n_off = np.count_nonzero(theta2_off < cut)
         n_on = np.count_nonzero(theta2_on < cut)
         li_ma = li_ma_significance(n_on, n_off, scaling)
+        n_exc_mean = n_on - scaling * n_off
+        n_exc_std = np.sqrt(n_on + scaling**2 * n_off)
 
         ax.axvline(x=cut, color='k', lw=0.1)
-        text = rf'$N_\mathrm{{off}} = {n_off}, N_\mathrm{{on}} = {n_on}, \alpha = {scaling:.2f}$' + '\n' + rf'$S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
+        if alpha == 'total_time':
+            total_time_on_hour = total_time_on / 3600
+            total_time_off_hour = total_time_off / 3600
+            text = (rf'$N_\mathrm{{on}} = {n_on},\, N_\mathrm{{off}} = {n_off}$' + '\n' 
+                + rf'$t_\mathrm{{on}} = {total_time_on_hour:.2f} \mathrm{{h}},\, t_\mathrm{{off}} = {total_time_off_hour:.2f} \mathrm{{h}},\, \alpha = {scaling:.2f}$' + '\n' 
+                + rf'$N_\mathrm{{exc}} = {n_exc_mean:.0f} \pm {n_exc_std:.0f},\, S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
+            )
+        else:
+            text = (rf'$N_\mathrm{{on}} = {n_on},\, N_\mathrm{{off}} = {n_off},\, \alpha = {scaling:.2f}$' + '\n' 
+                + rf'$N_\mathrm{{exc}} = {n_exc_mean:.0f} \pm {n_exc_std:.0f},\, S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
+            )
+        
         ax.text(0.3, 900, text)
 
     return ax
@@ -66,15 +80,12 @@ def theta2(df_on, df_off=None, ax=None, range=[0,1], alpha='total_time'):
 def angular_res(df, true_energy_column, ax=None):
 
     df = df.copy()
-    edges = 10**np.arange(                                                      #Warum hier diser Umweg mit log10? -> Damit hohe Energien nicht dominieren? Ne...
+    edges = 10**np.arange(
         np.log10(df[true_energy_column].min()),
         np.log10(df[true_energy_column].max()),
-        0.2
+        0.2     #cta convention
     )
     df['bin_idx'] = np.digitize(df[true_energy_column], edges)
-
-    # discard under and overflow                                                Kann doch eig gar nicht passieren, weil edges über min() und max() definiert?!
-    df = df[(df['bin_idx'] != 0) & (df['bin_idx'] != len(edges))]
 
     binned = pd.DataFrame({
         'e_center': 0.5 * (edges[1:] + edges[:-1]),
@@ -83,27 +94,24 @@ def angular_res(df, true_energy_column, ax=None):
         'e_width': np.diff(edges),
     }, index=pd.Series(np.arange(1, len(edges)), name='bin_idx'))
 
-    df['diff'] = np.rad2deg(np.sqrt(
-            np.abs(np.sqrt(df.source_x_prediction**2 + df.source_y_prediction**2) - np.sqrt(df.src_x**2 + df.src_y**2)) #difference as distance
-            ) 
+    df['diff'] = np.rad2deg(
+        np.sqrt((df.source_x_prediction - df.src_x)**2 + (df.source_y_prediction - df.src_y)**2)
         / df.focal_length
-        )
+    )
 
     def f(group):
         group = group.sort_values('diff')
         group = group.dropna(axis='index', subset=['diff'])
         group68 = group.quantile(q=0.68)
         return group68['diff']
-        
-    ang_res = pd.DataFrame(index=binned.index)
 
     grouped = df.groupby('bin_idx')
-    ang_res = grouped.apply(f)
-
+    binned['ang_res'] = grouped.apply(f)
+    
     ax = ax or plt.gca()
 
     ax.errorbar(
-        binned.e_center, ang_res,
+        binned.e_center, binned.ang_res,
         xerr=binned.e_width / 2,
         ls='',
         label=r'$68^{\mathrm{th}}$ Percentile'
