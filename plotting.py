@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from fact.analysis.statistics import li_ma_significance
 import pandas as pd
 
-def theta2(df_on, df_off=None, ax=None, range=[0,1], alpha='total_time'):
+def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time'):
 
     ax = ax or plt.gca()
     df_on_selected = df_on.query('gammaness > 0.7')
@@ -17,32 +17,26 @@ def theta2(df_on, df_off=None, ax=None, range=[0,1], alpha='total_time'):
         dist_off = df_off_selected.source_x_prediction**2 + df_off_selected.source_y_prediction**2
         theta2_off = np.rad2deg(np.sqrt(dist_off) / df_off.focal_length)**2
 
-        delta_on = np.diff(df_on.dragon_time.sort_values())
-        delta_on = delta_on[np.abs(delta_on) < 10]
-        total_time_on = len(df_on) * delta_on.mean() 
-        print(f'Total time ON = {total_time_on}')
+        def total_t(df):
+            delta = np.diff(df.dragon_time.sort_values())
+            delta = delta[np.abs(delta) < 10]
+            return len(df) * delta.mean()
 
-        delta_off = np.diff(df_off.dragon_time.sort_values())
-        delta_off = delta_off[np.abs(delta_off) < 10]
-        total_time_off = len(df_off) * delta_off.mean() 
-        print(f'Total time OFF = {total_time_off}')
+        total_time_on = total_t(df_on)
+        total_time_off = total_t(df_off)
 
         if alpha == 'total_time':
             scaling = total_time_on/total_time_off
         else:
-            norm_range = range[1]-range[1]/10
+            norm_range = range[1] - range[1]/10
 
-            hist = np.histogram(theta2_on[theta2_on < range[1]], bins=100)
-            x_on = hist[1]
-            x_on = x_on[:-1].copy()
-            mean_on = np.mean(hist[0][x_on > norm_range])
+            def mean_count(theta2):
+                hist = np.histogram(theta2[theta2 < range[1]], bins=100)
+                x = hist[1]
+                x = x[:-1].copy()
+                return np.mean(hist[0][x > norm_range])
 
-            hist = np.histogram(theta2_off[theta2_off < range[1]], bins=100)
-            x_off = hist[1]
-            x_off = x_off[:-1].copy()
-            mean_off = np.mean(hist[0][x_off > norm_range])
-
-            scaling = mean_on/mean_off
+            scaling = mean_count(theta2_on) / mean_count(theta2_off)
         
         ax.hist(theta2_off, bins=100, range=range, histtype='step', label='OFF', weights=np.full_like(theta2_off, scaling))
 
@@ -52,7 +46,6 @@ def theta2(df_on, df_off=None, ax=None, range=[0,1], alpha='total_time'):
     ax.figure.tight_layout()
 
     if df_off is not None:
-        cut = 0.065
         n_off = np.count_nonzero(theta2_off < cut)
         n_on = np.count_nonzero(theta2_on < cut)
         li_ma = li_ma_significance(n_on, n_off, scaling)
@@ -83,7 +76,7 @@ def angular_res(df, true_energy_column, ax=None):
     edges = 10**np.arange(
         np.log10(df[true_energy_column].min()),
         np.log10(df[true_energy_column].max()),
-        0.2     #cta convention
+        0.2     #cta convention: 5 bins per energy decade
     )
     df['bin_idx'] = np.digitize(df[true_energy_column], edges)
 
@@ -106,7 +99,10 @@ def angular_res(df, true_energy_column, ax=None):
         return group68['diff']
 
     grouped = df.groupby('bin_idx')
+    counts = grouped.size()
     binned['ang_res'] = grouped.apply(f)
+    binned['counts'] = counts
+    binned = binned.query('counts > 50') # at least 50 events per bin
     
     ax = ax or plt.gca()
 

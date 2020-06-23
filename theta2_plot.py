@@ -58,12 +58,12 @@ figures = []
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, df_off, ax)
+plotting.theta2(df_on, 0.065, df_off, ax)
 ax.set_title('Total-time scaling')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, df_off, ax, alpha='alt')
+plotting.theta2(df_on, 0.065, df_off, ax, alpha='alt')
 ax.set_title('Furthest $10\%$ scaling')
 
 
@@ -85,7 +85,7 @@ ax.set_title('gamma-diffuse testing')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(gamma_diff, ax=ax, range=None)
+plotting.theta2(gamma_diff, 0.065, ax=ax, range=None)
 ax.set_title('gamma-diffuse testing')
 
 #angular resolustion
