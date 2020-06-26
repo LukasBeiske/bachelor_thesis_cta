@@ -16,7 +16,9 @@ columns = [
     'dragon_time', 
     'gammaness', 
     'concentration_cog',
-    'focal_length'
+    'focal_length',
+    'alt_tel',
+    'az_tel'
     ]
 
 offs = [
@@ -55,6 +57,16 @@ for i, run in enumerate(ons):
     )
 
 figures = []
+
+#figures.append(plt.figure())
+#ax = figures[-1].add_subplot(1, 1, 1)
+#plotting.plot2D(df_on, ax)
+
+figures.append(plt.figure())
+ax = figures[-1].add_subplot(1, 1, 1)
+plotting.theta2(df_on, 0.1, df_off, ax, coord='sky')
+ax.set_title('Total-time scaling, crab coordinates')
+
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)

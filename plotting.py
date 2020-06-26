@@ -2,19 +2,50 @@ import numpy as np
 import matplotlib.pyplot as plt
 from fact.analysis.statistics import li_ma_significance
 import pandas as pd
+from astropy.time import Time
+from astropy.coordinates import SkyCoord, AltAz, EarthLocation
+import astropy.units as u
+from ctapipe.coordinates import CameraFrame
 
-def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time'):
+def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None):
 
     ax = ax or plt.gca()
     df_on_selected = df_on.query('gammaness > 0.7')
 
-    dist_on = df_on_selected.source_x_prediction**2 + df_on_selected.source_y_prediction**2
+    if coord is not None:
+        def coord_trafo(df):
+            crab = SkyCoord.from_name('crab')
+            altaz = AltAz(
+                location = EarthLocation.of_site('Roque de los Muchachos'),
+                obstime = Time(df.dragon_time, format='unix')
+            )
+            telescope_pointing = SkyCoord(
+                alt = u.Quantity(df.alt_tel.to_numpy(), u.rad, copy=False),
+                az = u.Quantity(df.az_tel.to_numpy(), u.rad, copy=False),
+                frame = altaz
+            )
+            camera_frame = CameraFrame(
+                focal_length = u.Quantity(df.focal_length.to_numpy(), u.m, copy=False),
+                telescope_pointing = telescope_pointing,
+                location = EarthLocation.of_site('Roque de los Muchachos'),
+                obstime = Time(df.dragon_time, format='unix')
+            )
+            crab_cf = crab.transform_to(camera_frame)
+
+            dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
+            return dist
+
+        dist_on = coord_trafo(df_on_selected)
+    else:
+        dist_on = df_on_selected.source_x_prediction**2 + df_on_selected.source_y_prediction**2
+    
     theta2_on = np.rad2deg(np.sqrt(dist_on) / df_on.focal_length)**2
 
     if df_off is not None:
         df_off_selected = df_off.query('gammaness > 0.7')
         
         dist_off = df_off_selected.source_x_prediction**2 + df_off_selected.source_y_prediction**2
+
         theta2_off = np.rad2deg(np.sqrt(dist_off) / df_off.focal_length)**2
 
         def total_t(df):
@@ -53,6 +84,7 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time'):
         n_exc_std = np.sqrt(n_on + scaling**2 * n_off)
 
         ax.axvline(x=cut, color='k', lw=0.1)
+        
         if alpha == 'total_time':
             total_time_on_hour = total_time_on / 3600
             total_time_off_hour = total_time_off / 3600
@@ -65,7 +97,7 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time'):
                 + rf'$N_\mathrm{{exc}} = {n_exc_mean:.0f} \pm {n_exc_std:.0f},\, S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
             )
         
-        ax.text(0.3, 900, text)
+        ax.text(0.3, 400, text)
 
     return ax
 
@@ -118,5 +150,33 @@ def angular_res(df, true_energy_column, ax=None):
     )
     ax.set_xscale('log')
     ax.legend()
+
+    return ax
+
+
+def plot2D(df, ax=None):
+
+    ax = ax or plt.gca()
+    df_selected = df.query('gammaness > 0.7')
+
+    crab = SkyCoord.from_name('crab')
+    altaz = AltAz(
+        location = EarthLocation.of_site('Roque de los Muchachos'),
+        obstime = Time(df_selected.dragon_time, format='unix')
+    )
+    telescope_pointing = SkyCoord(
+        alt = u.Quantity(df_selected.alt_tel.to_numpy(), u.rad, copy=False),
+        az = u.Quantity(df_selected.az_tel.to_numpy(), u.rad, copy=False),
+        frame = altaz
+    )
+    camera_frame = CameraFrame(
+        focal_length = u.Quantity(df_selected.focal_length.to_numpy(), u.m, copy=False),
+        telescope_pointing = telescope_pointing,
+        location = EarthLocation.of_site('Roque de los Muchachos'),
+        obstime = Time(df_selected.dragon_time, format='unix')
+    )
+    crab_cf = crab.transform_to(camera_frame)
+
+    ax.hist2d(crab_cf.x.to_value(u.m), crab_cf.y.to_value(u.m), bins = 100)
 
     return ax
