@@ -5,16 +5,16 @@ import pandas as pd
 from astropy.time import Time
 from astropy.coordinates import SkyCoord, AltAz, EarthLocation
 import astropy.units as u
-from ctapipe.coordinates import CameraFrame
+from ctapipe.coordinates import CameraFrame, TelescopeFrame
 
-def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None):
+def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, text_pos=400):
 
     ax = ax or plt.gca()
     df_on_selected = df_on.query('gammaness > 0.7')
 
     if coord is not None:
         def coord_trafo(df):
-            crab = SkyCoord.from_name('crab')
+            crab = SkyCoord.from_name(coord)
             altaz = AltAz(
                 location = EarthLocation.of_site('Roque de los Muchachos'),
                 obstime = Time(df.dragon_time, format='unix')
@@ -31,6 +31,7 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
                 obstime = Time(df.dragon_time, format='unix')
             )
             crab_cf = crab.transform_to(camera_frame)
+            print(crab_cf)
 
             dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
             return dist
@@ -83,7 +84,11 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
         n_exc_mean = n_on - scaling * n_off
         n_exc_std = np.sqrt(n_on + scaling**2 * n_off)
 
-        ax.axvline(x=cut, color='k', lw=0.1)
+        ax.axvline(x=cut, color='k', alpha=0.6, lw=1.5, ls=':')
+        ax.annotate(
+            rf'$\theta^2 = {cut} \mathrm{{deg}}^2$', 
+            (cut + range[1]/100, text_pos - text_pos/5)
+        )
         
         if alpha == 'total_time':
             total_time_on_hour = total_time_on / 3600
@@ -97,7 +102,7 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
                 + rf'$N_\mathrm{{exc}} = {n_exc_mean:.0f} \pm {n_exc_std:.0f},\, S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
             )
         
-        ax.text(0.3, 400, text)
+        ax.text(0.3, text_pos, text)
 
     return ax
 
@@ -177,6 +182,69 @@ def plot2D(df, ax=None):
     )
     crab_cf = crab.transform_to(camera_frame)
 
-    ax.hist2d(crab_cf.x.to_value(u.m), crab_cf.y.to_value(u.m), bins = 100)
+    #ax.hist2d(crab_cf.x.to_value(u.m), crab_cf.y.to_value(u.m), bins = 100)
+    #ax.set_xlabel(r'$x \,/\, \mathrm{m}$')
+    #ax.set_ylabel(r'$y \,/\, \mathrm{m}$')
 
+    
+    #crab_cf_1 = crab_cf.transform_to(altaz)
+    #ax.hist2d(
+    #    crab_cf_1.az.to_value(u.deg) - telescope_pointing.az.to_value(u.deg), 
+    #    crab_cf_1.alt.to_value(u.deg) - telescope_pointing.alt.to_value(u.deg), 
+    #    bins = 100,
+    #    range = [[-0.5, 0.5], [-0.5, 0.5]]
+    #)
+    #ax.set_xlabel(r'$az \,/\, \mathrm{deg}$')
+    #ax.set_ylabel(r'$alt \,/\, \mathrm{deg}$')
+
+    crab_tf = crab_cf.transform_to(TelescopeFrame())
+    ax.hist2d(
+        crab_tf.delta_az.to_value(u.deg), 
+        crab_tf.delta_alt.to_value(u.deg), 
+        bins = 100,
+        range = [[-0.3, 0.3], [-0.3, 0.3]]
+    )
+    ax.set_xlabel(r'$\Delta az \,/\, \mathrm{deg}$')
+    ax.set_ylabel(r'$\Delta alt \,/\, \mathrm{deg}$')
+
+    return ax
+
+
+def plot2D_runs(runs, names, ax=None):
+    for i, df in enumerate(runs):
+        ax = ax or plt.gca()
+        df_selected = df.query('gammaness > 0.7')
+    
+        crab = SkyCoord.from_name('crab')
+        altaz = AltAz(
+            location = EarthLocation.of_site('Roque de los Muchachos'),
+            obstime = Time(df_selected.dragon_time, format='unix')
+        )
+        telescope_pointing = SkyCoord(
+            alt = u.Quantity(df_selected.alt_tel.to_numpy(), u.rad, copy=False),
+            az = u.Quantity(df_selected.az_tel.to_numpy(), u.rad, copy=False),
+            frame = altaz
+        )
+        camera_frame = CameraFrame(
+            focal_length = u.Quantity(df_selected.focal_length.to_numpy(), u.m, copy=False),
+            telescope_pointing = telescope_pointing,
+            location = EarthLocation.of_site('Roque de los Muchachos'),
+            obstime = Time(df_selected.dragon_time, format='unix')
+        )
+        crab_cf = crab.transform_to(camera_frame)
+
+        crab_tf = crab_cf.transform_to(TelescopeFrame())
+        ax.scatter(
+            crab_tf.delta_az.to_value(u.deg), 
+            crab_tf.delta_alt.to_value(u.deg), 
+            color = f'C{i}',
+            marker = ',',
+            label = names[i]
+        )
+        ax.set_xlim(-0.3, 0.3)
+        ax.set_ylim(-0.3, 0.3)
+        ax.legend()
+        
+    ax.set_xlabel(r'$\Delta az \,/\, \mathrm{deg}$')
+    ax.set_ylabel(r'$\Delta alt \,/\, \mathrm{deg}$')
     return ax

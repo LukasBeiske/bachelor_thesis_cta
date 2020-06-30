@@ -29,10 +29,16 @@ all: $(OUTDIR)/cv_separation.h5 \
 	$(OUTDIR)/dl2_v0.5.1_LST-1.Run01842.h5 \
 	$(OUTDIR)/dl2_v0.5.1_LST-1.Run01843.h5 \
 	$(OUTDIR)/dl2_v0.5.1_LST-1.Run01844.h5 \
+	$(OUTDIR)/dl2_v0.5.1_LST-1.Run02113.h5 \
+	$(OUTDIR)/dl2_v0.5.1_LST-1.Run02114.h5 \
+	$(OUTDIR)/dl2_v0.5.1_LST-1.Run02115.h5 \
+	$(OUTDIR)/dl2_v0.5.1_LST-1.Run02116.h5 \
+	$(OUTDIR)/dl2_v0.5.1_LST-1.Run02117.h5 \
 	$(OUTDIR)/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5 \
 	$(OUTDIR)/dl2_gamma-diffuse_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5 \
 	$(OUTDIR)/dl2_proton_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5 \
-	$(OUTDIR)/theta2_plot.pdf
+	$(OUTDIR)/theta2_plot.pdf \
+	$(OUTDIR)/mrk421_plot.pdf
 	
 
 
@@ -130,8 +136,13 @@ $(OUTDIR)/theta2_plot.pdf: theta2_plot.py plotting.py $(OUTDIR)/dl2_gamma-diffus
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run01836.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01837.h5 \
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run01840.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01841.h5 \
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run01842.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01843.h5 \
-  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01844.h5  | $(OUTDIR)
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01844.h5 | $(OUTDIR)
 	python theta2_plot.py
+
+$(OUTDIR)/mrk421_plot.pdf: mrk421.py plotting.py $(OUTDIR)/dl2_v0.5.1_LST-1.Run02113.h5 \
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run02114.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run02115.h5 \
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run02116.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run02117.h5 | $(OUTDIR)
+	python mrk421.py
 
 
 $(OUTDIR):

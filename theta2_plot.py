@@ -19,14 +19,14 @@ columns = [
     'focal_length',
     'alt_tel',
     'az_tel'
-    ]
+]
 
 offs = [
     'build/dl2_v0.5.1_LST-1.Run01837.h5', 
     'build/dl2_v0.5.1_LST-1.Run01840.h5', 
     'build/dl2_v0.5.1_LST-1.Run01841.h5',
     'build/dl2_v0.5.1_LST-1.Run01842.h5'
-    ]
+]
 
 ons = [
     'build/dl2_v0.5.1_LST-1.Run01832.h5', 
@@ -36,7 +36,7 @@ ons = [
     'build/dl2_v0.5.1_LST-1.Run01836.h5',
     'build/dl2_v0.5.1_LST-1.Run01843.h5',
     'build/dl2_v0.5.1_LST-1.Run01844.h5'
-    ]
+]
 
 df_off = pd.DataFrame()
 for i, run in enumerate(offs):
@@ -58,26 +58,36 @@ for i, run in enumerate(ons):
 
 figures = []
 
-#figures.append(plt.figure())
-#ax = figures[-1].add_subplot(1, 1, 1)
-#plotting.plot2D(df_on, ax)
+#crab coordinates
+on_pointing = []
+for i, run in enumerate(ons):
+    df = read_h5py(run, key = 'events', columns=columns)
+    on_pointing.append(df)
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, 0.1, df_off, ax, coord='sky')
+plotting.plot2D_runs(on_pointing, ons, ax)
+
+figures.append(plt.figure())
+ax = figures[-1].add_subplot(1, 1, 1)
+plotting.plot2D(df_on, ax)
+
+#theta2 crab coordinates
+figures.append(plt.figure())
+ax = figures[-1].add_subplot(1, 1, 1)
+plotting.theta2(df_on, 0.1, df_off, ax, coord='crab')
 ax.set_title('Total-time scaling, crab coordinates')
 
-
+#theta2 camera center
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, 0.065, df_off, ax)
+plotting.theta2(df_on, 0.065, df_off, ax, text_pos=700)
 ax.set_title('Total-time scaling')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, 0.065, df_off, ax, alpha='alt')
+plotting.theta2(df_on, 0.065, df_off, ax, alpha='alt', text_pos=700)
 ax.set_title('Furthest $10\%$ scaling')
-
 
 #test plots
 gamma = read_h5py('build/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
