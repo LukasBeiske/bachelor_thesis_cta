@@ -7,57 +7,104 @@ from astropy.coordinates import SkyCoord, AltAz, EarthLocation
 import astropy.units as u
 from ctapipe.coordinates import CameraFrame, TelescopeFrame
 
-def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, text_pos=400):
+def calc_dist(df, coord, mode, OFF=False):
+    if coord is not None:
+        crab = SkyCoord.from_name(coord)
+        altaz = AltAz(
+            location = EarthLocation.of_site('Roque de los Muchachos'),
+            obstime = Time(df.dragon_time, format='unix')
+        )
+        telescope_pointing = SkyCoord(
+            alt = u.Quantity(df.alt_tel.to_numpy(), u.rad, copy=False),
+            az = u.Quantity(df.az_tel.to_numpy(), u.rad, copy=False),
+            frame = altaz
+        )
+        camera_frame = CameraFrame(
+            focal_length = u.Quantity(df.focal_length.to_numpy(), u.m, copy=False),
+            telescope_pointing = telescope_pointing,
+            location = EarthLocation.of_site('Roque de los Muchachos'),
+            obstime = Time(df.dragon_time, format='unix')
+        )
+        crab_cf = crab.transform_to(camera_frame)
+
+        if OFF == False:
+            dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
+        elif OFF == True and mode == 'wobble':
+            dist = (df.source_x_prediction + crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction + crab_cf.y.to_value(u.m))**2
+            dist = dist.append(
+                (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction + crab_cf.y.to_value(u.m))**2
+            )
+            dist = dist.append(
+                (df.source_x_prediction + crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
+            )
+        else:
+            dist = df.source_x_prediction**2 + df.source_y_prediction**2
+    else:
+        dist = df.source_x_prediction**2 + df.source_y_prediction**2
+    
+    return dist
+
+
+def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, mode=None, text_pos=400):
 
     ax = ax or plt.gca()
-    df_on_selected = df_on.query('gammaness > 0.7')
 
-    if coord is not None:
-        def coord_trafo(df):
-            crab = SkyCoord.from_name(coord)
-            altaz = AltAz(
-                location = EarthLocation.of_site('Roque de los Muchachos'),
-                obstime = Time(df.dragon_time, format='unix')
+    if mode == 'wobble':
+        focal_length = df_on[0].focal_length
+        dist_on = pd.Series()
+        theta2_on = pd.Series()
+        df_on_selected = []
+        for i, run in enumerate(df_on):
+            df_on_selected.append(
+                df_on[i].query('gammaness > 0.7')
             )
-            telescope_pointing = SkyCoord(
-                alt = u.Quantity(df.alt_tel.to_numpy(), u.rad, copy=False),
-                az = u.Quantity(df.az_tel.to_numpy(), u.rad, copy=False),
-                frame = altaz
+            dist_on = dist_on.append(
+                calc_dist(df_on_selected[i], coord, mode)
             )
-            camera_frame = CameraFrame(
-                focal_length = u.Quantity(df.focal_length.to_numpy(), u.m, copy=False),
-                telescope_pointing = telescope_pointing,
-                location = EarthLocation.of_site('Roque de los Muchachos'),
-                obstime = Time(df.dragon_time, format='unix')
-            )
-            crab_cf = crab.transform_to(camera_frame)
-            print(crab_cf)
-
-            dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
-            return dist
-
-        dist_on = coord_trafo(df_on_selected)
     else:
-        dist_on = df_on_selected.source_x_prediction**2 + df_on_selected.source_y_prediction**2
-    
-    theta2_on = np.rad2deg(np.sqrt(dist_on) / df_on.focal_length)**2
+        focal_length = df_on.focal_length
+        df_on_selected = df_on.query('gammaness > 0.7')
+        dist_on = calc_dist(df_on_selected, coord, mode)
+        
+    theta2_on = np.rad2deg(np.sqrt(dist_on) / focal_length)**2
 
     if df_off is not None:
-        df_off_selected = df_off.query('gammaness > 0.7')
+        if mode == 'wobble':
+            dist_off = pd.Series()
+            theta2_off = pd.Series()
+            df_off_selected = []
+            for i, run in enumerate(df_off):
+                df_off_selected.append(
+                    df_off[i].query('gammaness > 0.7')
+                )
+                dist_off = dist_off.append(
+                    calc_dist(df_off_selected[i], coord, mode, OFF=True)
+                )
+        else:
+            df_off_selected = df_off.query('gammaness > 0.7')
+            dist_off = calc_dist(df_off_selected, coord, mode, OFF=True)
         
-        dist_off = df_off_selected.source_x_prediction**2 + df_off_selected.source_y_prediction**2
-
-        theta2_off = np.rad2deg(np.sqrt(dist_off) / df_off.focal_length)**2
-
-        def total_t(df):
-            delta = np.diff(df.dragon_time.sort_values())
-            delta = delta[np.abs(delta) < 10]
-            return len(df) * delta.mean()
-
-        total_time_on = total_t(df_on)
-        total_time_off = total_t(df_off)
-
+        theta2_off = np.rad2deg(np.sqrt(dist_off) / focal_length)**2
+        
         if alpha == 'total_time':
+            def total_t(df):
+                delta = np.diff(df.dragon_time.sort_values())
+                delta = delta[np.abs(delta) < 10]
+                return len(df) * delta.mean()
+
+            if mode == 'wobble':
+                def calc_times(df):
+                    times = np.zeros(len(df))
+                    for i, run in enumerate(df):
+                        times[i] = total_t(df[i])
+                    return np.sum(times)
+
+                total_time_off = calc_times(df_off) *3
+                total_time_on = calc_times(df_on)
+            else:
+                total_time_on = total_t(df_on)
+                total_time_off = total_t(df_off)
+            
             scaling = total_time_on/total_time_off
         else:
             norm_range = range[1] - range[1]/10
@@ -210,12 +257,12 @@ def plot2D(df, ax=None):
     return ax
 
 
-def plot2D_runs(runs, names, ax=None):
+def plot2D_runs(runs, names, source, ax=None):
     for i, df in enumerate(runs):
         ax = ax or plt.gca()
         df_selected = df.query('gammaness > 0.7')
     
-        crab = SkyCoord.from_name('crab')
+        crab = SkyCoord.from_name(source)
         altaz = AltAz(
             location = EarthLocation.of_site('Roque de los Muchachos'),
             obstime = Time(df_selected.dragon_time, format='unix')
@@ -241,8 +288,6 @@ def plot2D_runs(runs, names, ax=None):
             marker = ',',
             label = names[i]
         )
-        ax.set_xlim(-0.3, 0.3)
-        ax.set_ylim(-0.3, 0.3)
         ax.legend()
         
     ax.set_xlabel(r'$\Delta az \,/\, \mathrm{deg}$')

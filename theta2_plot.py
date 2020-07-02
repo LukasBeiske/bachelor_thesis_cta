@@ -66,7 +66,7 @@ for i, run in enumerate(ons):
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.plot2D_runs(on_pointing, ons, ax)
+plotting.plot2D_runs(on_pointing, ons, 'crab', ax)
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
