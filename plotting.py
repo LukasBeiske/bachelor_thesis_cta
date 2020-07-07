@@ -7,7 +7,7 @@ from astropy.coordinates import SkyCoord, AltAz, EarthLocation
 import astropy.units as u
 from ctapipe.coordinates import CameraFrame, TelescopeFrame
 
-def calc_dist(df, coord, mode, OFF=False):
+def calc_dist(df, coord, mode, n_off, OFF=False):
     if coord is not None:
         crab = SkyCoord.from_name(coord)
         altaz = AltAz(
@@ -29,7 +29,7 @@ def calc_dist(df, coord, mode, OFF=False):
 
         if OFF == False:
             dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
-        elif OFF == True and mode == 'wobble':
+        elif OFF == True and mode == 'runs':
             dist = (df.source_x_prediction + crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction + crab_cf.y.to_value(u.m))**2
             dist = dist.append(
                 (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction + crab_cf.y.to_value(u.m))**2
@@ -37,6 +37,17 @@ def calc_dist(df, coord, mode, OFF=False):
             dist = dist.append(
                 (df.source_x_prediction + crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
             )
+        elif OFF == True and n_off != 1:
+            r = np.sqrt(crab_cf.x.to_value(u.m)**2 + crab_cf.y.to_value(u.m)**2)
+            phi = np.arctan2(crab_cf.y.to_value(u.m), crab_cf.x.to_value(u.m))
+
+            dist = pd.Series()
+            for i in range(1, n_off + 1):
+                x_off = r * np.cos(phi + i * 2 * np.pi / (n_off + 1)) 
+                y_off = r * np.sin(phi + i * 2 * np.pi / (n_off + 1))
+                dist = dist.append(
+                    (df.source_x_prediction - x_off)**2 + (df.source_y_prediction - y_off)**2
+                )
         else:
             dist = df.source_x_prediction**2 + df.source_y_prediction**2
     else:
@@ -45,11 +56,11 @@ def calc_dist(df, coord, mode, OFF=False):
     return dist
 
 
-def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, mode=None, text_pos=400):
+def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, mode=None, n_off=1, text_pos=400):
 
     ax = ax or plt.gca()
 
-    if mode == 'wobble':
+    if mode == 'runs':
         focal_length = df_on[0].focal_length
         dist_on = pd.Series()
         theta2_on = pd.Series()
@@ -59,17 +70,17 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
                 df_on[i].query('gammaness > 0.7')
             )
             dist_on = dist_on.append(
-                calc_dist(df_on_selected[i], coord, mode)
+                calc_dist(df_on_selected[i], coord, mode, n_off)
             )
     else:
         focal_length = df_on.focal_length
         df_on_selected = df_on.query('gammaness > 0.7')
-        dist_on = calc_dist(df_on_selected, coord, mode)
+        dist_on = calc_dist(df_on_selected, coord, mode, n_off)
         
     theta2_on = np.rad2deg(np.sqrt(dist_on) / focal_length)**2
 
     if df_off is not None:
-        if mode == 'wobble':
+        if mode == 'runs':
             dist_off = pd.Series()
             theta2_off = pd.Series()
             df_off_selected = []
@@ -78,11 +89,11 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
                     df_off[i].query('gammaness > 0.7')
                 )
                 dist_off = dist_off.append(
-                    calc_dist(df_off_selected[i], coord, mode, OFF=True)
+                    calc_dist(df_off_selected[i], coord, mode, n_off, OFF=True)
                 )
         else:
             df_off_selected = df_off.query('gammaness > 0.7')
-            dist_off = calc_dist(df_off_selected, coord, mode, OFF=True)
+            dist_off = calc_dist(df_off_selected, coord, mode, n_off, OFF=True)
         
         theta2_off = np.rad2deg(np.sqrt(dist_off) / focal_length)**2
         
@@ -92,18 +103,18 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
                 delta = delta[np.abs(delta) < 10]
                 return len(df) * delta.mean()
 
-            if mode == 'wobble':
+            if mode == 'runs':
                 def calc_times(df):
                     times = np.zeros(len(df))
                     for i, run in enumerate(df):
                         times[i] = total_t(df[i])
                     return np.sum(times)
 
-                total_time_off = calc_times(df_off) *3
                 total_time_on = calc_times(df_on)
+                total_time_off = calc_times(df_off) * 3
             else:
                 total_time_on = total_t(df_on)
-                total_time_off = total_t(df_off)
+                total_time_off = total_t(df_off) * n_off
             
             scaling = total_time_on/total_time_off
         else:
@@ -117,9 +128,9 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
 
             scaling = mean_count(theta2_on) / mean_count(theta2_off)
         
-        ax.hist(theta2_off, bins=100, range=range, histtype='step', label='OFF', weights=np.full_like(theta2_off, scaling))
+        ax.hist(theta2_off, bins=100, range=range, histtype='stepfilled', color='tab:blue', alpha=0.5, label='OFF', weights=np.full_like(theta2_off, scaling))
 
-    ax.hist(theta2_on, bins=100, range=range, histtype='step', label='ON')
+    ax.hist(theta2_on, bins=100, range=range, histtype='step', color='r', label='ON')
     ax.set_xlabel(r'$\theta^2 \,\, / \,\, \mathrm{deg}^2$')
     ax.legend()
     ax.figure.tight_layout()
@@ -246,13 +257,13 @@ def plot2D(df, ax=None):
 
     crab_tf = crab_cf.transform_to(TelescopeFrame())
     ax.hist2d(
-        crab_tf.delta_az.to_value(u.deg), 
-        crab_tf.delta_alt.to_value(u.deg), 
+        crab_tf.fov_lon.to_value(u.deg),
+        crab_tf.fov_lat.to_value(u.deg), 
         bins = 100,
         range = [[-0.3, 0.3], [-0.3, 0.3]]
     )
-    ax.set_xlabel(r'$\Delta az \,/\, \mathrm{deg}$')
-    ax.set_ylabel(r'$\Delta alt \,/\, \mathrm{deg}$')
+    ax.set_xlabel(r'fov_lon$ \,/\, \mathrm{deg}$')
+    ax.set_ylabel(r'fov_lat$ \,/\, \mathrm{deg}$')
 
     return ax
 
@@ -282,14 +293,14 @@ def plot2D_runs(runs, names, source, ax=None):
 
         crab_tf = crab_cf.transform_to(TelescopeFrame())
         ax.scatter(
-            crab_tf.delta_az.to_value(u.deg), 
-            crab_tf.delta_alt.to_value(u.deg), 
+            crab_tf.fov_lon.to_value(u.deg), 
+            crab_tf.fov_lat.to_value(u.deg), 
             color = f'C{i}',
             marker = ',',
             label = names[i]
         )
         ax.legend()
         
-    ax.set_xlabel(r'$\Delta az \,/\, \mathrm{deg}$')
-    ax.set_ylabel(r'$\Delta alt \,/\, \mathrm{deg}$')
+    ax.set_xlabel(r'fov_lon$ \,/\, \mathrm{deg}$')
+    ax.set_ylabel(r'fov_lat$ \,/\, \mathrm{deg}$')
     return ax

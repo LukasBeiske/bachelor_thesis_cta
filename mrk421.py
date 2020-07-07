@@ -26,7 +26,11 @@ runs = [
     'build/dl2_v0.5.1_LST-1.Run02114.h5',
     'build/dl2_v0.5.1_LST-1.Run02115.h5',
     'build/dl2_v0.5.1_LST-1.Run02116.h5',
-    'build/dl2_v0.5.1_LST-1.Run02117.h5'
+    'build/dl2_v0.5.1_LST-1.Run02117.h5',
+    'build/dl2_v0.5.1_LST-1.Run02130.h5',
+    'build/dl2_v0.5.1_LST-1.Run02131.h5',
+    'build/dl2_v0.5.1_LST-1.Run02132.h5',
+    'build/dl2_v0.5.1_LST-1.Run02133.h5'
 ]
 
 df = pd.DataFrame()
@@ -46,19 +50,24 @@ for i, run in enumerate(runs):
 
 figures = []
 
-figures.append(plt.figure())
-ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df, 0.04, df, ax=ax, coord='mrk 421', text_pos=170) #OFF data obviously wrong like this. Just for testing
-ax.set_title('Mrk 421 coordinates, OFF = camera center')
+#figures.append(plt.figure())
+#ax = figures[-1].add_subplot(1, 1, 1)
+#plotting.theta2(df_runs, 0.06, df_runs, ax=ax, coord='mrk 421', mode='runs', text_pos=400)
+#ax.set_title('Mrk 421 coordinates, OFF = mirrored -> n_off = 3')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_runs, 0.04, df_runs, ax=ax, coord='mrk 421', mode='wobble', text_pos=170)
-ax.set_title('Mrk 421 coordinates, wobble mode -> 3 times the OFF data')
+plotting.theta2(df, 0.06, df, ax=ax, coord='mrk 421', n_off=3, text_pos=400)
+ax.set_title('Mrk 421 coordinates, n_off = 3')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df, 0.1, ax=ax, range=None)
+plotting.theta2(df, 0.06, df, ax=ax, coord='mrk 421', n_off=5, text_pos=400)
+ax.set_title('Mrk 421 coordinates, n_off = 5')
+
+figures.append(plt.figure())
+ax = figures[-1].add_subplot(1, 1, 1)
+plotting.theta2(df, 0.06, ax=ax, range=None)
 ax.set_title('Mrk 421 camera center')
 
 #mrk 421 coordinates

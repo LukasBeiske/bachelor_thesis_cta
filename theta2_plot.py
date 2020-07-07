@@ -58,6 +58,17 @@ for i, run in enumerate(ons):
 
 figures = []
 
+#theta2 camera center
+figures.append(plt.figure())
+ax = figures[-1].add_subplot(1, 1, 1)
+plotting.theta2(df_on, 0.06, df_off, ax, text_pos=700)
+ax.set_title('Total-time scaling')
+
+figures.append(plt.figure())
+ax = figures[-1].add_subplot(1, 1, 1)
+plotting.theta2(df_on, 0.06, df_off, ax, alpha='alt', text_pos=700)
+ax.set_title('Furthest $10\%$ scaling')
+
 #crab coordinates
 on_pointing = []
 for i, run in enumerate(ons):
@@ -72,22 +83,10 @@ figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
 plotting.plot2D(df_on, ax)
 
-#theta2 crab coordinates
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
 plotting.theta2(df_on, 0.1, df_off, ax, coord='crab')
 ax.set_title('Total-time scaling, crab coordinates')
-
-#theta2 camera center
-figures.append(plt.figure())
-ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, 0.065, df_off, ax, text_pos=700)
-ax.set_title('Total-time scaling')
-
-figures.append(plt.figure())
-ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, 0.065, df_off, ax, alpha='alt', text_pos=700)
-ax.set_title('Furthest $10\%$ scaling')
 
 #test plots
 gamma = read_h5py('build/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
@@ -107,7 +106,7 @@ ax.set_title('gamma-diffuse testing')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(gamma_diff, 0.065, ax=ax, range=None)
+plotting.theta2(gamma_diff, 0.04, ax=ax, range=None)
 ax.set_title('gamma-diffuse testing')
 
 #angular resolustion
