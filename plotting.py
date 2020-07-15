@@ -7,7 +7,7 @@ from astropy.coordinates import SkyCoord, AltAz, EarthLocation
 import astropy.units as u
 from ctapipe.coordinates import CameraFrame, TelescopeFrame
 
-def calc_dist(df, coord, mode, n_off, OFF=False):
+def calc_dist(df, coord, n_off, OFF=False):
     if coord is not None:
         crab = SkyCoord.from_name(coord)
         altaz = AltAz(
@@ -29,14 +29,6 @@ def calc_dist(df, coord, mode, n_off, OFF=False):
 
         if OFF == False:
             dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
-        elif OFF == True and mode == 'runs':
-            dist = (df.source_x_prediction + crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction + crab_cf.y.to_value(u.m))**2
-            dist = dist.append(
-                (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction + crab_cf.y.to_value(u.m))**2
-            )
-            dist = dist.append(
-                (df.source_x_prediction + crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
-            )
         elif OFF == True and n_off != 1:
             r = np.sqrt(crab_cf.x.to_value(u.m)**2 + crab_cf.y.to_value(u.m)**2)
             phi = np.arctan2(crab_cf.y.to_value(u.m), crab_cf.x.to_value(u.m))
@@ -56,44 +48,19 @@ def calc_dist(df, coord, mode, n_off, OFF=False):
     return dist
 
 
-def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, mode=None, n_off=1, text_pos=700):
+def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, n_off=1, text_pos=700):
 
     ax = ax or plt.gca()
 
-    if mode == 'runs':
-        focal_length = df_on[0].focal_length
-        dist_on = pd.Series()
-        theta2_on = pd.Series()
-        df_on_selected = []
-        for i, run in enumerate(df_on):
-            df_on_selected.append(
-                df_on[i].query(f'gammaness > {threshold}')
-            )
-            dist_on = dist_on.append(
-                calc_dist(df_on_selected[i], coord, mode, n_off)
-            )
-    else:
-        focal_length = df_on.focal_length
-        df_on_selected = df_on.query(f'gammaness > {threshold}')
-        dist_on = calc_dist(df_on_selected, coord, mode, n_off)
+    focal_length = df_on.focal_length
+    df_on_selected = df_on.query(f'gammaness > {threshold}')
+    dist_on = calc_dist(df_on_selected, coord, n_off)
         
     theta2_on = np.rad2deg(np.sqrt(dist_on) / focal_length)**2
 
     if df_off is not None:
-        if mode == 'runs':
-            dist_off = pd.Series()
-            theta2_off = pd.Series()
-            df_off_selected = []
-            for i, run in enumerate(df_off):
-                df_off_selected.append(
-                    df_off[i].query(f'gammaness > {threshold}')
-                )
-                dist_off = dist_off.append(
-                    calc_dist(df_off_selected[i], coord, mode, n_off, OFF=True)
-                )
-        else:
-            df_off_selected = df_off.query(f'gammaness > {threshold}')
-            dist_off = calc_dist(df_off_selected, coord, mode, n_off, OFF=True)
+        df_off_selected = df_off.query(f'gammaness > {threshold}')
+        dist_off = calc_dist(df_off_selected, coord, n_off, OFF=True)
         
         theta2_off = np.rad2deg(np.sqrt(dist_off) / focal_length)**2
         
@@ -103,18 +70,8 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha='tot
                 delta = delta[np.abs(delta) < 10]
                 return len(df) * delta.mean()
 
-            if mode == 'runs':
-                def calc_times(df):
-                    times = np.zeros(len(df))
-                    for i, run in enumerate(df):
-                        times[i] = total_t(df[i])
-                    return np.sum(times)
-
-                total_time_on = calc_times(df_on)
-                total_time_off = calc_times(df_off) * 3
-            else:
-                total_time_on = total_t(df_on)
-                total_time_off = total_t(df_off) * n_off
+            total_time_on = total_t(df_on)
+            total_time_off = total_t(df_off) * n_off
             
             scaling = total_time_on/total_time_off
         else:

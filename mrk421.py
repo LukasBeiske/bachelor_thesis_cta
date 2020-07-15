@@ -52,10 +52,6 @@ figures = []
 theta2_cut = 0.04
 gammaness_threshold = 0.6
 
-#figures.append(plt.figure())
-#ax = figures[-1].add_subplot(1, 1, 1)
-#plotting.theta2(df_runs, theta2_cut, gammaness_threshold, df_runs, ax=ax, coord='mrk 421', mode='runs', text_pos=400)
-#ax.set_title('Mrk 421 coordinates, OFF = mirrored -> n_off = 3')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
