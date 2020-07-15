@@ -56,7 +56,7 @@ def calc_dist(df, coord, mode, n_off, OFF=False):
     return dist
 
 
-def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, mode=None, n_off=1, text_pos=400):
+def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, mode=None, n_off=1, text_pos=700):
 
     ax = ax or plt.gca()
 
@@ -67,14 +67,14 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
         df_on_selected = []
         for i, run in enumerate(df_on):
             df_on_selected.append(
-                df_on[i].query('gammaness > 0.7')
+                df_on[i].query(f'gammaness > {threshold}')
             )
             dist_on = dist_on.append(
                 calc_dist(df_on_selected[i], coord, mode, n_off)
             )
     else:
         focal_length = df_on.focal_length
-        df_on_selected = df_on.query('gammaness > 0.7')
+        df_on_selected = df_on.query(f'gammaness > {threshold}')
         dist_on = calc_dist(df_on_selected, coord, mode, n_off)
         
     theta2_on = np.rad2deg(np.sqrt(dist_on) / focal_length)**2
@@ -86,13 +86,13 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
             df_off_selected = []
             for i, run in enumerate(df_off):
                 df_off_selected.append(
-                    df_off[i].query('gammaness > 0.7')
+                    df_off[i].query(f'gammaness > {threshold}')
                 )
                 dist_off = dist_off.append(
                     calc_dist(df_off_selected[i], coord, mode, n_off, OFF=True)
                 )
         else:
-            df_off_selected = df_off.query('gammaness > 0.7')
+            df_off_selected = df_off.query(f'gammaness > {threshold}')
             dist_off = calc_dist(df_off_selected, coord, mode, n_off, OFF=True)
         
         theta2_off = np.rad2deg(np.sqrt(dist_off) / focal_length)**2
@@ -118,7 +118,7 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
             
             scaling = total_time_on/total_time_off
         else:
-            norm_range = range[1] - range[1]/10
+            norm_range = range[1] / 2
 
             def mean_count(theta2):
                 hist = np.histogram(theta2[theta2 < range[1]], bins=100)
@@ -144,7 +144,7 @@ def theta2(df_on, cut,  df_off=None, ax=None, range=[0,1], alpha='total_time', c
 
         ax.axvline(x=cut, color='k', alpha=0.6, lw=1.5, ls=':')
         ax.annotate(
-            rf'$\theta^2 = {cut} \mathrm{{deg}}^2$', 
+            rf'$\theta^2 = {cut} \mathrm{{deg}}^2$' + '\n' + rf'$(\, t_\mathrm{{\gamma}} = {threshold} \,)$', 
             (cut + range[1]/100, text_pos - text_pos/5)
         )
         
@@ -217,10 +217,10 @@ def angular_res(df, true_energy_column, ax=None):
     return ax
 
 
-def plot2D(df, ax=None):
+def plot2D(df, threshold, ax=None):
 
     ax = ax or plt.gca()
-    df_selected = df.query('gammaness > 0.7')
+    df_selected = df.query(f'gammaness > {threshold}')
 
     crab = SkyCoord.from_name('crab')
     altaz = AltAz(
@@ -268,10 +268,10 @@ def plot2D(df, ax=None):
     return ax
 
 
-def plot2D_runs(runs, names, source, ax=None):
+def plot2D_runs(runs, names, source, threshold, ax=None):
     for i, df in enumerate(runs):
         ax = ax or plt.gca()
-        df_selected = df.query('gammaness > 0.7')
+        df_selected = df.query(f'gammaness > {threshold}')
     
         crab = SkyCoord.from_name(source)
         altaz = AltAz(

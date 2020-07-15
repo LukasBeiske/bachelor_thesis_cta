@@ -49,31 +49,38 @@ for i, run in enumerate(runs):
 
 
 figures = []
+theta2_cut = 0.04
+gammaness_threshold = 0.6
 
 #figures.append(plt.figure())
 #ax = figures[-1].add_subplot(1, 1, 1)
-#plotting.theta2(df_runs, 0.06, df_runs, ax=ax, coord='mrk 421', mode='runs', text_pos=400)
+#plotting.theta2(df_runs, theta2_cut, gammaness_threshold, df_runs, ax=ax, coord='mrk 421', mode='runs', text_pos=400)
 #ax.set_title('Mrk 421 coordinates, OFF = mirrored -> n_off = 3')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df, 0.06, df, ax=ax, coord='mrk 421', n_off=3, text_pos=400)
+plotting.theta2(df, theta2_cut, gammaness_threshold, df, ax=ax, coord='mrk 421', n_off=3, text_pos=800)
 ax.set_title('Mrk 421 coordinates, n_off = 3')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df, 0.06, df, ax=ax, coord='mrk 421', n_off=5, text_pos=400)
+plotting.theta2(df, theta2_cut, gammaness_threshold, df, ax=ax, coord='mrk 421', n_off=5, text_pos=800)
 ax.set_title('Mrk 421 coordinates, n_off = 5')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df, 0.06, ax=ax, range=None)
+plotting.theta2(df, theta2_cut, gammaness_threshold, df, ax=ax, alpha='alt', coord='mrk 421', n_off=5, text_pos=800)
+ax.set_title('Mrk 421 coordinates, n_off = 5, furthest $50\%$ scaling')
+
+figures.append(plt.figure())
+ax = figures[-1].add_subplot(1, 1, 1)
+plotting.theta2(df, theta2_cut, gammaness_threshold, ax=ax, range=None)
 ax.set_title('Mrk 421 camera center')
 
 #mrk 421 coordinates
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.plot2D_runs(df_runs, runs, 'mrk 421', ax)
+plotting.plot2D_runs(df_runs, runs, 'mrk 421', gammaness_threshold, ax)
 
 
 #saving
