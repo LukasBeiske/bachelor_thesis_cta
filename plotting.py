@@ -9,7 +9,6 @@ from fact.analysis.statistics import li_ma_significance
 from ctapipe.coordinates import CameraFrame, TelescopeFrame
 
 def calc_dist(df, coord, n_off, OFF=False):
-    print('\n clac_dist started!')
     if coord is not None:
         crab = SkyCoord.from_name(coord)
         altaz = AltAz(
@@ -27,9 +26,7 @@ def calc_dist(df, coord, n_off, OFF=False):
             location = EarthLocation.of_site('Roque de los Muchachos'),
             obstime = Time(df.dragon_time, format='unix')
         )
-        print('definition done!')
         crab_cf = crab.transform_to(camera_frame)
-        print('transfomations done!')
 
         if OFF == False:
             dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
@@ -49,7 +46,6 @@ def calc_dist(df, coord, n_off, OFF=False):
     else:
         dist = df.source_x_prediction**2 + df.source_y_prediction**2
     
-    print('clac_dist finished! \n')
     return dist
 
 
