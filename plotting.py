@@ -1,13 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from fact.analysis.statistics import li_ma_significance
 import pandas as pd
 from astropy.time import Time
 from astropy.coordinates import SkyCoord, AltAz, EarthLocation
 import astropy.units as u
+
+from fact.analysis.statistics import li_ma_significance
 from ctapipe.coordinates import CameraFrame, TelescopeFrame
 
 def calc_dist(df, coord, n_off, OFF=False):
+    print('\n clac_dist started!')
     if coord is not None:
         crab = SkyCoord.from_name(coord)
         altaz = AltAz(
@@ -25,7 +27,9 @@ def calc_dist(df, coord, n_off, OFF=False):
             location = EarthLocation.of_site('Roque de los Muchachos'),
             obstime = Time(df.dragon_time, format='unix')
         )
+        print('definition done!')
         crab_cf = crab.transform_to(camera_frame)
+        print('transfomations done!')
 
         if OFF == False:
             dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
@@ -45,36 +49,35 @@ def calc_dist(df, coord, n_off, OFF=False):
     else:
         dist = df.source_x_prediction**2 + df.source_y_prediction**2
     
+    print('clac_dist finished! \n')
     return dist
 
 
-def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha='total_time', coord=None, n_off=1, text_pos=700):
+def total_t(df):
+    delta = np.diff(df.dragon_time.sort_values())
+    delta = delta[np.abs(delta) < 10]
+    return len(df) * delta.mean()
+
+
+def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None, coord=None, n_off=1, text_pos=700):
 
     ax = ax or plt.gca()
 
     focal_length = df_on.focal_length
     df_on_selected = df_on.query(f'gammaness > {threshold}')
+
     dist_on = calc_dist(df_on_selected, coord, n_off)
-        
     theta2_on = np.rad2deg(np.sqrt(dist_on) / focal_length)**2
 
     if df_off is not None:
         df_off_selected = df_off.query(f'gammaness > {threshold}')
+
         dist_off = calc_dist(df_off_selected, coord, n_off, OFF=True)
-        
         theta2_off = np.rad2deg(np.sqrt(dist_off) / focal_length)**2
         
-        if alpha == 'total_time':
-            def total_t(df):
-                delta = np.diff(df.dragon_time.sort_values())
-                delta = delta[np.abs(delta) < 10]
-                return len(df) * delta.mean()
-
-            total_time_on = total_t(df_on)
-            total_time_off = total_t(df_off) * n_off
-            
-            scaling = total_time_on/total_time_off
-        else:
+        if n_off > 1:
+            scaling = 1 / n_off
+        elif alpha == 'manuel':
             norm_range = range[1] / 2
 
             def mean_count(theta2):
@@ -83,7 +86,15 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha='tot
                 x = x[:-1].copy()
                 return np.mean(hist[0][x > norm_range])
 
-            scaling = mean_count(theta2_on) / mean_count(theta2_off)
+            mean_on = mean_count(theta2_on)
+            mean_off = mean_count(theta2_off)
+
+            scaling = mean_on / mean_off
+        else:
+            total_time_on = total_t(df_on)
+            total_time_off = total_t(df_off)
+            
+            scaling = total_time_on / total_time_off
         
         ax.hist(theta2_off, bins=100, range=range, histtype='stepfilled', color='tab:blue', alpha=0.5, label='OFF', weights=np.full_like(theta2_off, scaling))
 
@@ -105,15 +116,15 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha='tot
             (cut + range[1]/100, text_pos - text_pos/5)
         )
         
-        if alpha == 'total_time':
+        if alpha == 'manuel' or n_off != 1:
+            text = (rf'$N_\mathrm{{on}} = {n_on},\, N_\mathrm{{off}} = {n_off},\, \alpha = {scaling:.2f}$' + '\n' 
+                + rf'$N_\mathrm{{exc}} = {n_exc_mean:.0f} \pm {n_exc_std:.0f},\, S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
+            )
+        else:
             total_time_on_hour = total_time_on / 3600
             total_time_off_hour = total_time_off / 3600
             text = (rf'$N_\mathrm{{on}} = {n_on},\, N_\mathrm{{off}} = {n_off}$' + '\n' 
                 + rf'$t_\mathrm{{on}} = {total_time_on_hour:.2f} \mathrm{{h}},\, t_\mathrm{{off}} = {total_time_off_hour:.2f} \mathrm{{h}},\, \alpha = {scaling:.2f}$' + '\n' 
-                + rf'$N_\mathrm{{exc}} = {n_exc_mean:.0f} \pm {n_exc_std:.0f},\, S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
-            )
-        else:
-            text = (rf'$N_\mathrm{{on}} = {n_on},\, N_\mathrm{{off}} = {n_off},\, \alpha = {scaling:.2f}$' + '\n' 
                 + rf'$N_\mathrm{{exc}} = {n_exc_mean:.0f} \pm {n_exc_std:.0f},\, S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
             )
         

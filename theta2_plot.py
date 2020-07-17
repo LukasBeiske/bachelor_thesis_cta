@@ -64,12 +64,12 @@ gammaness_threshold = 0.6
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
 plotting.theta2(df_on, theta2_cut, gammaness_threshold, df_off, ax, text_pos=420)
-ax.set_title('Camera center, total-time scaling')
+ax.set_title('Crab camera center, total-time scaling')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, theta2_cut, gammaness_threshold, df_off, ax, alpha='alt', text_pos=450)
-ax.set_title('Camera center, furthest $50\%$ scaling')
+plotting.theta2(df_on, theta2_cut, gammaness_threshold, df_off, ax, alpha='manuel', text_pos=450)
+ax.set_title('Crab camera center, furthest $50\%$ scaling')
 
 #crab coordinates
 on_pointing = []
@@ -77,13 +77,13 @@ for i, run in enumerate(ons):
     df = read_h5py(run, key = 'events', columns=columns)
     on_pointing.append(df)
 
-figures.append(plt.figure())
-ax = figures[-1].add_subplot(1, 1, 1)
-plotting.plot2D_runs(on_pointing, ons, 'crab', gammaness_threshold, ax)
-
-figures.append(plt.figure())
-ax = figures[-1].add_subplot(1, 1, 1)
-plotting.plot2D(df_on, gammaness_threshold, ax)
+#figures.append(plt.figure())
+#ax = figures[-1].add_subplot(1, 1, 1)
+#plotting.plot2D_runs(on_pointing, ons, 'crab', gammaness_threshold, ax)
+#
+#figures.append(plt.figure())
+#ax = figures[-1].add_subplot(1, 1, 1)
+#plotting.plot2D(df_on, gammaness_threshold, ax)
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
@@ -92,7 +92,7 @@ ax.set_title('Crab coordinates, total-time scaling')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df_on, 0.1, gammaness_threshold, df_off, ax, alpha='alt', coord='crab', text_pos=350)
+plotting.theta2(df_on, 0.1, gammaness_threshold, df_off, ax, alpha='manuel', coord='crab', text_pos=350)
 ax.set_title('Crab coordinates, furthest $50\%$ scaling')
 
 #test plots

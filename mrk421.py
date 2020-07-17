@@ -65,18 +65,13 @@ ax.set_title('Mrk 421 coordinates, n_off = 5')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.theta2(df, theta2_cut, gammaness_threshold, df, ax=ax, alpha='alt', coord='mrk 421', n_off=5, text_pos=800)
-ax.set_title('Mrk 421 coordinates, n_off = 5, furthest $50\%$ scaling')
-
-figures.append(plt.figure())
-ax = figures[-1].add_subplot(1, 1, 1)
 plotting.theta2(df, theta2_cut, gammaness_threshold, ax=ax, range=None)
 ax.set_title('Mrk 421 camera center')
 
 #mrk 421 coordinates
-figures.append(plt.figure())
-ax = figures[-1].add_subplot(1, 1, 1)
-plotting.plot2D_runs(df_runs, runs, 'mrk 421', gammaness_threshold, ax)
+#figures.append(plt.figure())
+#ax = figures[-1].add_subplot(1, 1, 1)
+#plotting.plot2D_runs(df_runs, runs, 'mrk 421', gammaness_threshold, ax)
 
 
 #saving
