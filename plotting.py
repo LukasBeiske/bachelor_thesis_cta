@@ -8,7 +8,7 @@ import astropy.units as u
 from fact.analysis.statistics import li_ma_significance
 from ctapipe.coordinates import CameraFrame, TelescopeFrame
 
-def calc_dist(df, coord, n_off, OFF=False):
+def calc_dist(df, coord, n_offs, OFF=False):
     if coord is not None:
         crab = SkyCoord.from_name(coord)
         altaz = AltAz(
@@ -30,14 +30,14 @@ def calc_dist(df, coord, n_off, OFF=False):
 
         if OFF == False:
             dist = (df.source_x_prediction - crab_cf.x.to_value(u.m))**2 + (df.source_y_prediction - crab_cf.y.to_value(u.m))**2
-        elif OFF == True and n_off != 1:
+        elif OFF == True and n_offs != 1:
             r = np.sqrt(crab_cf.x.to_value(u.m)**2 + crab_cf.y.to_value(u.m)**2)
             phi = np.arctan2(crab_cf.y.to_value(u.m), crab_cf.x.to_value(u.m))
 
             dist = pd.Series()
-            for i in range(1, n_off + 1):
-                x_off = r * np.cos(phi + i * 2 * np.pi / (n_off + 1)) 
-                y_off = r * np.sin(phi + i * 2 * np.pi / (n_off + 1))
+            for i in range(1, n_offs + 1):
+                x_off = r * np.cos(phi + i * 2 * np.pi / (n_offs + 1)) 
+                y_off = r * np.sin(phi + i * 2 * np.pi / (n_offs + 1))
                 dist = dist.append(
                     (df.source_x_prediction - x_off)**2 + (df.source_y_prediction - y_off)**2
                 )
@@ -55,24 +55,24 @@ def total_t(df):
     return len(df) * delta.mean()
 
 
-def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None, coord=None, n_off=1, text_pos=700):
+def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None, coord=None, n_offs=1):
 
     ax = ax or plt.gca()
 
     focal_length = df_on.focal_length
     df_on_selected = df_on.query(f'gammaness > {threshold}')
 
-    dist_on = calc_dist(df_on_selected, coord, n_off)
+    dist_on = calc_dist(df_on_selected, coord, n_offs)
     theta2_on = np.rad2deg(np.sqrt(dist_on) / focal_length)**2
 
     if df_off is not None:
         df_off_selected = df_off.query(f'gammaness > {threshold}')
 
-        dist_off = calc_dist(df_off_selected, coord, n_off, OFF=True)
+        dist_off = calc_dist(df_off_selected, coord, n_offs, OFF=True)
         theta2_off = np.rad2deg(np.sqrt(dist_off) / focal_length)**2
         
-        if n_off > 1:
-            scaling = 1 / n_off
+        if n_offs > 1:
+            scaling = 1 / n_offs
         elif alpha == 'manuel':
             norm_range = range[1] / 2
 
@@ -87,8 +87,8 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None
 
             scaling = mean_on / mean_off
         else:
-            total_time_on = total_t(df_on)
-            total_time_off = total_t(df_off)
+            total_time_on = total_t(df_on_selected)
+            total_time_off = total_t(df_off_selected)
             
             scaling = total_time_on / total_time_off
         
@@ -100,6 +100,8 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None
     ax.figure.tight_layout()
 
     if df_off is not None:
+        text_pos = 0.8 * theta2_on[theta2_on < 0.01].size 
+
         n_off = np.count_nonzero(theta2_off < cut)
         n_on = np.count_nonzero(theta2_on < cut)
         li_ma = li_ma_significance(n_on, n_off, scaling)
@@ -109,10 +111,10 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None
         ax.axvline(x=cut, color='k', alpha=0.6, lw=1.5, ls=':')
         ax.annotate(
             rf'$\theta^2 = {cut} \mathrm{{deg}}^2$' + '\n' + rf'$(\, t_\mathrm{{\gamma}} = {threshold} \,)$', 
-            (cut + range[1]/100, text_pos - text_pos/5)
+            (cut + range[1]/100, 0.8 * text_pos)
         )
         
-        if alpha == 'manuel' or n_off != 1:
+        if alpha == 'manuel' or n_offs > 1:
             text = (rf'$N_\mathrm{{on}} = {n_on},\, N_\mathrm{{off}} = {n_off},\, \alpha = {scaling:.2f}$' + '\n' 
                 + rf'$N_\mathrm{{exc}} = {n_exc_mean:.0f} \pm {n_exc_std:.0f},\, S_\mathrm{{Li&Ma}} = {li_ma:.2f}$'
             )
