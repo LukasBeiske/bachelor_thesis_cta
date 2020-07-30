@@ -31,9 +31,9 @@
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures=TeX}  % -- becomes en-dash etc.
 
-% german language
+% language
 \usepackage{polyglossia}
-\setdefaultlanguage{german}
+\setdefaultlanguage{english}
 
 % for english abstract and english titles in the toc
 \setotherlanguages{english}
@@ -71,7 +71,6 @@
 %------------------------------------------------------------------------------
 
 \usepackage[
-  locale=DE,
   separate-uncertainty=true,
   per-mode=symbol-or-fraction,
 ]{siunitx}
@@ -131,13 +130,13 @@
 %------------------------------------------------------------------------------
 
 \author{Lukas Beiske}
-\title{High-level event reconstruction for the LST1 prototype of the Cherenkov Telescope Array}
+\title{High-level event reconstruction for the LST-1 prototype of the Cherenkov Telescope Array}
 \date{2020}
 \birthplace{Hamm}
 \chair{Lehrstuhl für Experimentelle Physik V}
 \division{Fakultät Physik}
 \thesisclass{Bachelor of Science}
-\submissiondate{18. August 2020}
+\submissiondate{18 August 2020}
 \firstcorrector{Prof.~Dr.~Dr.~Wolfgang Rhode}
 \secondcorrector{Prof.~Dr.~Kevin Kröninger}
 
@@ -146,7 +145,6 @@
 
 \begin{document}
 \frontmatter
-\input{content/hints.tex}
 \maketitle
 
 % Gutachterseite
@@ -158,14 +156,16 @@
 
 \mainmatter
 % Hier beginnt der Inhalt mit Seite 1 in arabischen Ziffern
-\input{content/01_einleitung.tex}
-\input{content/02_struktur.tex}
-\input{content/03_grundlagen.tex}
-\input{content/04_figs_tabs.tex}
+\input{content/01_introduction.tex}
+\input{content/02_cta.tex}
+\input{content/03_preprocessing.tex}
+\input{content/04_ml_aict.tex}
+\input{content/05_results.tex}
+\input{content/06_outlook.tex}
 
 \appendix
 % Hier beginnt der Anhang, nummeriert in lateinischen Buchstaben
-\input{content/a_anhang.tex}
+\input{content/a_appendix.tex}
 
 \backmatter
 \printbibliography

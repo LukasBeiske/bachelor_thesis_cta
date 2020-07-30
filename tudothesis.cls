@@ -71,7 +71,7 @@
 \newcommand\thesecondcorrector{}
 
 % new commands for information about the thesis
-\newcommand\birthplace[1]{\renewcommand\thebirthplace{geboren in #1}}
+\newcommand\birthplace[1]{\renewcommand\thebirthplace{born in #1}}
 \newcommand\chair[1]{\renewcommand\thechair{#1}}
 \newcommand\division[1]{\renewcommand\thedivision{#1}}
 \newcommand\thesisclass[1]{\renewcommand\thethesisclass{#1}}
@@ -80,7 +80,7 @@
 \newcommand\secondcorrector[1]{\renewcommand\thesecondcorrector{#1}}
 
 % set title page elements
-\subject{Arbeit zur Erlangung des akademischen Grades\\ \thethesisclass}
+\subject{Thesis submitted in partial fulfillment of the requirements for the degree of \\ \thethesisclass}
 \publishers{\thechair \\ \thedivision \\ Technische Universität Dortmund}
 
 % page for the correctors
@@ -88,9 +88,9 @@
   \thispagestyle{empty}
   \vspace*{\fill}
   \begin{tabular}{@{}l@{\hspace{2em}}l@{}}
-      Erstgutachter:  & \thefirstcorrector \\
-      Zweitgutachter: & \thesecondcorrector \\
-      Abgabedatum:    & \thesubmissiondate
+      First Supervisor:  & \thefirstcorrector \\
+      Second Supervisor: & \thesecondcorrector \\
+      Submission Date:   & \thesubmissiondate
   \end{tabular}
   \newpage
 }
