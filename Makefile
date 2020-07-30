@@ -44,7 +44,8 @@ all: $(OUTDIR)/cv_separation.h5 \
 	$(OUTDIR)/dl2_$(GAMMA_DIFFUSE_FILE)_testing.h5 \
 	$(OUTDIR)/dl2_$(PROTON_FILE)_testing.h5 \
 	$(OUTDIR)/theta2_plot.pdf \
-	$(OUTDIR)/mrk421_plot.pdf
+	$(OUTDIR)/mrk421_plot.pdf \
+	$(OUTDIR)/thesis.pdf
 	
 
 #file convert
@@ -162,7 +163,7 @@ $(OUTDIR)/mrk421_plot.pdf: mrk421.py plotting.py $(OUTDIR)/dl2_v0.5.1_LST-1.Run0
 
 
 #thesis
-$(OUTDIR)/thesis.pdf: FORCE | $(OUTDIR)		#not in 'all:' yet
+$(OUTDIR)/thesis.pdf: FORCE | $(OUTDIR)
 	latexmk $(TeXOptions) thesis.tex
 
 FORCE:
