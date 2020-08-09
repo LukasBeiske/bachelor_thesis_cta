@@ -114,21 +114,27 @@ $(OUTDIR)/dl2_%.h5: $(OUTDIR)/dl1_%_aict.h5 $(OUTDIR)/separator.pkl $(OUTDIR)/di
 		--chunksize=100000
 
 #performance plots
-$(OUTDIR)/regressor_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_regressor.h5 | $(OUTDIR)
+$(OUTDIR)/regressor_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_regressor.h5 | $(OUTDIR) $(OUTDIR)/plots_regressor
 	aict_plot_regressor_performance \
 		$(AICT_CONFIG) \
 		$(OUTDIR)/cv_regressor.h5 \
 		$(OUTDIR)/regressor.pkl \
 		-o $@
+	pdfseparate \
+		$(OUTDIR)/regressor_plots.pdf \
+		$(OUTDIR)/plots_regressor/plot_%d.pdf
 
-$(OUTDIR)/separator_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_separation.h5 | $(OUTDIR)
+$(OUTDIR)/separator_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_separation.h5 | $(OUTDIR) $(OUTDIR)/plots_separator
 	aict_plot_separator_performance \
 		$(AICT_CONFIG) \
 		$(OUTDIR)/cv_separation.h5 \
 		$(OUTDIR)/separator.pkl \
 		-o $@
+	pdfseparate \
+		$(OUTDIR)/separator_plots.pdf \
+		$(OUTDIR)/plots_separator/plot_%d.pdf
 
-$(OUTDIR)/disp_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_disp.h5 $(OUTDIR)/dl1_$(GAMMA_DIFFUSE_FILE)_training_precuts.h5 | $(OUTDIR)
+$(OUTDIR)/disp_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_disp.h5 $(OUTDIR)/dl1_$(GAMMA_DIFFUSE_FILE)_training_precuts.h5 | $(OUTDIR) $(OUTDIR)/plots_disp
 	aict_plot_disp_performance \
 		$(AICT_CONFIG) \
 		$(OUTDIR)/cv_disp.h5 \
@@ -136,6 +142,9 @@ $(OUTDIR)/disp_plots.pdf: $(AICT_CONFIG) $(OUTDIR)/cv_disp.h5 $(OUTDIR)/dl1_$(GA
 		$(OUTDIR)/disp.pkl \
 		$(OUTDIR)/sign.pkl \
 		-o $@
+	pdfseparate \
+		$(OUTDIR)/disp_plots.pdf \
+		$(OUTDIR)/plots_disp/plot_%d.pdf
 
 #observations
 $(OUTDIR)/theta2_plot.pdf: theta2_plot.py plotting.py \
@@ -145,21 +154,27 @@ $(OUTDIR)/theta2_plot.pdf: theta2_plot.py plotting.py \
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run01836.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01837.h5 \
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run01840.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01841.h5 \
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run01842.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run01843.h5 \
-  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01844.h5 | $(OUTDIR)
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run01844.h5 | $(OUTDIR) $(OUTDIR)/plots_crab
 	python theta2_plot.py \
 		$(OUTDIR) \
 		$(OUTDIR)/dl2_$(GAMMA_DIFFUSE_FILE)_testing.h5 \
 		$(OUTDIR)/dl2_$(GAMMA_FILE)_testing.h5 \
 		$(OUTDIR)/theta2_plot.pdf 
+	pdfseparate \
+		$(OUTDIR)/theta2_plot.pdf \
+		$(OUTDIR)/plots_crab/plot_%d.pdf
 
 $(OUTDIR)/mrk421_plot.pdf: mrk421.py plotting.py $(OUTDIR)/dl2_v0.5.1_LST-1.Run02113.h5 \
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run02114.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run02115.h5 \
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run02116.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run02117.h5 \
   $(OUTDIR)/dl2_v0.5.1_LST-1.Run02130.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run02131.h5 \
-  $(OUTDIR)/dl2_v0.5.1_LST-1.Run02132.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run02133.h5 | $(OUTDIR)
+  $(OUTDIR)/dl2_v0.5.1_LST-1.Run02132.h5 $(OUTDIR)/dl2_v0.5.1_LST-1.Run02133.h5 | $(OUTDIR) $(OUTDIR)/plots_mrk421
 	python mrk421.py \
 		$(OUTDIR) \
 		$(OUTDIR)/mrk421_plot.pdf 
+	pdfseparate \
+		$(OUTDIR)/mrk421_plot.pdf \
+		$(OUTDIR)/plots_mrk421/plot_%d.pdf
 
 
 #thesis
@@ -170,6 +185,11 @@ FORCE:
 
 $(OUTDIR):
 	mkdir -p $(OUTDIR)
+	mkdir -p $(OUTDIR)/plots_regressor
+	mkdir -p $(OUTDIR)/plots_separator
+	mkdir -p $(OUTDIR)/plots_disp
+	mkdir -p $(OUTDIR)/plots_crab
+	mkdir -p $(OUTDIR)/plots_mrk421
 
 clean:
 	rm -rf $(OUTDIR)

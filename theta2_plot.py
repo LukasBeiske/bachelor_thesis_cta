@@ -118,10 +118,10 @@ def main(outdir, gamma_diff_file, gamma_file, output):
     ax.set_xlabel('gammaness')
     ax.set_title('gamma-diffuse testing')
 
-    figures.append(plt.figure())
-    ax = figures[-1].add_subplot(1, 1, 1)
-    plotting.theta2(gamma_diff, theta2_cut, gammaness_threshold, ax=ax, range=None)
-    ax.set_title('gamma-diffuse testing')
+    #figures.append(plt.figure())
+    #ax = figures[-1].add_subplot(1, 1, 1)
+    #plotting.theta2(gamma_diff, theta2_cut, gammaness_threshold, ax=ax, range=None)
+    #ax.set_title('gamma-diffuse testing')
 
     #angular resolustion
     figures.append(plt.figure())
