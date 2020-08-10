@@ -1,9 +1,70 @@
 \chapter{Reconstruction of physical properties using machine learning}
 \label{ch:ml}
-Using the image paramters the particle type, origin and energy of the primary particle for each shower can be reconstructed.
-In this work supervised machine learning is used for this task.
+Using the image parameters for each event the particle type, origin and energy of the primary particle can be reconstructed.
+In this work supervised machine learning is used for the reconstruction.
+The algorithms are trained on two different sets of Monte Carlo simulations and the results are compared in \autoref{ch:results}.
+The difference between whom is a constant scaling factor for the optical efficiency of the camera because 
+the optical efficiency was observed as only \sfrac{2}{3} of the value assumed for the first set of simulations. 
+These simulations were done using the programs \texttt{CORSIKA} and \texttt{sim\_telarray} \cite{simulations}.
+
+In supervised machine learning a generic estimator $f$ is trained on a dataset for which all infromation is known.
+Training means that the parameters of $f$ get fitted in order to minimize a loss-function.
+This trained estimator, or model, can then be used to estimate unknown features of dataset where some information is missing.
+
+Two common types of problems that can be solved this way are binary calssification and regression. 
+For binary calssification problems the estimator $f$ has to guess which of two classes any given element is a part of. 
+This is used for background separation and during the origin reconstruction.
+To solve a regression problem a value within a countinuous quantity has to be estimated which is used for energy estimation and 
+again during origin reconstruction.
+
+One important step before using trained models to estimate unknown features is the validation of them by applying them to a different dataset 
+for which all infromation is known than the dataset the model was trained on.
+This allows for a comparison between the estimated values and the true values for the target features which is necessary to prevent overfitting.
+Overfitting means that the model learned the training dataset "by heart" and did not recognize the underlying structure and is therefore not able
+to estimate features for other datasets.
+
+In this work a $\num{5}$-fold cross validation is used which means that the training dataset is split into $\num{5}$ parts and training happens 
+with $\num{4}$ of those parts while the remaining part is used for validation. 
+The training is done on all possible combinations of the $\num{4}$ parts resulting in $\num{5}$ training sets.
+
+***Quality Metrics***
+
 
 \section{Decision Trees and Random Forests}
+The basis for the random forest algorithm is the decision tree algorithm \cite{breiman1984classification} or more specifically binary trees.
+A binary tree splits a dataset into two subsets at each step, called node.
+For each split a threshold $t_j$ for a certain feature $j$ is chosen that minimizes the given loss-function.
+This is repeated recursively until a stopping criterion is met like e.g. a maximum number of nodes ("depth" of the tree). 
+The final subsets are called leafs and for binary calssification partition between the two calsses within each leaf is returned as a value $\in [0,\, 1]$.
+For a regression task the average value of the regression target feature within each leaf is returned.
+
+One common loss-function for binary calssification is the cross-entropy
+\begin{align}
+    \text{Cross-entropy} = - p\, \log(p) - (1 - p) \log(1-p)
+\end{align}
+with $p$ being the proportion of one of the two classes.
+For the regression problem the mean squared error is often used as loss function which is evaluated for all $j$ features in every node \cite{hastie2009elements}.
+\begin{align}
+    \text{mse} = \sum_{X_{i,j} \in\, R_1} (y_i - c_1)^2\, + \sum_{X_{i,j} \in\, R_2} (y_i - c_2)^2,
+\end{align}
+
+As decision trees have some weaknesses like an inherent instability, Leo Breimann introduced the random forest algorithm \cite{breiman2001random}. 
+This algorithm trains multiple decision trees on slightly different datasets which are created from the initial training dataset by sampling with replacement.
+To add even more randomness to the training each only random subsample off all given features is considered in each node. 
+The results from these trees are then averaged.
+This process is called bagging \cite{breiman1996bagging}.
 
 
 \section{The aict-tools}
+For the training and appliction of such models the command line tools from the \texttt{aict-tools} package can be used \cite{aict-tools}. 
+For the implementation of the machine learning algorithms the \texttt{aict-tools} use the \texttt{scikit-learn} module \cite{scikit-learn}.
+The configuration of models is done using a single \text{yaml}-file and the configuration used in this work can be found in \autoref{sec:config}.
+
+Initially the \texttt{aict-tools} were developed for the FACT-experiment which uses a different coordinate system and data-structure than CTA.
+Therefore at the start of this work some conversion of the LST-1 data had to be done before the \texttt{aict-tools} could be applied.
+Due to the continued developed of the \texttt{aict-tools} different coordinate systems are now supported and the necessary conversions became largely obsolete.
+By the time of writing merely the data-structure of the LST-1 data has to be adjusted before the \texttt{aict-tools} can be applied.
+
+
+\section{The DISP method}
+

@@ -7,6 +7,7 @@ PROTON_FILE = proton_south_pointing_20200706_v0.5.2_local_DL1
 
 AICT_CONFIG = config/aict.yaml
 CUTS_CONFIG = config/quality_cuts.yaml
+CUTS_CONFIG_DATA = $(CUTS_CONFIG)
 TEL_NAME = LST_LSTCam
 
 TeXOptions = -lualatex \
@@ -91,9 +92,9 @@ $(OUTDIR)/regressor.pkl $(OUTDIR)/cv_regressor.h5: $(CUTS_CONFIG) $(AICT_CONFIG)
 $(OUTDIR)/%_aict.h5: $(INDIR)/%.h5 file_convert.py
 	python file_convert.py $< $@ $(TEL_NAME)
 
-$(OUTDIR)/dl2_%.h5: $(OUTDIR)/dl1_%_aict.h5 $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/regressor.pkl $(AICT_CONFIG) $(CUTS_CONFIG)
+$(OUTDIR)/dl2_%.h5: $(OUTDIR)/dl1_%_aict.h5 $(OUTDIR)/separator.pkl $(OUTDIR)/disp.pkl $(OUTDIR)/regressor.pkl $(AICT_CONFIG) $(CUTS_CONFIG_DATA)
 	aict_apply_cuts \
-		$(CUTS_CONFIG) \
+		$(CUTS_CONFIG_DATA) \
 		$< $@ \
 		--chunksize=100000
 	aict_apply_separation_model \

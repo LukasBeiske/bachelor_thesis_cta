@@ -9,19 +9,6 @@
 }
 
 
-% Ein in einem Journal veröffentlichter Artikel (Paper):
-@article{pdg,
-      author         = "Beringer, J. and others",
-      title          = "{Review of Particle Physics (RPP)}",
-      collaboration  = "Particle Data Group",
-      journal        = "Phys.Rev.",
-      volume         = "D86",
-      pages          = "010001",
-      doi            = "10.1103/PhysRevD.86.010001",
-      year           = "2012",
-      SLACcitation   = "%%CITATION = PHRVA,D86,010001;%%",
-}
-
 % eine Internet Quelle
 @MANUAL{siunitx,
     title   = {siunitx - A comprehensive (SI) units package},
@@ -166,7 +153,42 @@
   url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/9783527666829.ch4},
   eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/9783527666829.ch4},
   year = {2012},
-  keywords = {AGN types, classification of AGN type, unification of AGN types, Seyfert galaxies, quasars, blazars},
+}
+@book{hastie2009elements,
+  title={The Elements of Statistical Learning: Data Mining, Inference, and Prediction},
+  author={Hastie, T. and Tibshirani, R. and Friedman, J.H.},
+  isbn={9780387848846},
+  lccn={2008941148},
+  series={Springer series in statistics},
+  url={https://www.springer.com/de/book/9780387848570},
+  year={2009},
+  publisher={Springer}
+}
+@book{breiman1984classification,
+  title={Classification and regression trees},
+  author={Breiman, Leo and Friedman, Jerome and Stone, Charles J and Olshen, Richard A},
+  year={1984},
+  publisher={CRC press}
+}
+@article{breiman2001random,
+  title={Random forests},
+  author={Breiman, Leo},
+  journal={Machine learning},
+  volume={45},
+  number={1},
+  pages={5--32},
+  year={2001},
+  publisher={Springer}
+}
+@article{breiman1996bagging,
+  title={Bagging predictors},
+  author={Breiman, Leo},
+  journal={Machine learning},
+  volume={24},
+  number={2},
+  pages={123--140},
+  year={1996},
+  publisher={Springer}
 }
 
 %%% cta stuff %%%
@@ -194,6 +216,18 @@
   url = {https://www.cta-observatory.org/wp-content/uploads/2018/10/LST_Inauguration_FINAL.pdf},
   urldate = {2020-07-30}
 }
+@article{simulations,
+title = {Simulation of imaging atmospheric Cherenkov telescopes with CORSIKA and sim\_telarray},
+journal = {Astroparticle Physics},
+volume = {30},
+number = {3},
+pages = {149-158},
+year = {2008},
+issn = {0927-6505},
+doi = {https://doi.org/10.1016/j.astropartphys.2008.07.009},
+url = {http://www.sciencedirect.com/science/article/pii/S0927650508000972},
+author = {Konrad Bernlöhr},
+}
 
 %%% repos %%% 
 @software{aict-tools,
@@ -207,6 +241,45 @@
   version      = {v0.24.2},
   doi          = {10.5281/zenodo.3894652},
   url          = {https://doi.org/10.5281/zenodo.3894652}
+}
+@software{scikit-learn,
+  author       = {Olivier Grisel and
+                  Andreas Mueller and
+                  Lars and
+                  Alexandre Gramfort and
+                  Gilles Louppe and
+                  Peter Prettenhofer and
+                  Mathieu Blondel and
+                  Vlad Niculae and
+                  Joel Nothman and
+                  Arnaud Joly and
+                  Jake Vanderplas and
+                  manoj kumar and
+                  Thomas J. Fan and
+                  Hanmin Qin and
+                  Nelle Varoquaux and
+                  Loïc Estève and
+                  Robert Layton and
+                  Nicolas Hug and
+                  Jan Hendrik Metzen and
+                  Noel Dawe and
+                  Guillaume Lemaitre and
+                  Adrin Jalali and
+                  (Venkat) Raghav, Rajagopalan and
+                  Johannes Schönberger and
+                  Roman Yurchak and
+                  Wei Li and
+                  Clay Woolam and
+                  Kemal Eren and
+                  Tom Dupré la Tour and
+                  Eustache},
+  title        = {scikit-learn/scikit-learn: scikit-learn 0.23.2},
+  month        = aug,
+  year         = 2020,
+  publisher    = {Zenodo},
+  version      = {0.23.2},
+  doi          = {10.5281/zenodo.3971965},
+  url          = {https://doi.org/10.5281/zenodo.3971965}
 }
 @software{ctapipe,
   author       = {Karl Kosack and

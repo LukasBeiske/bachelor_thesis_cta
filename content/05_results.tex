@@ -1,2 +1,25 @@
 \chapter{Results}
 \label{ch:results}
+Preprocessing of the first set of simulations (without the scaling of the optical efficiency) as well as the observational data for the Crab Nebula and 
+Markarian 421 was done using \texttt{v0.5.1} of \texttt{lstchain}.
+The second set of simulations (with the scaling of the optical efficiency) was processed using \texttt{v0.5.2}.
+Hereafter the different sets of simulations will be referred to by the respective versions of \texttt{lstchain} they were processed with.
+
+Before training the machine learning models a pre-selection of the events for the simulations as well as the observational data is done to remove 
+hard to reconstruct and not properly simulated events. 
+This pre-selection can also be done using the \texttt{aict-tools}.
+For this work two different sets of criteria are used and the different results are compared in \autoref{ch:results}.
+\begin{align*}
+    &\underline{\textbf{criteria-set 1:}} & &\underline{\textbf{criteria-set 2:}} \\
+    &\texttt{intensity > 300} & &\texttt{intensity > 150} \\
+    &\texttt{leakage1\_intensity < 0.2} & &\texttt{leakage1\_intensity < 0.2} \\
+    &\texttt{leakage2\_intensity < 0.2} & &\texttt{leakage2\_intensity < 0.2}
+\end{align*}
+
+\section{Model performance}
+
+
+\section{Observations of the Crab Nebula}
+
+
+\section{Observations of Markarian 421}
