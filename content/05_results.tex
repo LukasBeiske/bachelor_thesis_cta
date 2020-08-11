@@ -1,25 +1,109 @@
 \chapter{Results}
 \label{ch:results}
-Preprocessing of the first set of simulations (without the scaling of the optical efficiency) as well as the observational data for the Crab Nebula and 
-Markarian 421 was done using \texttt{v0.5.1} of \texttt{lstchain}.
-The second set of simulations (with the scaling of the optical efficiency) was processed using \texttt{v0.5.2}.
-Hereafter the different sets of simulations will be referred to by the respective versions of \texttt{lstchain} they were processed with.
+Preprocessing of the first set of simulations as well as the observational data for the Crab Nebula and 
+Markarian 421 was done using version \texttt{v0.5.1} of \texttt{lstchain}.
+During the progression of this thesis the optical efficiency of the LST-1 camera was observed as only \sfrac{2}{3} of the value assumed for this first set of simulations
+Therefore a second set of simulations was done where the optical efficiency was scaled by a constant factor to compensate for this.
+This second set of simulations was processed using the \texttt{lstchain} version \texttt{v0.5.2}.
+%Hereafter the different sets of simulations will be referred to by the respective versions of \texttt{lstchain} they were processed with.
 
 Before training the machine learning models a pre-selection of the events for the simulations as well as the observational data is done to remove 
 hard to reconstruct and not properly simulated events. 
 This pre-selection can also be done using the \texttt{aict-tools}.
-For this work two different sets of criteria are used and the different results are compared in \autoref{ch:results}.
+For this work two different sets of criteria are used and the different results are compared.
 \begin{align*}
-    &\underline{\textbf{criteria-set 1:}} & &\underline{\textbf{criteria-set 2:}} \\
+    &\underline{\textbf{criteria set 1:}} & &\underline{\textbf{criteria set 2:}} \\
     &\texttt{intensity > 300} & &\texttt{intensity > 150} \\
     &\texttt{leakage1\_intensity < 0.2} & &\texttt{leakage1\_intensity < 0.2} \\
     &\texttt{leakage2\_intensity < 0.2} & &\texttt{leakage2\_intensity < 0.2}
 \end{align*}
 
+
 \section{Model performance}
+\subsection{Background separation}
+For the performance of the background separation the mean area under the ROC curve (AUC) was calculated, as well as precision, recall and $F_{0.1}$-score.
+If the models are trained on the first set of simulations and the more demanding event pre-selection (criteria set 1) is applied,
+the performance is already really good with a mean AUC of $\num{0.91}$, as can be seen in \autoref{fig:separator_oldMC_300}.
+But the performance for the less demanding event pre-selection (criteria set 2) is significantly worse with a mean AUC of $\num{0.86}$, as shown in
+\autoref{fig:separator_oldMC_150}. The small variance between the ROC curves for the individual cross validation iterations can be attributed to the large number 
+of events used for training ($\num{50000}$ events for each particle type, as can be seen in \autoref{sec:config}). 
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_separator/plot_1.pdf}
+        \label{fig:separator_oldMC_300_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_separator/plot_3.pdf}
+        \label{fig:separator_oldMC_300_2}
+    \end{subfigure}
+    \caption{test}
+    \label{fig:separator_oldMC_300}
+\end{figure}
+
+Decision tree based models can provide information about the contribution of each feature to the decision making.
+This allows the depiction of the feature importance for the model, as can be seen in \autoref{fig:separator_oldMC_300_feature}.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{HDD/build_noscaling_300/plots_separator/plot_4.pdf}
+    \caption{Feature importance for the background separation model trained on the first set of simulations using the pre-selection criteria set 1.
+        Each point represents the score of one tree in one of the cross validation iterations and the boxplots describe the overall distribution.
+        As background separation is mostly based on the shape of the shower image, the appropriate features are the most important.
+        The same plot for the model using the pre-selection criteria set 2 can be seen in \autoref{fig:separator_oldMC_150_feature}.
+    }
+    \label{fig:separator_oldMC_300_feature}
+\end{figure}
+
+Training the separation model on the second set of simulations leads to a noticeable improvment in performance with a mean AUC of $\num{0.94}$, 
+if the pre-selection criteria set 1 is applied (see \autoref{fig:separator_newMC_300}). 
+Even when the criteria set 2 is applied the performance is still comparable to the model trained on the first set of simulations combined with the more 
+demanding event pre-selection (mean AUC of $\num{0.91}$; see \autoref{fig:separator_newMC_150}).
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_separator/plot_1.pdf}
+        \label{fig:separator_newMC_300_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_separator/plot_3.pdf}
+        \label{fig:separator_newMC_300_2}
+    \end{subfigure}
+    \caption{test}
+    \label{fig:separator_newMC_300}
+\end{figure}
+
+
+\subsection{Energy estimation}
+
+
+\subsection{Origin reconstruction}
+
+
+
+
 
 
 \section{Observations of the Crab Nebula}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{HDD/build_scaling_300/plots_crab/plot_2.pdf}
+    \caption{Best result for crab. \texttt{lstchain v0.5.2} and \texttt{intensity > 300}.}
+    \label{fig:crab_best}
+\end{figure}
+
 
 \section{Observations of Markarian 421}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{HDD/build_scaling_300/plots_mrk421/plot_2.pdf}
+    \caption{Best result for mrk 421. \texttt{lstchain v0.5.2} and \texttt{intensity > 300}.}
+    \label{fig:mrk_best}
+\end{figure}

@@ -3,16 +3,14 @@
 Using the image parameters for each event the particle type, origin and energy of the primary particle can be reconstructed.
 In this work supervised machine learning is used for the reconstruction.
 The algorithms are trained on two different sets of Monte Carlo simulations and the results are compared in \autoref{ch:results}.
-The difference between whom is a constant scaling factor for the optical efficiency of the camera because 
-the optical efficiency was observed as only \sfrac{2}{3} of the value assumed for the first set of simulations. 
 These simulations were done using the programs \texttt{CORSIKA} and \texttt{sim\_telarray} \cite{simulations}.
 
 In supervised machine learning a generic estimator $f$ is trained on a dataset for which all infromation is known.
 Training means that the parameters of $f$ get fitted in order to minimize a loss-function.
 This trained estimator, or model, can then be used to estimate unknown features of dataset where some information is missing.
 
-Two common types of problems that can be solved this way are binary calssification and regression. 
-For binary calssification problems the estimator $f$ has to guess which of two classes any given element is a part of. 
+Two common types of problems that can be solved this way are binary classification and regression. 
+For binary classification problems the estimator $f$ has to guess which of two classes any given element is a part of. 
 This is used for background separation and during the origin reconstruction.
 To solve a regression problem a value within a countinuous quantity has to be estimated which is used for energy estimation and 
 again during origin reconstruction.
@@ -27,18 +25,17 @@ In this work a $\num{5}$-fold cross validation is used which means that the trai
 with $\num{4}$ of those parts while the remaining part is used for validation. 
 The training is done on all possible combinations of the $\num{4}$ parts resulting in $\num{5}$ training sets.
 
-***Quality Metrics***
-
 
 \section{Decision Trees and Random Forests}
 The basis for the random forest algorithm is the decision tree algorithm \cite{breiman1984classification} or more specifically binary trees.
 A binary tree splits a dataset into two subsets at each step, called node.
 For each split a threshold $t_j$ for a certain feature $j$ is chosen that minimizes the given loss-function.
 This is repeated recursively until a stopping criterion is met like e.g. a maximum number of nodes ("depth" of the tree). 
-The final subsets are called leafs and for binary calssification partition between the two calsses within each leaf is returned as a value $\in [0,\, 1]$.
+The final subsets are called leafs and for binary classification partition between the two classes within each leaf is returned as a prediction threshold
+$t_p \in [0,\, 1]$.
 For a regression task the average value of the regression target feature within each leaf is returned.
 
-One common loss-function for binary calssification is the cross-entropy
+One common loss-function for binary classification is the cross-entropy
 \begin{align}
     \text{Cross-entropy} = - p\, \log(p) - (1 - p) \log(1-p)
 \end{align}
@@ -55,6 +52,49 @@ The results from these trees are then averaged.
 This process is called bagging \cite{breiman1996bagging}.
 
 
+\section{Quality Metrics}
+\label{sec:quality_metrics}
+To quantify the performance of a model there are a number of quality metrics for binary classification which are all based on the confusion matrix.
+\begin{align}
+    \begin{pmatrix}
+        tp & fp \\
+        fn & tn
+    \end{pmatrix}
+\end{align}
+$tp$ means "true postives" and $tn$ means "true negatives". 
+These two values describe the proportion of correctly classified members of the two classes ("postive" and "negative").
+$fp$ ("false positives") and $fn$ ("false negatives") on the other and describe the amount of falsely classified members of the two classes respectively.
+In this work the following metrics are used based on this connotation.
+\begin{itemize}
+    \item \textbf{Precision} represents the percentage of correctly classified members of the reconstructed "positive" class.
+        \begin{align}
+            \text{precision} = \frac{tp}{tp\, +\, fp}
+        \end{align}
+    \item \textbf{Recall} describes the ability of the classifier to identify members of the "positive" class as such.
+        \begin{align}
+            \text{recall} = \frac{tp}{tp\, +\, fn}
+        \end{align}
+    \item \textbf{Accuracy} measures the overall percentage of correctly reconstructed samples.
+        \begin{align}
+            \text{accuracy} = \frac{tp\, +\, tn}{tp\, +\, tn\, +\, fp\, +\, fn}
+        \end{align}
+    \item \textbf{$\text{F}_\beta$-Score} is the weighted harmonic mean of precision and recall where the weight $\beta$ can be chosen to emphasize recall or precision.
+        \begin{align}
+            f_\beta = (1 + \beta^2) \frac{\text{precision}\, \cdot\, \text{recall}}{\beta^2\, \text{precision}\, +\, \text{recall}}
+        \end{align}
+\end{itemize}
+It is also of interest to examine the classifier performance independent of the prediction threshold $t_p$ 
+(which requires a metric thats independent of the confusion matrix).
+A common metric for this is the area under the Receiver Operating Characteristic (ROC) curve.
+In the ROC curve the $tp$ rate is plotted against the $fp$ rate for every possible threshold $t_p$.
+
+For regression models the coefficient of determination or $r^2$-score is often used as quality metric.
+\begin{align}
+    r^2 = 1 - \frac{\sum_{i = 0}^N (y_i - \hat{y}_i)^2}{\sum_{i = 0}^N (y_i - \bar{y})^2}
+\end{align}
+$\hat{y}_i$ is the estimated value for the true value $y_i$ and $\bar{y}$ is the arithmetic mean of all $y_i$.
+
+
 \section{The aict-tools}
 For the training and appliction of such models the command line tools from the \texttt{aict-tools} package can be used \cite{aict-tools}. 
 For the implementation of the machine learning algorithms the \texttt{aict-tools} use the \texttt{scikit-learn} module \cite{scikit-learn}.
@@ -65,6 +105,16 @@ Therefore at the start of this work some conversion of the LST-1 data had to be 
 Due to the continued developed of the \texttt{aict-tools} different coordinate systems are now supported and the necessary conversions became largely obsolete.
 By the time of writing merely the data-structure of the LST-1 data has to be adjusted before the \texttt{aict-tools} can be applied.
 
+Another utility provided by the \texttt{aict-tools} is the generation of additional custom image features based on existing ones.
+This is utilized in this work and the features that are generated can be seen in \autoref{sec:config}. 
+The calculation of the quality metrics presented in \autoref{sec:quality_metrics} is also done using their appropriate implementation in the \texttt{aict-tools}.
+
 
 \section{The DISP method}
+The estimation of the origin within the detector plane normally results in a two dimensional regression task ($x$ and $y$).
+The \texttt{aict-tools} use the disp methode instead which simplifies this task into a one dimensional regression task and a binary classification.
 
+This is done by assuming the main shower axis as correctly reconstructed so that the origin of the primary particle lies somewhere along this line.
+Based on this the regression task aims to determine the absolute distance of the origin from the center of gravity of the shower image called \texttt{|disp|}.
+As the regression results in two possible origin positions along the main shower axis, the objective of the binary classification is to decide which
+of those two is the correct origin position which is called \texttt{sign} of disp.
