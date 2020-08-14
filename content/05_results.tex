@@ -1,11 +1,10 @@
 \chapter{Results}
 \label{ch:results}
-Preprocessing of the first set of simulations as well as the observational data for the Crab Nebula and 
-Markarian 421 was done using version \texttt{v0.5.1} of \texttt{lstchain}.
-During the progression of this thesis the optical efficiency of the LST-1 camera was observed as only \sfrac{2}{3} of the value assumed for this first set of simulations
-Therefore a second set of simulations was done where the optical efficiency was scaled by a constant factor to compensate for this.
-This second set of simulations was processed using the \texttt{lstchain} version \texttt{v0.5.2}.
-%Hereafter the different sets of simulations will be referred to by the respective versions of \texttt{lstchain} they were processed with.
+Preprocessing of the simulations as well as the observational data for the Crab Nebula and Markarian 421 was done using version \texttt{v0.5.1} of \texttt{lstchain}.
+During the progression of this thesis the optical efficiency of the LST-1 camera was observed as only \sfrac{2}{3} of the value assumed for the simulations.
+Therefore the simualations were processed again while the optical efficiency was scaled by a constant factor to compensate for this.
+This processing of simulations was done using the \texttt{lstchain} version \texttt{v0.5.2}.
+%These two different iterations of the preprocessed simulations will hereafter be adressed by their respective \texttt{lstchain} versions.
 
 Before training the machine learning models a pre-selection of the events for the simulations as well as the observational data is done to remove 
 hard to reconstruct and not properly simulated events. 
@@ -21,27 +20,23 @@ For this work two different sets of criteria are used and the different results 
 
 \section{Model performance}
 \subsection{Background separation}
-For the performance of the background separation the mean area under the ROC curve (AUC) was calculated, as well as precision, recall and $F_{0.1}$-score.
-If the models are trained on the first set of simulations and the more demanding event pre-selection (criteria set 1) is applied,
-the performance is already really good with a mean AUC of $\num{0.91}$, as can be seen in \autoref{fig:separator_oldMC_300}.
-But the performance for the less demanding event pre-selection (criteria set 2) is significantly worse with a mean AUC of $\num{0.86}$, as shown in
-\autoref{fig:separator_oldMC_150}. The small variance between the ROC curves for the individual cross validation iterations can be attributed to the large number 
-of events used for training ($\num{50000}$ events for each particle type, as can be seen in \autoref{sec:config}). 
+For the performance of the background separation the mean area under the ROC curve (AUC) is calculated, as well as precision, recall and $F_{0.1}$-score.
+If the models are trained on the \texttt{lstchain v0.5.1} simulations and the more demanding event pre-selection (criteria set 1) is applied,
+the performance is already really good with a mean AUC of $\num{0.91}$, as can be seen in \autoref{fig:separator_oldMC_300_1} and \autoref{fig:separator_oldMC_300_2}.
+The performance for the less demanding event pre-selection (criteria set 2) is noticeably worse but still acceptable with a mean AUC of $\num{0.86}$, as shown in
+\autoref{fig:separator_oldMC_150_1} and \autoref{fig:separator_oldMC_150_2}. The small variance between the ROC curves for the individual cross validation iterations 
+can be attributed to the large number of events used for training ($\num{50000}$ events for each particle type, as can be seen in \autoref{sec:config}). 
 \begin{figure}
     \centering
-    \begin{subfigure}{0.7\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_separator/plot_1.pdf}
-        \label{fig:separator_oldMC_300_1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.7\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_separator/plot_3.pdf}
-        \label{fig:separator_oldMC_300_2}
-    \end{subfigure}
-    \caption{test}
-    \label{fig:separator_oldMC_300}
+    \includegraphics[width=0.7\textwidth]{HDD/build_noscaling_300/plots_separator/plot_1.pdf}
+    \caption{AUC ROC for \texttt{lstchain v0.5.1} simulations + criteria set 1.}
+    \label{fig:separator_oldMC_300_1}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{HDD/build_noscaling_300/plots_separator/plot_3.pdf}
+    \caption{Performance of separator for \texttt{lstchain v0.5.1} simulations + criteria set 1.}
+    \label{fig:separator_oldMC_300_2}
 \end{figure}
 
 Decision tree based models can provide information about the contribution of each feature to the decision making.
@@ -49,7 +44,7 @@ This allows the depiction of the feature importance for the model, as can be see
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_noscaling_300/plots_separator/plot_4.pdf}
-    \caption{Feature importance for the background separation model trained on the first set of simulations using the pre-selection criteria set 1.
+    \caption{Feature importance for the background separation model trained on the \texttt{lstchain v0.5.1} simulations using the pre-selection criteria set 1.
         Each point represents the score of one tree in one of the cross validation iterations and the boxplots describe the overall distribution.
         As background separation is mostly based on the shape of the shower image, the appropriate features are the most important.
         The same plot for the model using the pre-selection criteria set 2 can be seen in \autoref{fig:separator_oldMC_150_feature}.
@@ -57,46 +52,204 @@ This allows the depiction of the feature importance for the model, as can be see
     \label{fig:separator_oldMC_300_feature}
 \end{figure}
 
-Training the separation model on the second set of simulations leads to a noticeable improvment in performance with a mean AUC of $\num{0.94}$, 
-if the pre-selection criteria set 1 is applied (see \autoref{fig:separator_newMC_300}). 
-Even when the criteria set 2 is applied the performance is still comparable to the model trained on the first set of simulations combined with the more 
-demanding event pre-selection (mean AUC of $\num{0.91}$; see \autoref{fig:separator_newMC_150}).
+Training the separation model on the \texttt{lstchain v0.5.2} simulations leads to a noticeable improvment in performance with a mean AUC of $\num{0.94}$, 
+if the pre-selection criteria set 1 is applied (see \autoref{fig:separator_newMC_300_1} and \autoref{fig:separator_newMC_300_2}). 
+Even when the criteria set 2 is applied (mean AUC of $\num{0.91}$; see \autoref{fig:separator_newMC_150_1} and \autoref{fig:separator_newMC_150_2}) 
+the performance is still comparable to the model trained on the \texttt{lstchain v0.5.1} simulations with the more demanding event pre-selection.
 \begin{figure}
     \centering
-    \begin{subfigure}{0.7\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_separator/plot_1.pdf}
-        \label{fig:separator_newMC_300_1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.7\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_separator/plot_3.pdf}
-        \label{fig:separator_newMC_300_2}
-    \end{subfigure}
-    \caption{test}
-    \label{fig:separator_newMC_300}
+    \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_separator/plot_1.pdf}
+    \caption{AUC ROC for \texttt{lstchain v0.5.2} simulations + criteria set 1.}
+    \label{fig:separator_newMC_300_1}
 \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_separator/plot_3.pdf}
+    \caption{Performance of separator for \texttt{lstchain v0.5.2} simulations + criteria set 1.}
+    \label{fig:separator_newMC_300_2}
+\end{figure}
+
+The feature importance for the separation model trained with the criteria set 1 can be seein in \autoref{fig:separator_newMC_300_feature}.
+Compared with \autoref{fig:separator_oldMC_300_feature} no significant difference can be found.
+Overall the features describing the shower image geometry are still the most important ones for the background separation.
 
 
 \subsection{Energy estimation}
+One way to illustrate the performance of the energy estimation model is the energy migration matrix.
+Every reconstructed event is recorded according to its true simulated energy and its estimated value.
+For the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source and the event pre-selection criteria set 1 this can be seen in 
+\autoref{fig:regressor_newMC_300_mat}.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_1.pdf}
+    \caption{Energy migration matrix for gamma rays from a point-like source simulated using the scaled optical efficiency after applying the 
+        event pre-selection criteria set 1.
+    }
+    \label{fig:regressor_newMC_300_mat}
+\end{figure}
+
+As energy estimation can be biased and has a limited resolution it is necessary to analyze the impact of these imperfections. 
+Therefore bias and resolution are calculated for bins of the true energy in \autoref{fig:regressor_newMC_300_bias}.
+Bias is defined as the median of the relative error $\Delta E_\text{rel}$ in each bin.
+\begin{align}
+    \Delta E_\text{rel} = \frac{E_\text{Est} - E_\text{MC}}{E_\text{MC}}
+\end{align}
+Resolution describes the distribution of the relative error and can be defined as the standard deviation.
+Often another definition for the resolution is used because the standard deviation can be influenced heavily by a small number of extreme outliers.
+Therefore the quantile resolution is also defined as the $1\sigma$ intervall of the normal distribution, but it is calculated as half the distance 
+between the $\num{15.9}$th and the $\num{84.1}$th percentile of the distribution.
+\begin{align}
+    \text{Resolution} = \frac{Q_\text{84.1\%}(E_\text{rel}) - Q_\text{15.9\%}(E_\text{rel})}{2}
+\end{align}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_3.pdf}
+    \caption{Resolution and bias of the energy estimation for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source 
+        using the event pre-selection criteria set 1.
+        High energy events tend to be underestimated (negative bias) as the shower is not completely contained in the camera.
+        As the event pre-selection prefers the brighter events in the lower energy bins, the true energy of these events gets overestimated (positive bias).
+        The resolution of the estimation gets better for higher energies.
+        Each bin contains at least $\num{100}$ events.
+    }
+    \label{fig:regressor_newMC_300_bias}
+\end{figure}
+
+The feature importance can be seen in \autoref{fig:regressor_newMC_300_feature} and shows that the image features describing the brightness 
+like the number of pixel in the shower image contribute a lot to the decision making.
+Also the \texttt{leakage} features are important for higher energy events as explained in \autoref{fig:regressor_newMC_300_bias}.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_4.pdf}
+    \caption{The feature importance for the energy estimation for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source using 
+        the event pre-selection criteria set 1.
+    }
+    \label{fig:regressor_newMC_300_feature}
+\end{figure}
+
+The performance plots and feature importance for the models trained using the event pre-selection criteria set 2 or the \texttt{lstchain v0.5.1} simulation 
+can be seen in \autoref{fig:regressor_newMC_150}, \autoref{fig:regressor_oldMC_300} and \autoref{fig:regressor_oldMC_150}.
+When comparing the two event pre-selection criteria sets the obvious effect of losing low energy events, if the \texttt{intensity > 300} event pre-selection is applied, becomes apparent.
+Besides this it can be seen that the resolution is improved for the more demanding event pre-selection whereas the bias is not impacted much 
+(e.g. compare \autoref{fig:regressor_newMC_300_bias} with \autoref{fig:regressor_newMC_150_bias}).
+The performance with and without the scaled optical efficiency is pretty similar.
 
 
 \subsection{Origin reconstruction}
 
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_disp/plot_1.pdf}
+        \caption{Migration matrix for \texttt{|disp|}.}
+        \label{fig:origin_newMC_300_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_disp/plot_3.pdf}
+        \caption{AUC ROC for \texttt{sign}.}
+        \label{fig:origin_newMC_300_2}
+    \end{subfigure}
+    \caption{Performance for origin reconstruction.}
+\end{figure}
 
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_disp/plot_6.pdf}
+        \caption{Feature importance for \texttt{|disp|}.}
+        \label{fig:origin_newMC_300_3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_disp/plot_5.pdf}
+        \caption{Feature importance for \texttt{sign}.}
+        \label{fig:origin_newMC_300_4}
+    \end{subfigure}
+    \caption{Feature importance for origin reconstruction.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_disp/plot_8.pdf}
+    \caption{Further performance for origin reconstruction.}
+    \label{fig:origin_newMC_300_5}
+\end{figure}
+
+In order to measure the overall perfromance of the origin reconstruction, the angular resoultion can be calculated.
+It is defined as the radius around the source position which contains $\SI{68}{\percent}$ of the reconstructed events.
+Therefore simulated gamma rays from a point-like source are used and the results for bins of the true energy can be seen in \autoref{fig:ang_res_newMC_300_1}.
+If \texttt{sign} gets missclassified for an event, the distance between the reconstructed origin and its true origin is generally very large.
+Because of this, it is reasonable to discard such events.
+As background separation has to be applied to observational data before the reconstruction of the origin position can happen, it makes sense to do the same
+for the simulated gamma rays.
+Applying both these criteria results in an improved angular resolution which can be seen in \autoref{fig:ang_res_newMC_300_2}
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_crab/plot_7.pdf}
+        \caption{All reconstructed events.}
+        \label{fig:ang_res_newMC_300_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_crab/plot_8.pdf}
+        \caption{correct \texttt{sign} and \texttt{gammaness > 0.6}.}
+        \label{fig:ang_res_newMC_300_2}
+    \end{subfigure}
+    \caption{Angular resolution for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source using the pre-selection criteria set 1.}
+\end{figure}
 
 
 
 
 \section{Observations of the Crab Nebula}
+The trained models can now be applied to observational data.
+In this work, observations of the Crab Nebula and the blazar Markarian 421 by the LST-1 are analyzed.
+The the Crab Nebula observation was done during the night of the 18th of January 2020 without using wobble mode (see \autoref{sec:wobble}).
+Therefore the Crab Nebula was observed for $\SI{2.63}{\hour}$ and an off region was observed for $\SI{1.33}{\hour}$.
 
+To calculate the statistical significance of a source detection a likelihood ratio test can be used with a null hypothesis of no gamma rays emitted by the source.
+This was first proposed by Li and Ma \cite{Li_Ma}.
+The significance in units of the standard deviation $\sigma$ for rejection of this null hypothesis can be calculated as
+\begin{align}
+    S = \sqrt{2} \left( 
+        N_\text{on} \ln\left( \frac{1 + \alpha}{\alpha} \frac{N_\text{on}}{N_\text{on} + N_\text{off}} \right) + 
+        N_\text{off} \ln\left( (1 + \alpha) \frac{N_\text{off}}{N_\text{on} + N_\text{off}} \right) 
+    \right)^{\frac{1}{2}},
+\end{align}
+where $N_\text{on}$ is the number of recorded gamma ray events within a certain radius around the assumed source position and $N_\text{off}$ the number of events within 
+the same radius around the chosen of position. 
+$\alpha$ is a scaling factor for $N_\text{off}$ to compensate for a difference in observation time for the on and the off region.
+If an observation is done using wobble mode, $\alpha$ describes the ratio of the size of the on region to the size of the off region.
+
+After choosing the size of the on and off region $\theta_\text{max}^2$, the prediction threshold for the background separation $t_\gamma$ has to be chosen as well.
+In this work, those two parameters were chosen in order to maximize the detection significance of the Crab Nebula for the models trained on the 
+\texttt{lstchain v0.5.2} simulations and using the pre-selection criteria set 1.
+This resulted in a detection of the Crab Nebula with a significance of $\num{27.72} \sigma$, as can be seen in \autoref{fig:crab_best}.
+
+It has to be said, that the $\alpha$ is not calculated by directly dividing the two observation times $\sfrac{t_\text{on}}{t_\text{off}}$, because doing so 
+does not scale the number of events in the off region correctly (see \autoref{fig:crab_best_total_time}).
+Instead the overall number of recorded events for $\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared}$ is compared for the on and off region,
+to ensure a correct scaling of the event count for the off region.
+\begin{align}
+    \alpha = \frac{N_\text{on}(\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared})}{N_\text{off}(\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared})}
+\end{align}
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{HDD/build_scaling_300/plots_crab/plot_2.pdf}
-    \caption{Best result for crab. \texttt{lstchain v0.5.2} and \texttt{intensity > 300}.}
+    \caption{Theta-Squared-Plot for the Crab Nebula observation using the models trained on \texttt{lstchain v0.5.2} and the event pre-selection criteria set 1.
+        $\theta_\text{max}^2$ and $t_\gamma$ were optimized for the highest detection significance using this \texttt{lstchain} and pre-selection criteria combination.
+    }
     \label{fig:crab_best}
 \end{figure}
+
+
 
 
 \section{Observations of Markarian 421}

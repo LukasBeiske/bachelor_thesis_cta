@@ -1,27 +1,28 @@
 \chapter{Reconstruction of physical properties using machine learning}
 \label{ch:ml}
-Using the image parameters for each event the particle type, origin and energy of the primary particle can be reconstructed.
-In this work supervised machine learning is used for the reconstruction.
-The algorithms are trained on two different sets of Monte Carlo simulations and the results are compared in \autoref{ch:results}.
-These simulations were done using the programs \texttt{CORSIKA} and \texttt{sim\_telarray} \cite{simulations}.
+Using the image parameters for each event, the particle type, origin and energy of the primary particle can be reconstructed.
+In this work, supervised machine learning is used for the reconstruction.
+The algorithms are trained on a set of Monte Carlo simulations which are preprocessed using two different versions of \texttt{lstchain} 
+and the results are compared in \autoref{ch:results}.
+The set includes a simulation of the detection of diffuse gamma rays, diffuse protons and a simulation of gamma rays emitted by a point-like source.
+The simulations were done using the programs \texttt{CORSIKA} and \texttt{sim\_telarray} \cite{simulations}.
 
-In supervised machine learning a generic estimator $f$ is trained on a dataset for which all infromation is known.
-Training means that the parameters of $f$ get fitted in order to minimize a loss-function.
-This trained estimator, or model, can then be used to estimate unknown features of dataset where some information is missing.
+In supervised machine learning a generic estimator $f$ is trained on a dataset for which all information is known.
+Training means that the parameters of $f$ get fitted in order to minimize a loss-function for certain target features.
+This trained estimator, or model, can then be used to estimate the target features of datasets where this information is missing.
 
 Two common types of problems that can be solved this way are binary classification and regression. 
 For binary classification problems the estimator $f$ has to guess which of two classes any given element is a part of. 
 This is used for background separation and during the origin reconstruction.
-To solve a regression problem a value within a countinuous quantity has to be estimated which is used for energy estimation and 
-again during origin reconstruction.
+To solve a regression problem a countinuous quantity has to be estimated which is used for energy estimation and again during origin reconstruction.
 
-One important step before using trained models to estimate unknown features is the validation of them by applying them to a different dataset 
-for which all infromation is known than the dataset the model was trained on.
+It is important to validate the trained models before using them to estimate unknown features.
+This is done by applying them to a different dataset than the dataset the model was trained on, but for which all information is known as well.
 This allows for a comparison between the estimated values and the true values for the target features which is necessary to prevent overfitting.
-Overfitting means that the model learned the training dataset "by heart" and did not recognize the underlying structure and is therefore not able
+Overfitting means that the model learned the training dataset \enquote{by heart} and did not recognize the underlying structure and is therefore not able
 to estimate features for other datasets.
 
-In this work a $\num{5}$-fold cross validation is used which means that the training dataset is split into $\num{5}$ parts and training happens 
+In this work, a $\num{5}$-fold cross validation is used which means that the training dataset is split into $\num{5}$ parts and training happens 
 with $\num{4}$ of those parts while the remaining part is used for validation. 
 The training is done on all possible combinations of the $\num{4}$ parts resulting in $\num{5}$ training sets.
 
@@ -30,7 +31,7 @@ The training is done on all possible combinations of the $\num{4}$ parts resulti
 The basis for the random forest algorithm is the decision tree algorithm \cite{breiman1984classification} or more specifically binary trees.
 A binary tree splits a dataset into two subsets at each step, called node.
 For each split a threshold $t_j$ for a certain feature $j$ is chosen that minimizes the given loss-function.
-This is repeated recursively until a stopping criterion is met like e.g. a maximum number of nodes ("depth" of the tree). 
+This is repeated recursively until a stopping criterion is met like e.g. a maximum number of nodes (\enquote{depth} of the tree). 
 The final subsets are called leafs and for binary classification partition between the two classes within each leaf is returned as a prediction threshold
 $t_p \in [0,\, 1]$.
 For a regression task the average value of the regression target feature within each leaf is returned.
@@ -47,9 +48,9 @@ For the regression problem the mean squared error is often used as loss function
 
 As decision trees have some weaknesses like an inherent instability, Leo Breimann introduced the random forest algorithm \cite{breiman2001random}. 
 This algorithm trains multiple decision trees on slightly different datasets which are created from the initial training dataset by sampling with replacement.
-To add even more randomness to the training each only random subsample off all given features is considered in each node. 
-The results from these trees are then averaged.
 This process is called bagging \cite{breiman1996bagging}.
+To add even more randomness to the training only a random subsample off all given features is considered in each node. 
+The results from these trees are then averaged.
 
 
 \section{Quality Metrics}
@@ -61,16 +62,16 @@ To quantify the performance of a model there are a number of quality metrics for
         fn & tn
     \end{pmatrix}
 \end{align}
-$tp$ means "true postives" and $tn$ means "true negatives". 
-These two values describe the proportion of correctly classified members of the two classes ("postive" and "negative").
-$fp$ ("false positives") and $fn$ ("false negatives") on the other and describe the amount of falsely classified members of the two classes respectively.
-In this work the following metrics are used based on this connotation.
+$tp$ means \enquote{true postives} and $tn$ means \enquote{true negatives}. 
+These two values describe the proportion of correctly classified members of the two classes (\enquote{postive} and \enquote{negative}).
+$fp$ (\enquote{false positives}) and $fn$ (\enquote{false negatives}) on the other and describe the amount of falsely classified members of the two classes respectively.
+In this work, the following metrics are used based on this connotation.
 \begin{itemize}
-    \item \textbf{Precision} represents the percentage of correctly classified members of the reconstructed "positive" class.
+    \item \textbf{Precision} represents the percentage of correctly classified members of the reconstructed \enquote{positive} class.
         \begin{align}
             \text{precision} = \frac{tp}{tp\, +\, fp}
         \end{align}
-    \item \textbf{Recall} describes the ability of the classifier to identify members of the "positive" class as such.
+    \item \textbf{Recall} describes the ability of the classifier to identify members of the \enquote{positive} class as such.
         \begin{align}
             \text{recall} = \frac{tp}{tp\, +\, fn}
         \end{align}
@@ -96,7 +97,7 @@ $\hat{y}_i$ is the estimated value for the true value $y_i$ and $\bar{y}$ is the
 
 
 \section{The aict-tools}
-For the training and appliction of such models the command line tools from the \texttt{aict-tools} package can be used \cite{aict-tools}. 
+For the training and appliction of such models in the context of data analysis for IACTs the command line tools from the \texttt{aict-tools} package can be used \cite{aict-tools}. 
 For the implementation of the machine learning algorithms the \texttt{aict-tools} use the \texttt{scikit-learn} module \cite{scikit-learn}.
 The configuration of models is done using a single \text{yaml}-file and the configuration used in this work can be found in \autoref{sec:config}.
 
@@ -115,6 +116,7 @@ The estimation of the origin within the detector plane normally results in a two
 The \texttt{aict-tools} use the disp methode instead which simplifies this task into a one dimensional regression task and a binary classification.
 
 This is done by assuming the main shower axis as correctly reconstructed so that the origin of the primary particle lies somewhere along this line.
-Based on this the regression task aims to determine the absolute distance of the origin from the center of gravity of the shower image called \texttt{|disp|}.
+Based on this, the regression task aims to determine the absolute distance of the origin from the center of gravity of the shower image called \texttt{|disp|}.
 As the regression results in two possible origin positions along the main shower axis, the objective of the binary classification is to decide which
-of those two is the correct origin position which is called \texttt{sign} of disp.
+of those two is the correct origin position.
+This is called \texttt{sign} of disp.

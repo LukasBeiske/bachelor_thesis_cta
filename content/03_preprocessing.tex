@@ -3,14 +3,13 @@
 
 Before the analysis steps done in this work can be performed, the raw data taken by the LST-1 has to be processed up until what is called Data Level 1 (DL1).
 For this work such preprocessing was done using \texttt{lstchain}, a low-level data processing pipeline for the LST telescopes. 
-\texttt{lstchain} is open-source project which still in development on github \cite{lstchain} and is based on \texttt{ctapipe}. 
-\texttt{ctapipe} will be the main low-level data processing pipeline for CTA and is itself still getting developed as an open-source project.
+\texttt{lstchain} is open-source project which is still in development on github \cite{lstchain} and is based on \texttt{ctapipe}. 
+\texttt{ctapipe} will be the main low-level data processing pipeline for CTA and is itself in development as an open-source project.
 This work uses the versions \texttt{v0.5.1} and \texttt{v0.5.2} of \texttt{lstchain} which are both based on version \texttt{v0.7.0} of \texttt{ctapipe} \cite{ctapipe}. 
 
-In the first step the waveforms recorded by each pixel of the camera are smoothed and calibrated according to environmental effects to reduce the influence
-of electronic noise in the signal.
+In the first step the waveforms recorded by each pixel of the camera are cleaned to reduce the influence of electronic noise in the signal.
 After that the waveforms are integrated to obtain the total photon charge and a mean arrival time for the photons is defined for each pixel 
-as the rising edge of the waveform.
+as the point in time at which half of all the photons within the pixel have arrived.
 This results in two 2-dimensional images for each event recorded by the camera, as can be seen in \autoref{fig:eas_images}.
 \begin{figure}
     \centering
@@ -34,9 +33,9 @@ This results in two 2-dimensional images for each event recorded by the camera, 
 \end{figure}
 
 In the next step these images are cleaned by discarding pixels that did not record the air shower. 
-This is done in multiple using two thresholds for the photon charge of each pixel and one for the number of neighboring pixels.
-First all pixels above the higher photon charge threshold with enough neighboring pixels above the lower photon charge threshold get selcted.
-After that all pixels above the lower photon charge threshold with enough neighboring pixels above the higher photon charge threshold get selcted as well \cite{lukas}.
+This is done in multiple steps using two thresholds for the photon charge of each pixel and one for the number of neighboring pixels.
+First all pixels above the higher photon charge threshold with enough neighboring pixels above the lower photon charge threshold get selected as part of the shower.
+After that all pixels above the lower photon charge threshold with enough neighboring pixels above the higher photon charge threshold get selected as well \cite{lukas}.
 For rather soft thresholds the results of this cleaning can be seen in \autoref{fig:eas_images_cleaned}.
 \begin{figure}
     \centering
@@ -45,12 +44,12 @@ For rather soft thresholds the results of this cleaning can be seen in \autoref{
     \label{fig:eas_images_cleaned}
 \end{figure}
 
-Based on these cleaned images a multitude of image paramters can be calculated.
+Based on these cleaned images, a multitude of image parameters can be calculated.
 The most important ones are the total number of photons in the shower, \texttt{intensity}, and the so called hillas parameters which are illustrated in \autoref{fig:image_parameters}.
 the hillas parameters are based on a principal component analysis (PCA) of the photon charge distribution and describe the extension and orientation of the shower.
-The parameters \texttt{length} and \texttt{width} correspond with the standart deviations along the principal components of the distribution and are therefore a 
+The parameters \texttt{length} and \texttt{width} correspond with the standard deviations along the principal components of the distribution and are therefore a 
 description of the shower extension. 
-The orientation on the other hand is described by the angle of the main shower axis relative to the x-axis of the image.
+The orientation on the other hand is described by the angle of the main shower axis relative to the $x$-axis of the image.
 The performance of the algorithms used in this work in regards to reconstructing this angle can be seen in \autoref{fig:delta_comparison}.
 \begin{figure}
     \centering
@@ -67,5 +66,5 @@ The center of gravity of the shower image is calculated by weighting the coordin
 Additional image featueres include multiple \texttt{leakage} parameters that describe how much of the light was recorded at the edge of the camera and are
 therefore an indication of how much light from the shower might have missed the camera.
 
-The image of the arrival times allows for timing paramters to be calculated by fitting a linear function along the main shower axis. 
-This yields the parameters \texttt{time\_gradient} and \texttt{intercept} which help to determine the direction of the shower, together with \texttt{skewness} and \texttt{kurtosis}.
+The image of the arrival times allows for timing parameters to be calculated by fitting a linear function along the main shower axis. 
+This yields the parameters \texttt{time\_gradient} and \texttt{intercept} which help to determine the direction of the shower, together with \texttt{skewness}.

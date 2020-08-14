@@ -5,23 +5,26 @@
     \centering
     \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{build/plots_disp/plot_7.pdf}
-        \caption{\texttt{lstchain v0.5.2} and \texttt{intensity > 150}.}
-        \label{fig:newMC_150}
+        \includegraphics[width=\linewidth]{HDD/build_scaling_300/plots_disp/plot_7.pdf}
+        \caption{\texttt{lstchain v0.5.2} and \texttt{intensity > 300}.}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{HDD/build_scaling_300/plots_disp/plot_7.pdf}
-        \caption{\texttt{lstchain v0.5.2} and \texttt{intensity > 300}.}
-        \label{fig:newMC_300}
+        \includegraphics[width=\linewidth]{build/plots_disp/plot_7.pdf}
+        \caption{\texttt{lstchain v0.5.2} and \texttt{intensity > 150}.}
     \end{subfigure}
     \newline\vfill
     \begin{subfigure}{0.49\textwidth}
         \centering
         \includegraphics[width=\linewidth]{HDD/build_noscaling_300/plots_disp/plot_7.pdf}
         \caption{\texttt{lstchain v0.5.1} and \texttt{intensity > 300}.}
-        \label{fig:newMC_300}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{HDD/build_noscaling/plots_disp/plot_7.pdf}
+        \caption{\texttt{lstchain v0.5.1} and \texttt{intensity > 150}.}
     \end{subfigure}
     \caption{A histogram of the difference between the reconstructed main shower axis angle $\delta$ and the true simulated main shower axis angle $\delta_\text{true}$.
         In all three cases the reconstruction works well, as a difference of $\num{0}$ and $\pm \pi$ means that the angle was reconstructed correctly.
@@ -202,48 +205,372 @@ energy:
 \end{verbatim}
 
 
-\section{Model performance plots for models trained on the first set of simulations using the pre-selection criteria set 2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Additional plots for the \texttt{lstchain v0.5.2} simulations using the pre-selection criteria set 1}
 \begin{figure}
     \centering
-    \begin{subfigure}{0.7\textwidth}
+    \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_separator/plot_4.pdf}
+    \caption{Feature importance for the background separation model trained on the \texttt{lstchain v0.5.2} simulations using the pre-selection criteria set 1.
+        The same plot for the model using the pre-selection criteria set 2 can be seen in \autoref{fig:separator_newMC_150_feature}.
+    }
+    \label{fig:separator_newMC_300_feature}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{HDD/build_scaling_300/plots_crab/plot_1.pdf}
+    \caption{Theta-Squared-Plot for the Crab Nebula with $\alpha = \sfrac{t_\text{on}}{t_\text{off}}$.
+        The machine learning models were trained using the \texttt{lstchain v0.5.2} simulations and the pre-selection criteria set 1.
+        It is visible that the scaling of the event count for the off region is incorrect.
+    }
+    \label{fig:crab_best_total_time}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Plots for the \texttt{lstchain v0.5.1} simulations using the pre-selection criteria set 1}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_separator/plot_1.pdf}
-        \label{fig:separator_oldMC_150_1}
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_regressor/plot_1.pdf}
+        \caption{Energy migration matrix.}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.7\textwidth}
+    \begin{subfigure}{0.49\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_separator/plot_3.pdf}
-        \label{fig:separator_oldMC_150_2}
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_regressor/plot_3.pdf}
+        \caption{Resolution and bias.}
     \end{subfigure}
-    \caption{test}
-    \label{fig:separator_oldMC_150}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_regressor/plot_4.pdf}
+        \caption{Feature importance.}
+    \end{subfigure}
+    \caption{Energy estimation performance plots for \texttt{lstchain v0.5.1} simulations + criteria set 1.}
+    \label{fig:regressor_oldMC_300}
 \end{figure}
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.7\textwidth]{HDD/build_noscaling/plots_separator/plot_4.pdf}
-    \caption{Feature importance for the background separation model trained on the first set of simulations using the pre-selection criteria set 2.}
-    \label{fig:separator_oldMC_150_feature}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_disp/plot_1.pdf}
+        \caption{Migration matrix for \texttt{|disp|}.}
+        \label{fig:origin_oldMC_300_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_disp/plot_3.pdf}
+        \caption{AUC ROC for \texttt{sign}.}
+        \label{fig:origin_oldMC_300_2}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_disp/plot_6.pdf}
+        \caption{Feature importance for \texttt{|disp|}.}
+        \label{fig:origin_oldMC_300_3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_disp/plot_5.pdf}
+        \caption{Feature importance for \texttt{sign}.}
+        \label{fig:origin_oldMC_300_4}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_disp/plot_8.pdf}
+        \caption{Further performance.}
+        \label{fig:origin_oldMC_300_4}
+    \end{subfigure}
+    \caption{Performance for origin reconstruction for \texttt{lstchain v0.5.1} simulations + criteria set 1.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_crab/plot_7.pdf}
+        \label{fig:ang_res_oldMC_300_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_crab/plot_8.pdf}
+        \label{fig:ang_res_oldMC_300_2}
+    \end{subfigure}
+    \caption{Angular resolution for \texttt{lstchain v0.5.1} simulations + criteria set 1.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_crab/plot_2.pdf}
+        \caption{Crab.}
+        \label{fig:crab_oldMC_300}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling_300/plots_mrk421/plot_2.pdf}
+        \caption{Mrk 421.}
+        \label{fig:mrk_oldMC_300}
+    \end{subfigure}
+    \caption{Theta-Squared-Plots for \texttt{lstchain v0.5.1} simulations + criteria set 1.}
 \end{figure}
 
 
-\section{Model performance plots for models trained on the second set of simulations using the pre-selection criteria set 2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Plots for the \texttt{lstchain v0.5.2} simulations using the pre-selection criteria set 2}
 \begin{figure}
     \centering
-    \begin{subfigure}{0.7\textwidth}
+    \begin{subfigure}{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{build/plots_separator/plot_1.pdf}
+        \caption{AUC ROC.}
         \label{fig:separator_newMC_150_1}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.7\textwidth}
+    \begin{subfigure}{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{build/plots_separator/plot_3.pdf}
+        \caption{Performance.}
         \label{fig:separator_newMC_150_2}
     \end{subfigure}
-    \caption{test}
-    \label{fig:separator_newMC_150}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_separator/plot_4.pdf}
+        \caption{Feature importance.}
+        \label{fig:separator_newMC_150_feature}
+    \end{subfigure}
+    \caption{separator performance plots for \texttt{lstchain v0.5.2} simulations + criteria set 2.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_regressor/plot_1.pdf}
+        \caption{Energy migration matrix.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_regressor/plot_3.pdf}
+        \caption{Resolution and bias.}
+        \label{fig:regressor_newMC_150_bias}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_regressor/plot_4.pdf}
+        \caption{Feature importance.}
+    \end{subfigure}
+    \caption{Energy estimation performance plots for \texttt{lstchain v0.5.2} simulations + criteria set 2.}
+    \label{fig:regressor_newMC_150}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_disp/plot_1.pdf}
+        \caption{Migration matrix for \texttt{|disp|}.}
+        \label{fig:origin_newMC_150_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_disp/plot_3.pdf}
+        \caption{AUC ROC for \texttt{sign}.}
+        \label{fig:origin_newMC_150_2}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_disp/plot_6.pdf}
+        \caption{Feature importance for \texttt{|disp|}.}
+        \label{fig:origin_newMC_150_3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_disp/plot_5.pdf}
+        \caption{Feature importance for \texttt{sign}.}
+        \label{fig:origin_newMC_150_4}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_disp/plot_8.pdf}
+        \caption{Further performance.}
+        \label{fig:origin_newMC_150_4}
+    \end{subfigure}
+    \caption{Performance for origin reconstruction for \texttt{lstchain v0.5.2} simulations + criteria set 2.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_crab/plot_7.pdf}
+        \label{fig:ang_res_newMC_150_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_crab/plot_8.pdf}
+        \label{fig:ang_res_newMC_150_2}
+    \end{subfigure}
+    \caption{Angular resolution for \texttt{lstchain v0.5.2} simulations + criteria set 2.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_crab/plot_2.pdf}
+        \caption{Crab.}
+        \label{fig:crab_newMC_150}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{build/plots_mrk421/plot_2.pdf}
+        \caption{Mrk 421.}
+        \label{fig:mrk_newMC_150}
+    \end{subfigure}
+    \caption{Theta-Squared-Plots for \texttt{lstchain v0.5.2} simulations + criteria set 2.}
 \end{figure}
 
 
-\section{Model performance plots for models trained on the first set of simulations using the pre-selection criteria set 1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Plots the \texttt{lstchain v0.5.1} simulations using the pre-selection criteria set 2}
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_separator/plot_1.pdf}
+        \caption{AUC ROC.}
+        \label{fig:separator_oldMC_150_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_separator/plot_3.pdf}
+        \caption{Performance.}
+        \label{fig:separator_oldMC_150_2}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_separator/plot_4.pdf}
+        \caption{Feature importance.}
+        \label{fig:separator_oldMC_150_feature}
+    \end{subfigure}
+    \caption{separator performance plots for \texttt{lstchain v0.5.1} simulations + criteria set 2.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_regressor/plot_1.pdf}
+        \caption{Energy migration matrix.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_regressor/plot_3.pdf}
+        \caption{Resolution and bias.}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_regressor/plot_4.pdf}
+        \caption{Feature importance.}
+    \end{subfigure}
+    \caption{Energy estimation performance plots for \texttt{lstchain v0.5.1} simulations + criteria set 2.}
+    \label{fig:regressor_oldMC_150}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_disp/plot_1.pdf}
+        \caption{Migration matrix for \texttt{|disp|}.}
+        \label{fig:origin_oldMC_150_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_disp/plot_3.pdf}
+        \caption{AUC ROC for \texttt{sign}.}
+        \label{fig:origin_oldMC_150_2}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_disp/plot_6.pdf}
+        \caption{Feature importance for \texttt{|disp|}.}
+        \label{fig:origin_oldMC_150_3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_disp/plot_5.pdf}
+        \caption{Feature importance for \texttt{sign}.}
+        \label{fig:origin_oldMC_150_4}
+    \end{subfigure}
+    \newline\vfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_disp/plot_8.pdf}
+        \caption{Further performance.}
+        \label{fig:origin_oldMC_150_4}
+    \end{subfigure}
+    \caption{Performance for origin reconstruction for \texttt{lstchain v0.5.1} simulations + criteria set 2.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_crab/plot_7.pdf}
+        \label{fig:ang_res_oldMC_150_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_crab/plot_8.pdf}
+        \label{fig:ang_res_oldMC_150_2}
+    \end{subfigure}
+    \caption{Angular resolution for \texttt{lstchain v0.5.1} simulations + criteria set 2.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_crab/plot_2.pdf}
+        \caption{Crab.}
+        \label{fig:crab_oldMC_150}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{HDD/build_noscaling/plots_mrk421/plot_2.pdf}
+        \caption{Mrk 421.}
+        \label{fig:mrk_oldMC_150}
+    \end{subfigure}
+    \caption{Theta-Squared-Plots for \texttt{lstchain v0.5.1} simulations + criteria set 2.}
+\end{figure}
