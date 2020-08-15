@@ -100,7 +100,7 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None
     ax.figure.tight_layout()
 
     if df_off is not None:
-        text_pos = 0.8 * theta2_on[theta2_on < 0.01].size 
+        text_pos = 0.9 * theta2_on[theta2_on < 0.01].size 
 
         n_off = np.count_nonzero(theta2_off < cut)
         n_on = np.count_nonzero(theta2_on < cut)
@@ -110,7 +110,7 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None
 
         ax.axvline(x=cut, color='k', alpha=0.6, lw=1.5, ls=':')
         ax.annotate(
-            rf'$\theta^2 = {cut} \mathrm{{deg}}^2$' + '\n' + rf'$(\, t_\mathrm{{\gamma}} = {threshold} \,)$', 
+            rf'$\theta_\mathrm{{max}}^2 = {cut} \mathrm{{deg}}^2$' + '\n' + rf'$(\, t_\gamma = {threshold} \,)$', 
             (cut + range[1]/100, 0.8 * text_pos)
         )
         
@@ -131,7 +131,7 @@ def theta2(df_on, cut, threshold,  df_off=None, ax=None, range=[0,1], alpha=None
     return ax
 
 
-def angular_res(df, true_energy_column, ax=None):
+def angular_res(df, true_energy_column, ax=None, label=r'$68^{\mathrm{th}}$ Percentile'):
 
     df = df.copy()
     edges = 10**np.arange(
@@ -171,9 +171,9 @@ def angular_res(df, true_energy_column, ax=None):
         binned.e_center, binned.ang_res,
         xerr=binned.e_width / 2,
         ls='',
-        label=r'$68^{\mathrm{th}}$ Percentile'
+        label=label
     )
-    ax.set_ylabel(r'$\theta \,\, / \,\, \mathrm{deg}$')
+    ax.set_ylabel(r'$\theta_{68\%} \,\, / \,\, \mathrm{deg}$')
     ax.set_xlabel(
         r'$E_{\mathrm{true}} \,\,/\,\, \mathrm{TeV}$'
     )

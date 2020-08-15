@@ -74,12 +74,12 @@ def main(outdir, gamma_diff_file, gamma_file, output):
     figures.append(plt.figure())
     ax = figures[-1].add_subplot(1, 1, 1)
     plotting.theta2(df_on, theta2_cut, gammaness_threshold, df_off, ax)
-    ax.set_title('Crab camera center, total-time scaling')
+    #ax.set_title('Crab camera center, total-time scaling')
 
     figures.append(plt.figure())
     ax = figures[-1].add_subplot(1, 1, 1)
     plotting.theta2(df_on, theta2_cut, gammaness_threshold, df_off, ax, alpha='manuel')
-    ax.set_title('Crab camera center, furthest $50\%$ scaling')
+    #ax.set_title('Crab camera center, furthest $50\%$ scaling')
 
     #crab coordinates
     on_pointing = []
@@ -137,6 +137,11 @@ def main(outdir, gamma_diff_file, gamma_file, output):
     gamma_cuts = gamma_cuts.query(f'gammaness > {gammaness_threshold}')
     plotting.angular_res(gamma_cuts, 'mc_energy', ax)
     ax.set_title(f'Angular resolution (correct sign prediction & gammaness > {gammaness_threshold})')
+
+    figures.append(plt.figure())
+    ax = figures[-1].add_subplot(1, 1, 1)
+    plotting.angular_res(gamma, 'mc_energy', ax, label='All events')
+    plotting.angular_res(gamma_cuts, 'mc_energy', ax, label=rf'correct sign and $t_\gamma > {gammaness_threshold}$')
 
     #saving
     with PdfPages(output) as pdf:

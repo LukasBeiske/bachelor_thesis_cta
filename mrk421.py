@@ -64,7 +64,7 @@ def main(outdir, output):
     figures.append(plt.figure())
     ax = figures[-1].add_subplot(1, 1, 1)
     plotting.theta2(df, theta2_cut, gammaness_threshold, df, ax=ax, coord='mrk 421', n_offs=5)
-    ax.set_title('Mrk 421 coordinates, n_offs = 5')
+    #ax.set_title('Mrk 421 coordinates, n_offs = 5')
 
     #figures.append(plt.figure())
     #ax = figures[-1].add_subplot(1, 1, 1)
