@@ -1,10 +1,10 @@
 \chapter{Results}
 \label{ch:results}
 Preprocessing of the simulations as well as the observational data for the Crab Nebula and Markarian 421 was done using version \texttt{v0.5.1} of \texttt{lstchain}.
-During the progression of this thesis the optical efficiency of the LST-1 camera was observed as only \sfrac{2}{3} of the value assumed for the simulations.
-Therefore the simulations were processed again while the optical efficiency was scaled by a constant factor to compensate for this.
-This processing of simulations was done using the \texttt{lstchain} version \texttt{v0.5.2}.
-%These two different iterations of the preprocessed simulations will hereafter be adressed by their respective \texttt{lstchain} versions.
+During the course of this work, members of the LST Collaboration observed the optical efficiency of the LST-1 camera as only \sfrac{2}{3} of the value assumed 
+for the simulations.
+Therefore they processed the simulations again after introducing a constant scaling factor for the optical efficiency to compensate for this.
+This second processing of simulations was done using the \texttt{lstchain} version \texttt{v0.5.2}.
 
 Before training the machine learning models, a pre-selection of the events for the simulations as well as the observational data is done to remove 
 hard to reconstruct and not properly simulated events. 
@@ -15,7 +15,7 @@ For this work two different sets of criteria are used and the different results 
     \caption{Two different sets of event pre-selection criteria are used.}
     \begin{tabular}{c c c}
         \toprule
-        image feature & criteria set 1 & criteria set 2 \\
+        image feature & criteria set one & criteria set two \\
         \midrule
         \texttt{intensity} & > 300 & > 150 \\
         \texttt{leakage1\_intensity} & < 0.2 & < 0.2 \\
@@ -26,57 +26,53 @@ For this work two different sets of criteria are used and the different results 
 
 
 \section{Model performance}
+The performance of the models is evaluated using the cross-validated training datasets.
+The results for the different event pre-selection criteria with and without the scaling of the optical efficiency are compared.
+
 \subsection{Background separation}
-For the performance of the background separation the mean area under the ROC curve (AUC) is calculated.% as well as precision, recall and $F_{0.1}$-score.
-If the models are trained on the \texttt{lstchain v0.5.1} simulations and the stricter event pre-selection (criteria set 1) is applied,
+For the performance of the background separation the mean area under the ROC curve (AUC) is calculated.
+If the models are trained on the \texttt{lstchain v0.5.1} simulations and the stricter event pre-selection (criteria set one) is applied,
 the performance is already very good with a mean AUC of $\num{0.91}$, as can be seen in \autoref{fig:separator_oldMC_300}.
-The performance for the less strict event pre-selection (criteria set 2) is worse but still acceptable with a mean AUC of $\num{0.86}$, as shown in
+The performance for the less strict event pre-selection (criteria set two) is worse but still acceptable with a mean AUC of $\num{0.86}$, as shown in
 \autoref{fig:separator_oldMC_150}. The small variance between the ROC curves for the individual cross validation iterations 
 can be attributed to the large number of events used for training ($\num{50000}$ events for each particle type, as can be seen in \autoref{sec:config}). 
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_noscaling_300/plots_separator/plot_1.pdf}
-    \caption{AUC ROC for \texttt{lstchain v0.5.1} simulations + criteria set 1.}
+    \caption{ROC curve for the separator model trained with the \texttt{lstchain v0.5.1} simulations and pre-selection criteria set one.
+        A mean AUC of $\num{0.9067(7)}$ is achieved. 
+        The ROC curves for the individual cross validation iterations are almost identical, because a large number of events is used for training.
+    }
     \label{fig:separator_oldMC_300}
 \end{figure}
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.7\textwidth]{HDD/build_noscaling_300/plots_separator/plot_3.pdf}
-%    \caption{Performance of separator for \texttt{lstchain v0.5.1} simulations + criteria set 1.}
-%    \label{fig:separator_oldMC_300_2}
-%\end{figure}
 
 Decision tree based models can provide information about the contribution of each feature to the decision making.
-This allows the depiction of the feature importance for the model, as can be seen in \autoref{fig:separator_oldMC_300_feature}.
+This allows the depiction of the feature importance for the model, as can be seen in \autoref{fig:separator_oldMC_300_feature} 
+(or \autoref{fig:separator_oldMC_150_feature} for criteria set two).
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_noscaling_300/plots_separator/plot_4.pdf}
-    \caption{Feature importance for the background separation model trained on the \texttt{lstchain v0.5.1} simulations using the pre-selection criteria set 1.
+    \caption{Feature importance for the background separation model trained on the \texttt{lstchain v0.5.1} simulations using the pre-selection criteria set one.
         Each point represents the score of one tree in one of the cross validation iterations and the boxplots describe the overall distribution.
         As background separation is mostly based on the shape of the shower image, the appropriate features are the most important.
-        The same plot for the model using the pre-selection criteria set 2 can be seen in \autoref{fig:separator_oldMC_150_feature}.
     }
     \label{fig:separator_oldMC_300_feature}
 \end{figure}
 
 Training the separation model on the \texttt{lstchain v0.5.2} simulations leads to a noticeable improvement in performance with a mean AUC of $\num{0.94}$, 
-if the pre-selection criteria set 1 is applied (see \autoref{fig:separator_newMC_300}). 
-Even when the criteria set 2 is applied (mean AUC of $\num{0.91}$; see \autoref{fig:separator_newMC_150}) 
+if the pre-selection criteria set one is applied (see \autoref{fig:separator_newMC_300}). 
+Even when the criteria set two is applied (mean AUC of $\num{0.91}$; see \autoref{fig:separator_newMC_150}) 
 the performance is still comparable to the model trained on the \texttt{lstchain v0.5.1} simulations with the stricter event pre-selection.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_separator/plot_1.pdf}
-    \caption{AUC ROC for \texttt{lstchain v0.5.2} simulations + criteria set 1.}
+    \caption{ROC curve for the separator model trained with the \texttt{lstchain v0.5.2} simulations and pre-selection criteria set one.
+        A mean AUC of $\num{0.9440(14)}$ is achieved, representing an improved performance compared to \autoref{fig:separator_oldMC_300}.
+    }
     \label{fig:separator_newMC_300}
 \end{figure}
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_separator/plot_3.pdf}
-%    \caption{Performance of separator for \texttt{lstchain v0.5.2} simulations + criteria set 1.}
-%    \label{fig:separator_newMC_300_2}
-%\end{figure}
 
-The feature importance for the separation model trained with the criteria set 1 can be seen in \autoref{fig:separator_newMC_300_feature}.
+The feature importance for the separation model trained with the criteria set one can be seen in \autoref{fig:separator_newMC_300_feature}.
 Compared with \autoref{fig:separator_oldMC_300_feature} no significant difference can be found.
 Overall the features describing the shower image geometry are still the most important ones for the background separation.
 
@@ -84,13 +80,13 @@ Overall the features describing the shower image geometry are still the most imp
 \subsection{Energy estimation}
 One way to illustrate the performance of the energy estimation model is the energy migration matrix.
 Every reconstructed event is recorded according to its true simulated energy and its estimated value.
-For the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source and the event pre-selection criteria set 1 this can be seen in 
+For the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source and the event pre-selection criteria set one this can be seen in 
 \autoref{fig:regressor_newMC_300_mat}.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_1.pdf}
     \caption{Energy migration matrix for gamma rays from a point-like source simulated using the scaled optical efficiency after applying the 
-        event pre-selection criteria set 1.
+        event pre-selection criteria set one.
     }
     \label{fig:regressor_newMC_300_mat}
 \end{figure}
@@ -112,7 +108,7 @@ between the $\num{15.9}$th and the $\num{84.1}$th percentile of the distribution
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_3.pdf}
     \caption{Resolution and bias of the energy estimation for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source 
-        using the event pre-selection criteria set 1.
+        using the event pre-selection criteria set one.
         High energy events tend to be underestimated (negative bias) as the shower is not completely contained in the camera.
         As the event pre-selection prefers the brighter events in the lower energy bins, the true energy of these events gets overestimated (positive bias).
         The resolution of the estimation gets better for higher energies.
@@ -128,23 +124,23 @@ Also the \texttt{leakage} features are important for higher energy events as exp
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_4.pdf}
     \caption{The feature importance for the energy estimation for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source using 
-        the event pre-selection criteria set 1.
+        the event pre-selection criteria set one.
     }
     \label{fig:regressor_newMC_300_feature}
 \end{figure}
 
-The performance plots and feature importance for the models trained using the event pre-selection criteria set 2 or the \texttt{lstchain v0.5.1} simulation 
+The performance plots and feature importance for the models trained using the event pre-selection criteria set two or the \texttt{lstchain v0.5.1} simulation 
 can be seen in \autoref{fig:regressor_newMC_150}, \autoref{fig:regressor_oldMC_300} and \autoref{fig:regressor_oldMC_150}.
-When comparing the two event pre-selection criteria sets the obvious effect of losing low energy events, if the \texttt{intensity > 300} event pre-selection is applied, becomes apparent.
+Comparing the two event pre-selection criteria sets illustrates the obvious effect of losing low energy events, if the \texttt{intensity > 300} event pre-selection is applied.
 Besides this, it can be seen that the resolution is improved for the stricter event pre-selection, whereas the bias is not impacted much 
 (e.g. compare \autoref{fig:regressor_newMC_300_bias} with \autoref{fig:regressor_newMC_150_bias}).
 The performance with and without the scaled optical efficiency is pretty similar.
 
 
 \subsection{Origin reconstruction}
-The performance of the \texttt{|disp|} regressor can also be illustrated by a migration matrix comapring the reconstruct and the true value of \texttt{|disp|}.
+The performance of the \texttt{|disp|} regressor can also be illustrated by a migration matrix comparing the reconstruct and the true value of \texttt{|disp|}.
 As \texttt{sign} is a classification task, the ROC curve can be used to measure its performance.
-For the \texttt{lstchain v0.5.2} simulation of diffuse gamma rays and the pre-selection criteria set 1 this can be seen in \autoref{fig:origin_newMC_300}.
+For the \texttt{lstchain v0.5.2} simulation of diffuse gamma rays and the pre-selection criteria set one this can be seen in \autoref{fig:origin_newMC_300}.
 Both performance metrics show a very good good performance with an almost perfect mean AUC for \texttt{sign} of $\num{0.99}$.
 \begin{figure}
     \centering
@@ -157,32 +153,32 @@ Both performance metrics show a very good good performance with an almost perfec
     \begin{subfigure}{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_disp/plot_3.pdf}
-        \caption{ROC for \texttt{sign} with mean AUC$= \num{0.99}$.}    
+        \caption{ROC for \texttt{sign} with mean AUC of $\num{0.9934(3)}$.}    
         \label{fig:origin_newMC_300_roc}  
     \end{subfigure}
     \caption{The migration matric and ROC curves for \texttt{|disp|} and \texttt{sign} respectively show the very good performance of the origin reconstruction
-        for the \texttt{lstchain v0.5.2} simulation using the pre-selection criteria set 1.
+        for the \texttt{lstchain v0.5.2} simulation using the pre-selection criteria set one.
     }
     \label{fig:origin_newMC_300}
 \end{figure}
 
-To emphasise the energy depedence of the performance, the accuracy for the \texttt{sign} classifier and the $r^2$-score for the \texttt{|disp|} regressor can
+To emphasise the energy depedence of the performance, the accuracy for the \texttt{sign} and the $r^2$-score for the \texttt{|disp|} can
 be calculated in bins of the true energy, as can be seen in \autoref{fig:origin_newMC_300_e}.
-In \autoref{fig:origin_newMC_300_e} a clear drop in performance for energies below $\SI{0.3}{\tera\electronvolt}$ can be seen.
+In \autoref{fig:origin_newMC_300_e} a clear decrease in performance for energies below $\SI{0.3}{\tera\electronvolt}$ can be seen.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_disp/plot_8.pdf}
     \caption{Accuracy for \texttt{sign} and $r^2$-score for \texttt{|disp|} calculated in bins of true energy for 
-        \texttt{lstchain v0.5.2} simulation using the pre-selection criteria set 1.
+        \texttt{lstchain v0.5.2} simulation using the pre-selection criteria set one.
         Each bin contains at least $\num{100}$ events.
     }
     \label{fig:origin_newMC_300_e}
 \end{figure}
 
-The feature importance for both models can be seen in \autoref{fig:origin_newMC_300_feature}.
-As mentioned in \autoref{ch:prepro}, features based on the arrival time of the photons in each pixel and the skewness of the overall photon charge distribution
+The feature importance for both models is shown in \autoref{fig:origin_newMC_300_feature}.
+As mentioned in \autoref{ch:prepro}, features based on the arrival time of the photons and the skewness of the overall photon charge distribution
 help with determining the direction of the shower.
-Therefore they contribute a lot to the origin reconstruction which is particularly well visible for \texttt{sign}.
+Therefore they contribute a lot to the origin reconstruction which is especially true for \texttt{sign}.
 \begin{figure}
     \centering
     \begin{subfigure}{0.49\textwidth}
@@ -196,7 +192,7 @@ Therefore they contribute a lot to the origin reconstruction which is particular
         \includegraphics[width=\textwidth]{HDD/build_scaling_300/plots_disp/plot_5.pdf}
         \caption{Feature importance for \texttt{sign}.}
     \end{subfigure}
-    \caption{Feature importance for the origin reconstruction using the \texttt{lstchain v0.5.2} simulation and the pre-selection criteria set 1.
+    \caption{Feature importance for the origin reconstruction using the \texttt{lstchain v0.5.2} simulation and the pre-selection criteria set one.
         Features that describe the direction of the shower, like the timing paramter \texttt{time\_gradient}, contribute most.
     }
     \label{fig:origin_newMC_300_feature}
@@ -204,44 +200,44 @@ Therefore they contribute a lot to the origin reconstruction which is particular
 
 In order to measure the overall performance of the origin reconstruction, the angular resoultion can be calculated.
 It is defined as the radius around the source position which contains $\SI{68}{\percent}$ of the reconstructed events.
-Therefore simulated gamma rays from a point-like source are used and the results for bins of the true energy can be seen in \autoref{fig:ang_res_newMC_300}.
+Therefore simulated gamma rays from a point-like source are used for the calculation and the results for bins of the true energy can be seen in \autoref{fig:ang_res_newMC_300}.
 If \texttt{sign} gets missclassified for an event, the distance between the reconstructed origin and its true origin is generally very large.
 Because of this, it is reasonable to discard such events.
 As background separation has to be applied to observational data before the reconstruction of the origin position can happen, it makes sense to do the same
 for the simulated gamma rays.
 Applying both these criteria results in a minimal improvement, because the background separation and \texttt{sign} classification works very well for higher energies.
-\autoref{origin_newMC_300_e} shows that the performance of \texttt{sign} gets worse for lower energies which is why discarding events with missclassified  
+\autoref{fig:origin_newMC_300_e} shows, that the performance of \texttt{sign} gets worse for lower energies which is why discarding events with missclassified  
 \texttt{sign} results in an improved angular resolution for energies below $\SI{0.3}{\tera\electronvolt}$.
 The best angular resolution is achieved for energies between $\SI{1}{\tera\electronvolt}$ and $\SI{10}{\tera\electronvolt}$.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_crab/plot_9.pdf}
-    \caption{Angular resolution for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source using the pre-selection criteria set 1.
+    \caption{Angular resolution for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source using the pre-selection criteria set one.
         Each bin contains at least $\num{50}$ events which results in the lowest energy bin not containing enough events, if events with missclassified \texttt{sign} 
         get discarded.
     }
     \label{fig:ang_res_newMC_300}
 \end{figure}
 
-The performance of the models trained on the \texttt{lstchain v0.5.1} simulation using the pre-selection criteria set 1 is only slightly worse, 
+The performance of the models trained on the \texttt{lstchain v0.5.1} simulation using the pre-selection criteria set one is only slightly worse, 
 as shown in \autoref{fig:origin_oldMC_300}.
-However for the angular resolution the loss in performance is more noticeably which can be attributed to the almost perfect \texttt{sign}
-reconstruction for the \texttt{lstchain v0.5.2} simulation (see \autoref{fig:origin_newMC_300_roc}).
-If the pre-selection criteria set 2 is used the performance gets worse for both simulations 
+However the angular resolution worsens more noticeably (see \autoref{fig:ang_res_oldMC_300}) which can be attributed to the almost perfect \texttt{sign}
+reconstruction for the \texttt{lstchain v0.5.2} simulation.
+If the pre-selection criteria set two is used the performance gets worse for both simulations 
 (\autoref{fig:origin_newMC_150} for \texttt{lstchain v0.5.2} simulation, \autoref{fig:origin_oldMC_150} for \texttt{lstchain v0.5.1} simulation).
-As the less strict event pre-selection allows for more low energy events to be reconstructed, the bad performance for energies below $\SI{0.3}{\tera\electronvolt}$
+As the less strict event pre-selection allows for more low energy events to be included, the bad performance for energies below $\SI{0.3}{\tera\electronvolt}$
 gets even more apparent (e.g. in \autoref{fig:origin_newMC_150_e} for the \texttt{lstchain v0.5.2} simulation).
-The angular resolution for the \texttt{lstchain v0.5.2} simulation does change much compared to the criteria set 1 (see \autoref{fig:ang_res_newMC_150}).
-However for the for the \texttt{lstchain v0.5.1} simulation it gets worse, but it has to be considered that more low energy events get reconstructed 
-in this case than for any of the other three combinations of simulation an pre-selection criteria.
-This becomes apparent, because the lowest energy bin still contains more than $\num{50}$ events with a true energy between $\SI{6}{\giga\electronvolt}$
-and $\SI{10}{\giga\electronvolt}$ (see \autoref{fig:ang_res_oldMC_150}).
+The angular resolution for the \texttt{lstchain v0.5.2} simulation does not change much compared to the criteria set one (see \autoref{fig:ang_res_newMC_150}).
+However for the for the \texttt{lstchain v0.5.1} simulation it gets worse, but it has to be considered that, in this case, more low energy events get included 
+than for any of the other three combinations of simulation an pre-selection criteria.
+This becomes apparent, because the lowest energy bin containing true energies between $\SI{6}{\giga\electronvolt}$ and $\SI{10}{\giga\electronvolt}$ 
+still contains more than $\num{50}$ events (see \autoref{fig:ang_res_oldMC_150}).
 This means a lot more dim and hard to reconstruct events get included than for any of the other combinations.
 
 
 \section{Observations of the Crab Nebula and Markarian 421}
 The trained models can now be applied to observational data.
-In this work, observations of the Crab Nebula and the blazar Markarian 421 by the LST-1 are analyzed.
+In this work, observations by the LST-1 of the Crab Nebula and the blazar Markarian 421 are analyzed.
 The the Crab Nebula observation was done during the night of the 18th of January 2020 without using wobble mode (see \autoref{sec:wobble}).
 Therefore the Crab Nebula was observed for $\SI{2.63}{\hour}$ and an off region was observed for $\SI{1.33}{\hour}$.
 
@@ -255,42 +251,41 @@ The significance in units of the standard deviation $\sigma$ for rejection of th
     \right)^{\frac{1}{2}},
 \end{align}
 where $N_\text{on}$ is the number of recorded gamma ray events within a certain radius around the assumed source position and $N_\text{off}$ the number of events within 
-the same radius around the chosen of position. 
-$\alpha$ is a scaling factor for $N_\text{off}$ to compensate for a difference in observation time for the on and the off region.
+the same radius around the chosen off position. 
+$\alpha$ is a scaling factor for $N_\text{off}$ to compensate for a difference in observation time between the on and the off region.
 If an observation is done using wobble mode, $\alpha$ describes the ratio of the size of the on region to the size of the off region.
 
 After choosing the size of the on and off region $\theta_\text{max}^2$, the prediction threshold for the background separation $t_\gamma$ has to be chosen as well.
 In this work, those two parameters were chosen in order to maximize the detection significance of the Crab Nebula for the models trained on the 
-\texttt{lstchain v0.5.2} simulations and using the pre-selection criteria set 1.
+\texttt{lstchain v0.5.2} simulations and using the pre-selection criteria set one.
 This resulted in a detection of the Crab Nebula with a significance of $\num{27.72} \sigma$, as can be seen in \autoref{fig:crab_best}.
-
-It has to be said, that the $\alpha$ is not calculated by directly dividing the two observation times $\sfrac{t_\text{on}}{t_\text{off}}$, because doing so 
+It has to be said, that $\alpha$ is not calculated by directly dividing the two observation times $\sfrac{t_\text{on}}{t_\text{off}}$, because doing so 
 does not scale the number of events in the off region correctly (see \autoref{fig:crab_best_total_time}).
 Instead the overall number of recorded events for $\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared}$ is compared for the on and off region,
-to ensure a correct scaling of the event count for the off region.
+to ensure correct scaling of the event count.
 \begin{align}
     \alpha = \frac{N_\text{on}(\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared})}{N_\text{off}(\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared})}
 \end{align}
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{HDD/build_scaling_300/plots_crab/plot_2.pdf}
-    \caption{Theta-Squared-Plot for the Crab Nebula observation using the models trained on the \texttt{lstchain v0.5.2} simulations and the event pre-selection criteria set 1.
+    \caption{Theta-Squared-Plot for the Crab Nebula observation using the models trained on the \texttt{lstchain v0.5.2} simulations and the event pre-selection criteria set one.
         $\theta_\text{max}^2$ and $t_\gamma$ were optimized for the highest detection significance using this \texttt{lstchain} and pre-selection criteria combination.
     }
     \label{fig:crab_best}
 \end{figure}
 
-During the night of the 20th of June 2020 the close-to-Earth blazar Markarian 421 was observed by the LST-1 for $\SI{2.22}{\hour}$ using wobble mode.
+During the night of the 20th of June 2020 the blazar Markarian 421 was observed by the LST-1 for $\SI{2.22}{\hour}$ using wobble mode.
 In this work, $n_\text{wobble} = \num{5}$ equidistant off regions are used for the estimation of the background (see \autoref{fig:wobble}).
-This resulted in a detection with a significance of $\num{43.74} \sigma$, as can be seen in \autoref{fig:mrk_best}.
+This resulted in a detection with a significance of $\num{43.74} \sigma$, as visible in \autoref{fig:mrk_best}.
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{HDD/build_scaling_300/plots_mrk421/plot_2.pdf}
-    \caption{Theta-Squared-Plot for Markarian 421 using the models trained on the \texttt{lstchain v0.5.2} simulations and the event pre-selection criteria set 1.}
+    \caption{Theta-Squared-Plot for Markarian 421 using the models trained on the \texttt{lstchain v0.5.2} simulations and the event pre-selection criteria set one.}
     \label{fig:mrk_best}
 \end{figure}
 
-Even though the overall reconstruction performance of the models trained with the other combinations of \texttt{lstchain} version and event pre-selection criteria set
-is not much worse than for \texttt{lstchain v0.5.2} and pre-selection criteria set 1, they perform significantly worse when applied to the observational data.
-This can be seen in \autoref{fig:obs_oldMC_300} (\texttt{lstchain v0.5.1} and criteria set 1), \autoref{fig:obs_newMC_150} (\texttt{lstchain v0.5.2} and criteria set 2)
-and \autoref{fig:obs_oldMC_150} (\texttt{lstchain v0.5.1} and criteria set 2).
+Even though the overall reconstruction performance of the models trained with the other combinations of \texttt{lstchain} version and event pre-selection criteria
+is not much worse than for \texttt{lstchain v0.5.2} and pre-selection criteria set one, they perform significantly worse when applied to the observational data.
+This can be seen in \autoref{fig:obs_oldMC_300} (\texttt{lstchain v0.5.1} and criteria set one), \autoref{fig:obs_newMC_150} (\texttt{lstchain v0.5.2} and criteria set two)
+and \autoref{fig:obs_oldMC_150} (\texttt{lstchain v0.5.1} and criteria set two).

@@ -1,9 +1,35 @@
-\chapter{Outlook}
+\chapter{Conclusion and Outlook}
+This work shows that a source independent approach for the high-level event reconstruction for the LST-1 prototype yields good results, 
+if sufficiently strict event pre-selection is performend.
 
-energy dependent $\theta^2$ und $t_\gamma$ cuts optimized on MCs
+Necessary preprocessing was performend using two different versions of the official low-level analysis pipeline \texttt{lstchain}, which is still 
+in development, and the different results were compared.
+In this work, the high-level reconstruction is based on the random forest algorithm and its implementation in the \texttt{aict-tools} package.
+In order to use the \texttt{aict-tools}, some changes to the data had to be done complementing the progressing development of the \texttt{aict-tools}.
+By the time of writing many CTA conventions are now being suppored by the \texttt{aict-tools} and development continues.
 
-new Crab data, because data here old
+Simulations of diffuse protons, diffuse gamma rays and gamma rays from a point-like source were used for the training of the reconstruction models and
+the angular resolution was calculated using point-like gamma rays.
+Background separation, energy estimation and origin reconstruction based on the disp method perform well and the best angular resolution is 
+achieved for energies between $\SI{1}{\tera\electronvolt}$ and $\SI{10}{\tera\electronvolt}$.
+The trained models were used to analyze observations of the Crab Nebula and Markarian 421 done by the LST-1.
+In both cases a detection with a significance of $\num{27.7} \sigma$ for the Crab Nebula and $\num{43.7} \sigma$ for Markarian 421 was achieved.
 
-other changes for \texttt{lstchain v0.5.2} than scaling -> what are those/ impact?
+During the course of this work, members of the LST Collaboration discovered, that the optical efficiency of the camera is lower than 
+the value assumed for the simulations.
+To compensate for this, they introduced a constant scaling factor for the optical efficiency into the preprocessing.
+This improved the results overall which is shown as part of this work.
+If a less strict event pre-selection is used which includes more low energy events, the performance of the individual reconstruction models gets only slightly worse.
+However this does not apply for the observational results for the Crab Nebula and Markarian 421, instead a much larger negative impact can be observed.
 
-try deeper trees and more events for criteria set 2
+A steep decrease of the reconstruction performance can be observed for energies below $\SI{0.3}{\tera\electronvolt}$.
+Because of this, the observational results for less strict event pre-selection might improve if the size of the on and off regions $\theta_\text{max}^2$ and the
+prediction threshold $t_\gamma$ get chosen differently depending on the reconstructed energy of the observed particle.
+As the mismatch of the optical efficiency is fixed now, those two parameters should also be optimized based on simulations instead of the observational data 
+for the Crab Nebula.
+This would make the results for different observations more comparable.
+
+Additionally, new observations of the Crab Nebula might yield better results, because the data used in this work still contains some errors 
+that have been fixed since this data was obtained.
+Further optimization of the event pre-selection is also advised.
+Overall the continued development of the whole analysis pipeline and new observations will help to improve on the results presented in this work.  

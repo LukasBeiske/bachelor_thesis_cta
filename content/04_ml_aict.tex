@@ -7,21 +7,18 @@ and the results are compared in \autoref{ch:results}.
 The set includes a simulation of the detection of diffuse gamma rays, diffuse protons and a simulation of gamma rays emitted by a point-like source.
 The simulations were done using the programs \texttt{CORSIKA} and \texttt{sim\_telarray} \cite{simulations}.
 
-In supervised machine learning a generic estimator $f$ is trained on a dataset for which all information is known.
-Training means that the parameters of $f$ get fitted in order to minimize a loss-function for certain target features.
+In supervised machine learning, a generic estimator $f$ is trained on a dataset for which all information is known.
+Training means that the parameters of $f$ are fitted in order to minimize a loss-function for certain target features.
 This trained estimator, or model, can then be used to estimate the target features of datasets where this information is missing.
 
 Two common types of problems that can be solved this way are binary classification and regression. 
-For binary classification problems the estimator $f$ has to guess which of two classes any given element is a part of. 
+For binary classification problems, the estimator $f$ has to guess which of two classes any given element is a part of. 
 This is used for background separation and during the origin reconstruction.
 To solve a regression problem a countinuous quantity has to be estimated which is used for energy estimation and again during origin reconstruction.
 
 It is important to validate the trained models before using them to estimate unknown features.
 This is done by applying them to a different dataset than the dataset the model was trained on, but for which all information is known as well.
-This allows for a comparison between the estimated values and the true values for the target features which is necessary to prevent overfitting.
-Overfitting means that the model learned the training dataset \enquote{by heart} and did not recognize the underlying structure and is therefore not able
-to estimate features for other datasets.
-
+This allows for a comparison between the estimated values and the true values for the target features.
 In this work, a $\num{5}$-fold cross validation is used which means that the training dataset is split into $\num{5}$ parts and training happens 
 with $\num{4}$ of those parts while the remaining part is used for validation. 
 The training is done on all possible combinations of the $\num{4}$ parts resulting in $\num{5}$ training sets.
@@ -31,10 +28,9 @@ The training is done on all possible combinations of the $\num{4}$ parts resulti
 The basis for the random forest algorithm is the decision tree algorithm \cite{breiman1984classification} or more specifically binary trees.
 A binary tree splits a dataset into two subsets at each step, called node.
 For each split a threshold $t_j$ for a certain feature $j$ is chosen that minimizes the given loss-function.
-This is repeated recursively until a stopping criterion is met like e.g. a maximum number of nodes (\enquote{depth} of the tree). 
+This is repeated recursively until a stopping criterion is met like e.g. a total number of nodes (\enquote{depth} of the tree). 
 The final subsets are called leafs and for binary classification the partition between the two classes within each leaf as a continuous score $s \in [0,\, 1]$.
 For a regression task the average value of the regression target feature within each leaf is returned.
-
 One common loss-function for binary classification is the cross-entropy
 \begin{align}
     \text{Cross-entropy} = - p\, \log(p) - (1 - p) \log(1-p)
@@ -62,8 +58,8 @@ To quantify the performance of a model there are a number of quality metrics for
         fn & tn
     \end{pmatrix}
 \end{align}
-$tp$ means true postives and $tn$ means true negatives. 
-These two values describe the proportion of correctly classified members of the two classes (postive and negative).
+$tp$ means true positive and $tn$ means true negatives. 
+These two values describe the proportion of correctly classified members of the two classes (positive and negative).
 On the other hand, $fp$ (false positives) and $fn$ (false negatives) describe the amount of falsely classified members of the two classes respectively.
 In this work, the accuracy of a binary classifier is used which measures the overall percentage of correctly reconstructed samples.
 \begin{align}
@@ -88,27 +84,31 @@ In this work, the accuracy of a binary classifier is used which measures the ove
 %        \end{align}
 %\end{itemize}
 Because a binary classifier returns a continuous score $s \in [0,\, 1]$ for each sample, in order to ultimately classify a sample,
-a prediction threshold $t_p \in [0,\, 1]$ has to be chosen and if $s > t_p$, the sample is calssified as positive. 
-However it is also of interest to examine the classifier performance independent of this prediction threshold $t_p$.
+a prediction threshold $t_p \in [0,\, 1]$ has to be chosen and if $s > t_p$, the sample is classified as positive. 
+However, it is also of interest to examine the classifier performance independent of this prediction threshold $t_p$.
 A common metric for this is the area under the Receiver Operating Characteristic (ROC) curve.
 In the ROC curve the $tp$ rate is plotted against the $fp$ rate for every possible threshold $t_p$.
-
+A perfect classifier would achieve an area under the curve (AUC) of $\num{1.0}$ and random guessing is equivalent to an AUC of $\num{0.5}$.
 For regression models the coefficient of determination or $r^2$-score is often used as quality metric.
 \begin{align}
     r^2 = 1 - \frac{\sum_{i = 0}^N (y_i - \hat{y}_i)^2}{\sum_{i = 0}^N (y_i - \bar{y})^2}
 \end{align}
 $\hat{y}_i$ is the estimated value for the true value $y_i$ and $\bar{y}$ is the arithmetic mean of all $y_i$.
+A perfect regressor would always achieve $y_i - \hat{y}_i = 0$ which would result in an $r^2$-score of $\num{1}$.
+A $r^2$-score of $\num{0}$ means that the regressor always estimates $\bar{y}$ and a negative $r^2$-score thus means the regressor is doing even worse.
 
 
 \section{The aict-tools}
-For the training and appliction of such models in the context of data analysis for IACTs the command line tools from the \texttt{aict-tools} package can be used \cite{aict-tools}. 
+For the training and appliction of such models in the context of data analysis for IACTs, the command line tools from the \texttt{aict-tools} package can be used \cite{aict-tools}. 
 For the implementation of the machine learning algorithms the \texttt{aict-tools} use the \texttt{scikit-learn} module \cite{scikit-learn}.
 The configuration of models is done using a single \text{yaml}-file and the configuration used in this work can be found in \autoref{sec:config}.
 
-Initially the \texttt{aict-tools} were developed for the FACT-experiment which uses a different coordinate system and data-structure than CTA.
-Therefore at the start of this work some conversion of the LST-1 data had to be done before the \texttt{aict-tools} could be applied.
-Due to the continued developed of the \texttt{aict-tools} different coordinate systems are now supported and the necessary conversions became largely obsolete.
-By the time of writing merely the data-structure of the LST-1 data has to be adjusted before the \texttt{aict-tools} can be applied.
+Initially the \texttt{aict-tools} were developed for the FACT-experiment, which uses a different coordinate system and data-structure than CTA.
+Therefore, at the start of this work, some conversion of the LST-1 data had to be done before the \texttt{aict-tools} could be applied 
+(\texttt{aict-tools} version \texttt{v0.21.0}).
+Due to the continued development of the \texttt{aict-tools}, different coordinate systems are now supported and the necessary conversions became largely obsolete.
+By the time of writing, merely the data-structure of the LST-1 data has to be adjusted before the \texttt{aict-tools} can be applied 
+(\texttt{aict-tools} version \texttt{v0.24.2} \cite{aict-tools}).
 
 Another utility provided by the \texttt{aict-tools} is the generation of additional custom image features based on existing ones.
 This is utilized in this work and the features that are generated can be seen in \autoref{sec:config}. 
@@ -119,7 +119,7 @@ The calculation of the quality metrics presented in \autoref{sec:quality_metrics
 The estimation of the origin within the detector plane is a two dimensional regression task ($x$ and $y$).
 The \texttt{aict-tools} use the disp method instead which simplifies this task into a one dimensional regression task and a binary classification.
 
-This is done by assuming the main shower axis correctly reconstructed so that the origin of the primary particle lies somewhere along this line.
+This is done by assuming the main shower axis is correctly reconstructed so that the origin of the primary particle lies somewhere along this line.
 Based on this, the regression task aims to determine the absolute distance of the origin from the center of gravity of the shower image called \texttt{|disp|}.
 As the regression results in two possible origin positions along the main shower axis, the objective of the binary classification is to decide which
 of those two is the correct origin position.
