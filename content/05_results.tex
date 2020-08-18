@@ -79,13 +79,13 @@ Overall the features describing the shower image geometry are still the most imp
 
 \subsection{Energy estimation}
 One way to illustrate the performance of the energy estimation model is the energy migration matrix.
-Every reconstructed event is recorded according to its true simulated energy and its estimated value.
-For the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source and the event pre-selection criteria set one this can be seen in 
+Every reconstructed event is registered according to its true simulated energy and the estimated value.
+For the \texttt{lstchain v0.5.2} simulation of gamma-rays from a point-like source and the event pre-selection criteria set one this can be seen in 
 \autoref{fig:regressor_newMC_300_mat}.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_1.pdf}
-    \caption{Energy migration matrix for gamma rays from a point-like source simulated using the scaled optical efficiency after applying the 
+    \caption{Energy migration matrix for gamma-rays from a point-like source simulated using the scaled optical efficiency after applying the 
         event pre-selection criteria set one.
     }
     \label{fig:regressor_newMC_300_mat}
@@ -99,15 +99,15 @@ Bias is defined as the median of the relative error $\Delta E_\text{rel}$ in eac
 \end{align}
 Resolution describes the distribution of the relative error and can be defined as the standard deviation.
 Often another definition for the resolution is used because the standard deviation can be influenced heavily by a small number of extreme outliers.
-Therefore the quantile resolution is also defined as the $1\sigma$ intervall of the normal distribution, but it is calculated as half the distance 
+Therefore the quantile resolution is defined as the $1\sigma$ intervall of the normal distribution, but it is calculated as half the distance 
 between the $\num{15.9}$th and the $\num{84.1}$th percentile of the distribution.
 \begin{align}
-    \text{Resolution} = \frac{Q_\text{84.1\%}(E_\text{rel}) - Q_\text{15.9\%}(E_\text{rel})}{2}
+    \text{quantile Resolution} = \frac{Q_\text{84.1\%}(E_\text{rel}) - Q_\text{15.9\%}(E_\text{rel})}{2}
 \end{align}
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_3.pdf}
-    \caption{Resolution and bias of the energy estimation for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source 
+    \caption{Resolution and bias of the energy estimation for the \texttt{lstchain v0.5.2} simulation of gamma-rays from a point-like source 
         using the event pre-selection criteria set one.
         High energy events tend to be underestimated (negative bias) as the shower is not completely contained in the camera.
         As the event pre-selection prefers the brighter events in the lower energy bins, the true energy of these events gets overestimated (positive bias).
@@ -117,13 +117,13 @@ between the $\num{15.9}$th and the $\num{84.1}$th percentile of the distribution
     \label{fig:regressor_newMC_300_bias}
 \end{figure}
 
-The feature importance can be seen in \autoref{fig:regressor_newMC_300_feature} and shows that the image features describing the brightness 
-like the number of pixel in the shower image contribute a lot to the decision making.
+The feature importance can be seen in \autoref{fig:regressor_newMC_300_feature} and shows that the image features describing the brightness, 
+like the number of pixel in the shower image, contribute a lot to the decision making.
 Also the \texttt{leakage} features are important for higher energy events as explained in \autoref{fig:regressor_newMC_300_bias}.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_regressor/plot_4.pdf}
-    \caption{The feature importance for the energy estimation for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source using 
+    \caption{The feature importance for the energy estimation for the \texttt{lstchain v0.5.2} simulation of gamma-rays from a point-like source using 
         the event pre-selection criteria set one.
     }
     \label{fig:regressor_newMC_300_feature}
@@ -131,16 +131,16 @@ Also the \texttt{leakage} features are important for higher energy events as exp
 
 The performance plots and feature importance for the models trained using the event pre-selection criteria set two or the \texttt{lstchain v0.5.1} simulation 
 can be seen in \autoref{fig:regressor_newMC_150}, \autoref{fig:regressor_oldMC_300} and \autoref{fig:regressor_oldMC_150}.
-Comparing the two event pre-selection criteria sets illustrates the obvious effect of losing low energy events, if the \texttt{intensity > 300} event pre-selection is applied.
+Comparing the two event pre-selection criteria sets illustrates the trivial effect of losing low energy events, if the \texttt{intensity > 300} event pre-selection is applied.
 Besides this, it can be seen that the resolution is improved for the stricter event pre-selection, whereas the bias is not impacted much 
 (e.g. compare \autoref{fig:regressor_newMC_300_bias} with \autoref{fig:regressor_newMC_150_bias}).
 The performance with and without the scaled optical efficiency is pretty similar.
 
 
 \subsection{Origin reconstruction}
-The performance of the \texttt{|disp|} regressor can also be illustrated by a migration matrix comparing the reconstruct and the true value of \texttt{|disp|}.
+The performance of the \texttt{|disp|} regressor can also be illustrated by a migration matrix comparing the reconstructed and the true value of \texttt{|disp|}.
 As \texttt{sign} is a classification task, the ROC curve can be used to measure its performance.
-For the \texttt{lstchain v0.5.2} simulation of diffuse gamma rays and the pre-selection criteria set one this can be seen in \autoref{fig:origin_newMC_300}.
+For the \texttt{lstchain v0.5.2} simulation of diffuse gamma-rays and the pre-selection criteria set one this can be seen in \autoref{fig:origin_newMC_300}.
 Both performance metrics show a very good good performance with an almost perfect mean AUC for \texttt{sign} of $\num{0.99}$.
 \begin{figure}
     \centering
@@ -164,7 +164,7 @@ Both performance metrics show a very good good performance with an almost perfec
 
 To emphasise the energy depedence of the performance, the accuracy for the \texttt{sign} and the $r^2$-score for the \texttt{|disp|} can
 be calculated in bins of the true energy, as can be seen in \autoref{fig:origin_newMC_300_e}.
-In \autoref{fig:origin_newMC_300_e} a clear decrease in performance for energies below $\SI{0.3}{\tera\electronvolt}$ can be seen.
+A clear decrease in performance for energies below $\SI{0.3}{\tera\electronvolt}$ can be seen.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_disp/plot_8.pdf}
@@ -200,11 +200,11 @@ Therefore they contribute a lot to the origin reconstruction which is especially
 
 In order to measure the overall performance of the origin reconstruction, the angular resoultion can be calculated.
 It is defined as the radius around the source position which contains $\SI{68}{\percent}$ of the reconstructed events.
-Therefore simulated gamma rays from a point-like source are used for the calculation and the results for bins of the true energy can be seen in \autoref{fig:ang_res_newMC_300}.
+Simulated gamma-rays from a point-like source are used for the calculation and the results for bins of the true energy can be seen in \autoref{fig:ang_res_newMC_300}.
 If \texttt{sign} gets missclassified for an event, the distance between the reconstructed origin and its true origin is generally very large.
 Because of this, it is reasonable to discard such events.
 As background separation has to be applied to observational data before the reconstruction of the origin position can happen, it makes sense to do the same
-for the simulated gamma rays.
+for the simulated gamma-rays.
 Applying both these criteria results in a minimal improvement, because the background separation and \texttt{sign} classification works very well for higher energies.
 \autoref{fig:origin_newMC_300_e} shows, that the performance of \texttt{sign} gets worse for lower energies which is why discarding events with missclassified  
 \texttt{sign} results in an improved angular resolution for energies below $\SI{0.3}{\tera\electronvolt}$.
@@ -212,7 +212,7 @@ The best angular resolution is achieved for energies between $\SI{1}{\tera\elect
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{HDD/build_scaling_300/plots_crab/plot_9.pdf}
-    \caption{Angular resolution for the \texttt{lstchain v0.5.2} simulation of gamma rays from a point-like source using the pre-selection criteria set one.
+    \caption{Angular resolution for the \texttt{lstchain v0.5.2} simulation of gamma-rays from a point-like source using the pre-selection criteria set one.
         Each bin contains at least $\num{50}$ events which results in the lowest energy bin not containing enough events, if events with missclassified \texttt{sign} 
         get discarded.
     }
@@ -241,16 +241,16 @@ In this work, observations by the LST-1 of the Crab Nebula and the blazar Markar
 The the Crab Nebula observation was done during the night of the 18th of January 2020 without using wobble mode (see \autoref{sec:wobble}).
 Therefore the Crab Nebula was observed for $\SI{2.63}{\hour}$ and an off region was observed for $\SI{1.33}{\hour}$.
 
-To calculate the statistical significance of a source detection a likelihood ratio test can be used with a null hypothesis of no gamma rays emitted by the source.
+To calculate the statistical significance of a source detection a likelihood ratio test can be used with a null hypothesis of no gamma-rays emitted by the source.
 This was first proposed by Li and Ma \cite{Li_Ma}.
-The significance in units of the standard deviation $\sigma$ for rejection of this null hypothesis can be calculated as
+The significance of rejection of this null hypothesis can be calculated in units of the standard deviation $\sigma$ as
 \begin{align}
     S = \sqrt{2} \left( 
         N_\text{on} \ln\left( \frac{1 + \alpha}{\alpha}\, \frac{N_\text{on}}{N_\text{on} + N_\text{off}} \right) + 
         N_\text{off} \ln\left( (1 + \alpha)\, \frac{N_\text{off}}{N_\text{on} + N_\text{off}} \right) 
     \right)^{\frac{1}{2}},
 \end{align}
-where $N_\text{on}$ is the number of recorded gamma ray events within a certain radius around the assumed source position and $N_\text{off}$ the number of events within 
+where $N_\text{on}$ is the number of recorded gamma-ray events within a certain radius around the assumed source position and $N_\text{off}$ the number of events within 
 the same radius around the chosen off position. 
 $\alpha$ is a scaling factor for $N_\text{off}$ to compensate for a difference in observation time between the on and the off region.
 If an observation is done using wobble mode, $\alpha$ describes the ratio of the size of the on region to the size of the off region.
@@ -258,7 +258,7 @@ If an observation is done using wobble mode, $\alpha$ describes the ratio of the
 After choosing the size of the on and off region $\theta_\text{max}^2$, the prediction threshold for the background separation $t_\gamma$ has to be chosen as well.
 In this work, those two parameters were chosen in order to maximize the detection significance of the Crab Nebula for the models trained on the 
 \texttt{lstchain v0.5.2} simulations and using the pre-selection criteria set one.
-This resulted in a detection of the Crab Nebula with a significance of $\num{27.72} \sigma$, as can be seen in \autoref{fig:crab_best}.
+This resulted in a detection of the Crab Nebula with a significance of $\num{27.7} \sigma$, as can be seen in \autoref{fig:crab_best}.
 It has to be said, that $\alpha$ is not calculated by directly dividing the two observation times $\sfrac{t_\text{on}}{t_\text{off}}$, because doing so 
 does not scale the number of events in the off region correctly (see \autoref{fig:crab_best_total_time}).
 Instead the overall number of recorded events for $\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared}$ is compared for the on and off region,
@@ -277,7 +277,7 @@ to ensure correct scaling of the event count.
 
 During the night of the 20th of June 2020 the blazar Markarian 421 was observed by the LST-1 for $\SI{2.22}{\hour}$ using wobble mode.
 In this work, $n_\text{wobble} = \num{5}$ equidistant off regions are used for the estimation of the background (see \autoref{fig:wobble}).
-This resulted in a detection with a significance of $\num{43.74} \sigma$, as visible in \autoref{fig:mrk_best}.
+This resulted in a detection with a significance of $\num{43.7} \sigma$, as visible in \autoref{fig:mrk_best}.
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{HDD/build_scaling_300/plots_mrk421/plot_2.pdf}

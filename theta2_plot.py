@@ -141,7 +141,7 @@ def main(outdir, gamma_diff_file, gamma_file, output):
     figures.append(plt.figure())
     ax = figures[-1].add_subplot(1, 1, 1)
     plotting.angular_res(gamma, 'mc_energy', ax, label='All events')
-    plotting.angular_res(gamma_cuts, 'mc_energy', ax, label=rf'correct sign and $t_\gamma > {gammaness_threshold}$')
+    plotting.angular_res(gamma_cuts, 'mc_energy', ax, label=rf'correct sign and $p_\gamma > {gammaness_threshold}$')
 
     #saving
     with PdfPages(output) as pdf:

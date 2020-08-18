@@ -3,7 +3,7 @@
 For IACTs, the atmosphere itself acts as the detector medium. 
 If a high energy primary particle interacts with the atmosphere, it starts a cascade of secondary particles called an air shower.
 The charged secondary particles travel faster than the speed of light in air, resulting in the emission of Cherenkov light.
-This light is emitted in a fixed angle $\theta$ which depends on the refractive index $n$ of the dielectric medium and the velocity of the particle 
+This light is emitted at a fixed angle $\theta$ which depends on the refractive index $n$ of the dielectric medium and the velocity of the particle 
 relative to the speed of light in vacuum $\beta$.
 \begin{align}
     \cos (\theta) = \frac{1}{\beta\, n} 
@@ -12,13 +12,13 @@ The Cherenkov light is then collected by mirrors and projected onto a camera sys
 
 As both charged primary particles and photons start air showers, a dominant background of hadronic air showers is recorded by IACTs.
 In hadronic air showers many different interactions are possible due to the strong force.
-These varied interactions lead to the more complex shower pattern of hadronic air showers resulting in the possibility to distinguish them from purely electromagnetic
+These varied interactions lead to the complex shower pattern of hadronic air showers resulting in the possibility to distinguish them from purely electromagnetic
 air showers caused by photons or electrons.
 Electromagnetic air showers mainly consist of two processes. 
 High energy photons produce electron-positron pairs which then generate photons again through bremsstahlung. 
-These two processes continue until the photon energy falls under energy threshold for pair production of $\SI{1022}{\kilo\electronvolt}$.
+These two processes continue until the photon energy falls under the energy threshold for pair production of $\SI{1022}{\kilo\electronvolt}$.
 
-As it is impossible to generate gamma rays at energies as high as they are present in gamma ray astronomy in a laboratory environment, it is 
+As it is impossible to generate gamma-rays at energies as high as they are present in gamma-ray astronomy in a laboratory environment, it is 
 necessary to simulate the response of the experiment.
 To this end, Monte Carlo simulations are commonly used by IACT experiments.
 
@@ -41,8 +41,8 @@ A size comparsion of the telescopes can be seen in \autoref{fig:telescopes}.
 \end{figure}
 
 The southern site will be located in the Atacama desert in Chile and will consist of \num{4} LSTs, \num{25} MSTs and \num{70} SSTs.
-The northern site will be build as part of the Observatorio del Roque de los Muchachos (ORM) on La Palma and will include \num{4} LSTs and \num{15} MSTs.
-More information about the CTA and its scientific capabilities can be found in \cite{science_with_cta}.
+The northern site will be build as part of the Observatorio del Roque de los Muchachos (ORM) on La Palma, Spain and will include \num{4} LSTs and \num{15} MSTs.
+More information about CTA and its scientific capabilities can be found in \cite{science_with_cta}.
 
 The ORM is also the location of the first prototype for the LSTs, inaugurated on the 10 October 2018, the LST-1 which is the subject of this work \cite{lst_inauguration}.
 The LST-1 has a parabolic mirror with a diameter of $\SI{23}{\meter}$ which helps to collect the Cherenkov light of the dimmest low-energy air showers.
@@ -51,16 +51,16 @@ The light is recorded by a $\num{1855}$-pixel camera based on photomultiplier tu
 
 \section{Observation Strategy}
 \label{sec:wobble}
-When observing a source of gamma rays, it is necessary to also observe a similar region in the sky without a gamma ray source to estimate the 
+When observing a source of gamma-rays, it is necessary to also observe a similar region in the sky without a gamma-ray source to estimate the 
 remaining background after gamma-hadron separation is performed.
 
 In its simplest form, this can be done by observing the so called off region after the initial observation target.
 But this method is not optimal, not only because it shortens the time the observation target can be observed, but the observation conditions could
 change as well which would bias the background estimation.
 
-Therefore another way of observing a gamma ray source is commonly used, called wobble mode.
+Therefore another way of observing a gamma-ray source is commonly used, called wobble mode.
 During wobble mode observations, the target is not observed in the camera center, but instead with a small offset (the LST-1 uses $\SI{0.5}{\degree}$).
-In this case, the off region(s) can be chosen along a circle around camera center with this offset as radius, because the camera geometry is radially symmetric.
+In this case, the off region(s) can be chosen along a circle around the camera center with this offset as radius, because the camera geometry is radially symmetric.
 This maximizes the time the target can be observed while simultaneously guaranteeing identical observation conditions and decreasing statistical uncertainty 
 for the background estimation, because multiple off regions can be chosen along the circle.
 An illustration of this can be seen in \autoref{fig:wobble}.

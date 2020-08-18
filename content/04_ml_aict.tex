@@ -4,7 +4,7 @@ Using the image parameters for each event, the particle type, origin and energy 
 In this work, supervised machine learning is used for the reconstruction.
 The algorithms are trained on a set of Monte Carlo simulations which are preprocessed using two different versions of \texttt{lstchain} 
 and the results are compared in \autoref{ch:results}.
-The set includes a simulation of the detection of diffuse gamma rays, diffuse protons and a simulation of gamma rays emitted by a point-like source.
+The set includes a simulation of diffuse gamma-rays, diffuse protons and a simulation of gamma-rays emitted by a point-like source.
 The simulations were done using the programs \texttt{CORSIKA} and \texttt{sim\_telarray} \cite{simulations}.
 
 In supervised machine learning, a generic estimator $f$ is trained on a dataset for which all information is known.
@@ -12,7 +12,7 @@ Training means that the parameters of $f$ are fitted in order to minimize a loss
 This trained estimator, or model, can then be used to estimate the target features of datasets where this information is missing.
 
 Two common types of problems that can be solved this way are binary classification and regression. 
-For binary classification problems, the estimator $f$ has to guess which of two classes any given element is a part of. 
+For binary classification problems, the estimator $f$ has to guess which of two classes any given sample is a part of. 
 This is used for background separation and during the origin reconstruction.
 To solve a regression problem a countinuous quantity has to be estimated which is used for energy estimation and again during origin reconstruction.
 
@@ -29,13 +29,13 @@ The basis for the random forest algorithm is the decision tree algorithm \cite{b
 A binary tree splits a dataset into two subsets at each step, called node.
 For each split a threshold $t_j$ for a certain feature $j$ is chosen that minimizes the given loss-function.
 This is repeated recursively until a stopping criterion is met like e.g. a total number of nodes (\enquote{depth} of the tree). 
-The final subsets are called leafs and for binary classification the partition between the two classes within each leaf as a continuous score $s \in [0,\, 1]$.
+The final subsets are called leafs and for binary classification the partition between the two classes within each leaf is returned as a continuous score $p \in [0,\, 1]$.
 For a regression task the average value of the regression target feature within each leaf is returned.
 One common loss-function for binary classification is the cross-entropy
 \begin{align}
-    \text{Cross-entropy} = - p\, \log(p) - (1 - p) \log(1-p)
+    \text{Cross-entropy} = - q\, \log(q) - (1 - q) \log(1 - q)
 \end{align}
-with $p$ being the proportion of one of the two classes.
+with $q$ being the proportion of one of the two classes.
 For the regression problem the mean squared error is often used as loss function which is evaluated for all $j$ features in every node \cite{hastie2009elements}.
 \begin{align}
     \text{mse} = \sum_{X_{i,j} \in\, R_1} (y_i - c_1)^2\, + \sum_{X_{i,j} \in\, R_2} (y_i - c_2)^2,
@@ -65,26 +65,8 @@ In this work, the accuracy of a binary classifier is used which measures the ove
 \begin{align}
     \text{accuracy} = \frac{tp\, +\, tn}{tp\, +\, tn\, +\, fp\, +\, fn}
 \end{align}
-%\begin{itemize}
-%    \item \textbf{Precision} represents the percentage of correctly classified members of the reconstructed \enquote{positive} class.
-%        \begin{align}
-%            \text{precision} = \frac{tp}{tp\, +\, fp}
-%        \end{align}
-%    \item \textbf{Recall} describes the ability of the classifier to identify members of the \enquote{positive} class as such.
-%        \begin{align}
-%            \text{recall} = \frac{tp}{tp\, +\, fn}
-%        \end{align}
-%    \item \textbf{Accuracy} measures the overall percentage of correctly reconstructed samples.
-%        \begin{align}
-%            \text{accuracy} = \frac{tp\, +\, tn}{tp\, +\, tn\, +\, fp\, +\, fn}
-%        \end{align}
-%    \item \textbf{$\text{F}_\beta$-Score} is the weighted harmonic mean of precision and recall where the weight $\beta$ can be chosen to emphasize recall or precision.
-%        \begin{align}
-%            f_\beta = (1 + \beta^2) \frac{\text{precision}\, \cdot\, \text{recall}}{\beta^2\, \text{precision}\, +\, \text{recall}}
-%        \end{align}
-%\end{itemize}
-Because a binary classifier returns a continuous score $s \in [0,\, 1]$ for each sample, in order to ultimately classify a sample,
-a prediction threshold $t_p \in [0,\, 1]$ has to be chosen and if $s > t_p$, the sample is classified as positive. 
+Because a binary classifier returns a continuous score $p \in [0,\, 1]$ for each sample, in order to ultimately classify a sample,
+a prediction threshold $t_p \in [0,\, 1]$ has to be chosen and if $p > t_p$, the sample is classified as positive. 
 However, it is also of interest to examine the classifier performance independent of this prediction threshold $t_p$.
 A common metric for this is the area under the Receiver Operating Characteristic (ROC) curve.
 In the ROC curve the $tp$ rate is plotted against the $fp$ rate for every possible threshold $t_p$.
@@ -99,8 +81,8 @@ A $r^2$-score of $\num{0}$ means that the regressor always estimates $\bar{y}$ a
 
 
 \section{The aict-tools}
-For the training and appliction of such models in the context of data analysis for IACTs, the command line tools from the \texttt{aict-tools} package can be used \cite{aict-tools}. 
-For the implementation of the machine learning algorithms the \texttt{aict-tools} use the \texttt{scikit-learn} module \cite{scikit-learn}.
+For the training and appliction of such models in the context of data analysis for IACTs, the command line tools from the \texttt{aict-tools} package is used \cite{aict-tools}. 
+For the implementation of the machine learning algorithms, the \texttt{aict-tools} use the \texttt{scikit-learn} module \cite{scikit-learn}.
 The configuration of models is done using a single \text{yaml}-file and the configuration used in this work can be found in \autoref{sec:config}.
 
 Initially the \texttt{aict-tools} were developed for the FACT-experiment, which uses a different coordinate system and data-structure than CTA.
@@ -108,16 +90,16 @@ Therefore, at the start of this work, some conversion of the LST-1 data had to b
 (\texttt{aict-tools} version \texttt{v0.21.0}).
 Due to the continued development of the \texttt{aict-tools}, different coordinate systems are now supported and the necessary conversions became largely obsolete.
 By the time of writing, merely the data-structure of the LST-1 data has to be adjusted before the \texttt{aict-tools} can be applied 
-(\texttt{aict-tools} version \texttt{v0.24.2} \cite{aict-tools}).
+(\texttt{aict-tools} version \texttt{v0.25.0} \cite{aict-tools}).
 
 Another utility provided by the \texttt{aict-tools} is the generation of additional custom image features based on existing ones.
 This is utilized in this work and the features that are generated can be seen in \autoref{sec:config}. 
-The calculation of the quality metrics presented in \autoref{sec:quality_metrics} is also done using their appropriate implementation in the \texttt{aict-tools}.
+The calculation of the quality metrics presented in \autoref{sec:quality_metrics} is also done using their implementation in the \texttt{aict-tools}.
 
 
-\section{The DISP method}
+\section{The disp method}
 The estimation of the origin within the detector plane is a two dimensional regression task ($x$ and $y$).
-The \texttt{aict-tools} use the disp method instead which simplifies this task into a one dimensional regression task and a binary classification.
+The \texttt{aict-tools} use the disp method instead which simplifies this task into a one dimensional regression task and a binary classification \cite{max}.
 
 This is done by assuming the main shower axis is correctly reconstructed so that the origin of the primary particle lies somewhere along this line.
 Based on this, the regression task aims to determine the absolute distance of the origin from the center of gravity of the shower image called \texttt{|disp|}.
