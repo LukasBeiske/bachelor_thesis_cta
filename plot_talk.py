@@ -70,11 +70,11 @@ figures = []
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.angular_res(gamma_1_150, 'mc_energy', ax, label='noscaling_150')
-plotting.angular_res(gamma_1_300, 'mc_energy', ax, label='noscaling_300')
-plotting.angular_res(gamma_2_150, 'mc_energy', ax, label='scaling_150')
-plotting.angular_res(gamma_2_300, 'mc_energy', ax, label='scaling_300')
-ax.set_title('All events')
+plotting.angular_res(gamma_1_150, 'mc_energy', ax, label='v0.5.1 and intensity > 150')
+plotting.angular_res(gamma_1_300, 'mc_energy', ax, label='v0.5.1 and intensity > 300')
+plotting.angular_res(gamma_2_150, 'mc_energy', ax, label='v0.5.2 and intensity > 150')
+plotting.angular_res(gamma_2_300, 'mc_energy', ax, label='v0.5.2 and intensity > 300')
+#ax.set_title('All events')
 
 # event selection
 gamma_2_150['sign_prediction'] = np.sign(gamma_2_150.disp_prediction)
@@ -95,11 +95,11 @@ gamma_1_300_cuts = gamma_1_300_cuts.query(f'gammaness > {gammaness_threshold}')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plotting.angular_res(gamma_1_150_cuts, 'mc_energy', ax, label='noscaling_150')
-plotting.angular_res(gamma_1_300_cuts, 'mc_energy', ax, label='noscaling_300')
-plotting.angular_res(gamma_2_150_cuts, 'mc_energy', ax, label='scaling_150')
-plotting.angular_res(gamma_2_300_cuts, 'mc_energy', ax, label='scaling_300')
-ax.set_title(rf'correct sign and $p_\gamma > {gammaness_threshold}$')
+plotting.angular_res(gamma_1_150_cuts, 'mc_energy', ax, label='v0.5.1 and intensity > 150')
+plotting.angular_res(gamma_1_300_cuts, 'mc_energy', ax, label='v0.5.1 and intensity > 300')
+plotting.angular_res(gamma_2_150_cuts, 'mc_energy', ax, label='v0.5.2 and intensity > 150')
+plotting.angular_res(gamma_2_300_cuts, 'mc_energy', ax, label='v0.5.2 and intensity > 300')
+#ax.set_title(rf'correct sign and $p_\gamma > {gammaness_threshold}$')
 
 
 # energy perfromance
@@ -110,19 +110,19 @@ energy_1_300 = read_data('HDD/build_noscaling_300/cv_regressor.h5', key = 'data'
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plot_bias_resolution(energy_1_150, key='bias', label='noscaling_150', ax=ax)
-plot_bias_resolution(energy_1_300, key='bias', label='noscaling_300', ax=ax)
-plot_bias_resolution(energy_2_150, key='bias', label='scaling_150', ax=ax)
-plot_bias_resolution(energy_2_300, key='bias', label='scaling_300', ax=ax)
-ax.set_title('Bias')
+plot_bias_resolution(energy_1_150, key='bias', label='v0.5.1 and intensity > 150', ax=ax)
+plot_bias_resolution(energy_1_300, key='bias', label='v0.5.1 and intensity > 300', ax=ax)
+plot_bias_resolution(energy_2_150, key='bias', label='v0.5.2 and intensity > 150', ax=ax)
+plot_bias_resolution(energy_2_300, key='bias', label='v0.5.2 and intensity > 300', ax=ax)
+#ax.set_title('Bias')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
-plot_bias_resolution(energy_1_150, key='resolution_quantiles', label='noscaling_150', ax=ax)
-plot_bias_resolution(energy_1_300, key='resolution_quantiles', label='noscaling_300', ax=ax)
-plot_bias_resolution(energy_2_150, key='resolution_quantiles', label='scaling_150', ax=ax)
-plot_bias_resolution(energy_2_300, key='resolution_quantiles', label='scaling_300', ax=ax)
-ax.set_title('quantile Resolution')
+plot_bias_resolution(energy_1_150, key='resolution_quantiles', label='v0.5.1 and intensity > 150', ax=ax)
+plot_bias_resolution(energy_1_300, key='resolution_quantiles', label='v0.5.1 and intensity > 300', ax=ax)
+plot_bias_resolution(energy_2_150, key='resolution_quantiles', label='v0.5.2 and intensity > 150', ax=ax)
+plot_bias_resolution(energy_2_300, key='resolution_quantiles', label='v0.5.2 and intensity > 300', ax=ax)
+#ax.set_title('quantile Resolution')
 
 
 for i, fig in enumerate(figures):
