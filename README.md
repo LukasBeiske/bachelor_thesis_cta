@@ -14,4 +14,4 @@ The [`aict-tools`](https://github.com/fact-project/aict-tools) are used to train
     * Crab Nebula: 2.63h ON and 1.33h OFF (taken on 18.01.2020)
     * Markarian 421: 2.22h wobble mode (taken on 20.06.2020)
 
-3. All data (MCs and observations) was processed up to image parameter level (DL1) using [`lstchain`](https://github.com/cta-observatory/cta-lstchain) (not part of this thesis)
+3. All data (MCs and observations) was processed up to image parameter level (DL1) using [`lstchain`](https://github.com/cta-observatory/cta-lstchain) (not part of this thesis).
