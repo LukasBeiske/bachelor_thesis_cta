@@ -1,0 +1,52 @@
+\begin{frame}{Detection of the Crab Nebula}
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.64\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../HDD/build_scaling_300/plots_crab/plot_2.pdf}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \hspace{0.3cm}\textcolor{tugreen}{Date:} 18th January, 2020\\
+            \hspace{0.3cm}\textcolor{tugreen}{ON:} \SI{2.6}{\hour}\\
+            \hspace{0.3cm}\textcolor{tugreen}{OFF:} \SI{1.3}{\hour}\\
+            \medskip
+            \begin{itemize}
+                \item Different observation times for ON and OFF $\to$ scaling necessary:
+                    \begin{align*}
+                        \alpha = \frac{N_\text{on}(\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared})}
+                            {N_\text{off}(\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared})}
+                    \end{align*}
+                \item $\theta^2_\text{max}$ and $t_\gamma$ optimised for maximum detection significance
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \note[item]{Krebsnebel}
+    \note[item]{Unterschieliche Beobachtungszeit $\to$ Ereignisraten skalieren
+        \newline Alle Ereignisse $\SI{0.5}{\degree\squared} < \theta^2 < \SI{1}{\degree\squared}$ vergleichen
+    }
+    \note[item]{Radius $\theta^2_\text{max}$ \& Schwellwert $t_\gamma$ für Berechung festlegen $\to$ Detektionssignifikanz
+        \newline $\to$ Signifikans von 27.7$\sigma$ 
+        \newline $\to$ $\theta^2_\text{max}$ und $t_\gamma$ hier optimiert
+    }
+\end{frame}
+
+\begin{frame}{Detection of Markarian 421}
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.64\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../HDD/build_scaling_300/plots_mrk421/plot_2.pdf}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \hspace{0.3cm}\textcolor{tugreen}{Date:} 20th June, 2020\\
+            \hspace{0.3cm}\textcolor{tugreen}{Wobble:} \SI{2.2}{\hour}\\
+            \medskip
+            \begin{itemize}
+                \item $n = \num{5}$ OFF regions
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \note[item]{Wobble Mode von Markarian 421}
+    \note[item]{n = 5 äquidistante OFF regionen entlang Kreis}
+    \note[item]{$\theta^2_\text{max}$ und $t_\gamma$ wie Krebsnebel $\to$ Signifikanz von 43.7$\sigma$ erreicht}
+\end{frame}

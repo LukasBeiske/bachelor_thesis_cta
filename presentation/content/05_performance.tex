@@ -1,0 +1,170 @@
+\begin{frame}{Gamma-hadron separation}
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.475\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../HDD/build_scaling_300/plots_separator/plot_4.pdf}
+        \end{column}
+        \begin{column}{0.475\textwidth}
+            \begin{itemize}
+                \setlength\itemsep{1em}
+                \item Random forest classifier
+                    \begin{itemize}
+                        \item Trained on diffuse gammas and protons
+                        \item \texttt{gamma\_prediction} score $\in [0, 1]$
+                        \item[\textbf{\textcolor{tugreen}{\to}}] Choose prediction threshold $t_\gamma$
+                    \end{itemize}
+                \item Differentiate gamma-hadron shower images
+                    \begin{itemize}
+                        \item[\textbf{\textcolor{tugreen}{\to}}] Features describing shower image are most important
+                    \end{itemize}
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \note[item]{Teilchentypbestimmung 
+        \newline $\to$ Random forest Algo. zur Klassifizierung
+        \newline $\to$ Trainiert: diffuse Gammas und Protonen
+        \newline $\to$ Jedes Ereignis: \texttt{gamma\_prediction} Wert 
+        \newline $\to$ Schwellwert für \texttt{gamma\_prediction}
+    }
+    \note[item]{Entscheidungsbaum basierter Algo. $\to$ Wichtigkeit Bildparameter}
+    \note[item]{Komplexe hadronische Schauer $\to$ komplexere Bilder 
+        \newline $\to$ Bildparameter für Schauerform
+    }
+\end{frame}
+
+\begin{frame}{Gamma-hadron separation}
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=1.1\textwidth]{../HDD/build_scaling_300/plots_separator/plot_1.pdf}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Perfromance evaluation independent from prediction threshold $t_\gamma$
+            \end{itemize}
+            \begin{table}
+                \caption{Mean area under ROC Curve.}
+                \sisetup{table-format=0.3}
+                \begin{tabular}{ S  S  S}
+                    \toprule
+                     & {lstchain v0.5.1} & {lstchain v0.5.2} \\
+                    \midrule
+                    \texttt{intensity > 300} & 0.907 & 0.944 \\
+                    \texttt{intensity > 150} & 0.860 & 0.908 \\
+                    \bottomrule
+                \end{tabular}
+            \end{table}
+        \end{column}
+    \end{columns}
+
+    \note[item]{Perfromance Klassifizier unabhängig Wahl Schwellwert 
+        \newline $\to$ Fläche unter ROC Kurve $\to$ Bild
+    }
+    \note[item]{Ergebnisse verschiedene Kombinationen $\to$ Tabelle
+        \newline $\to$ v0.5.2 deutlich besser
+    }
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Energy estimation}
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.475\textwidth}
+            \centering
+            \includegraphics<1>[width=\textwidth]{../HDD/build_scaling_300/plots_regressor/plot_4.pdf}
+            \includegraphics<2>[width=\textwidth]{../HDD/build_scaling_300/plots_regressor/plot_1.pdf}
+        \end{column}
+        \begin{column}{0.475\textwidth}
+            \begin{itemize}
+                \setlength\itemsep{1em}
+                \item Random forest regressor
+                \item Trained on point-like gammas
+                \item Light content most important
+            \end{itemize}
+        \end{column}
+    \end{columns}
+
+    \note<1->[item]{Energieschätzung 
+        \newline $\to$ Random Forest
+        \newline $\to$ Trainiert: Punktquellen Gammas    
+    }
+    \note<1->[item]{Beitrag Bildparameter $\to$ Helligkeit beschriebende Parameter}
+    \note<2->[item]{Mögleichkeit Performance Regressor darzustellen $\to$ Migrations Matrix}
+\end{frame}
+
+\begin{frame}{Energy estimation}
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.5\textwidth}
+            \centering
+            Bias
+            \includegraphics[width=\textwidth]{/home/lukas/Bachelorarbeit/bachelor_thesis_cta/build/plot_talk_2.pdf}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            (Quantile) Resolution
+            \includegraphics[width=\textwidth]{../build/plot_talk_3.pdf}
+        \end{column}
+    \end{columns}
+
+    \note[item]{Verrzerrung für verschiedene Kombinationen:
+        \newline $\to$ Niedrige E: Überschätzt, da nur helle Ereignisse
+        \newline $\to$ Hohe E: Unterschätzt, da Schauer nicht ganz im Kamera
+    }
+    \note[item]{Auflösung: 
+        \newline $\to$ Insgesamt besser für höhere Energien
+    }
+    \note[item]{\texttt{intensity > 300} Kombinationen schlechter bei niedrige E $\to$ wenige, helle Ereignisse}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Origin reconstruction}
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.475\textwidth}
+            \begin{itemize}
+                \setlength\itemsep{1em}
+                \item Random forest regressor/ classifier
+                \item Trained on diffuse gammas
+                \item Timing parameters and skewness (3rd moment along main shower axis) very important
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.475\textwidth}
+            \centering
+            \includegraphics<1>[width=\textwidth]{../HDD/build_scaling_300/plots_disp/plot_6.pdf}
+            \includegraphics<2>[width=\textwidth]{../HDD/build_scaling_300/plots_disp/plot_5.pdf}
+        \end{column}
+    \end{columns}
+
+    \note[item]{Richtungsrekonstruktion: disp \& sign
+        \newline $\to$ erneut Random Forest
+        \newline $\to$ Trainiert: Diffuse Gammas 
+    }
+    \note[item]{Parameter anhand Ankunftszeiten und Schiefe (entlang Hauptachse) wichtig}
+    \note<2->[item]{$\to$ besonders bei sign}
+\end{frame}
+
+\begin{frame}{Origin reconstruction: angular resolution}
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.5\textwidth}
+            \centering
+            v0.5.2 and intensity > 300
+            \includegraphics[width=\textwidth]{../HDD/build_scaling_300/plots_crab/plot_9.pdf}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            correct sign and $p_\gamma > 0.6$
+            \includegraphics[width=\textwidth]{../build/plot_talk_1.pdf}
+        \end{column}
+    \end{columns}
+
+    \note[item]{Insgesamt Performance Richtungsrekonstruktion $\to$ Winkelauflösung
+        \newline $\to$ Radius in dem 68\% der Ereignisse einer Punktquelle rekonstruiert
+    }
+    \note[item]{Sinnvolle Einschränkung 
+        \newline $\to$ Nur events mit korrektem sign $\to$ sonst weit weg von echter Quelle
+        \newline $\to$ + Ereignisse, die wahrsch. Gammas
+    }
+    \note[item]{Vergleich Kombinationen 
+        \newline $\to$ deutliche Verbesserung mit v0.5.2
+        \newline $\to$ \texttt{intensity > 300} besser als \texttt{intensity > 150}
+    }
+\end{frame}

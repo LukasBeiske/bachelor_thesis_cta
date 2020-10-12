@@ -1,0 +1,112 @@
+% This example is meant to be compiled with lualatex or xelatex
+% The theme itself also supports pdflatex
+\PassOptionsToPackage{unicode}{hyperref}
+\documentclass[aspectratio=1610, 9pt]{beamer}
+
+% Load packages you need here
+\usepackage{polyglossia}
+\setmainlanguage{english}
+
+\usepackage{csquotes}
+    
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{booktabs}
+
+\usepackage{pgfpages}
+\setbeameroption{show notes on second screen}
+
+\usepackage[
+  style=numeric,
+  sorting=none,
+  backend=biber,
+]{biblatex}
+\addbibresource{references.bib}
+
+\usepackage{hyperref}
+\usepackage{bookmark}
+
+\usepackage{xfrac}
+\usepackage{tikz}
+\usetikzlibrary{
+  overlay-beamer-styles,
+  calc,
+  tikzmark,
+  decorations.pathreplacing,
+}
+
+% load the theme after all packages
+
+\usetheme[
+  showtotalframes, % show total number of frames in the footline
+]{tudo}
+
+% Put settings here, like
+\unimathsetup{
+  math-style=ISO,
+  bold-style=ISO,
+  nabla=upright,
+  partial=upright,
+  mathrm=sym,
+}
+
+\newcommand{\roundpic}[6][]{
+  \node [circle, draw, color=tugreen, minimum width = #2,
+    path picture = {
+      \node [#1] at (path picture bounding box.center) {
+        \includegraphics[width=#3]{#4}};
+    }] at (#5,#6) {};}
+
+
+\title{High-level Event Reconstruction for the LST-1 Prototype of the Cherenkov Telescope Array}
+\author[L.~Beiske]{Lukas Beiske}
+\institute[E5b]{E5b Astroparticle Physics \\  Department of Physics - TU Dortmund}
+\titlegraphic{\includegraphics[width=0.5\textwidth]{images/LST_2.jpg}}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Overview}
+  \tableofcontents
+\end{frame}
+
+\section{Introduction}
+\input{content/01_introduction.tex}
+
+\AtBeginSection{
+  \begin{frame}{Overview}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\section{CTA and the LST-1 prototype}
+\input{content/02_cta.tex}
+
+\section{Data used and preprocessing}
+\input{content/03_preprocessing.tex}
+
+\section{Reconstruction of physical properties using machine learning}
+\input{content/04_ml.tex}
+
+\section{Model performance}
+\input{content/05_performance.tex}
+
+\section{Results for observational data}
+\input{content/06_observations.tex}
+
+\section{Conclusion and Outlook}
+\input{content/07_outlook.tex}
+
+\begin{frame}
+  \centering 
+  \Huge\color{tugreen} Backup
+\end{frame}
+
+\input{content/08_backup.tex}
+
+\end{document}

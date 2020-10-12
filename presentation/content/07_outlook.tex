@@ -1,0 +1,35 @@
+\begin{frame}[t]{Conclusion and Outlook}
+    \begin{columns}[onlytextwidth]
+        \begin{column}[T]{0.43\textwidth}
+            \begin{itemize}
+                \setlength\itemsep{1em} %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                \item<1-> aict-tools achieve good results for high energies
+                \item<1-> lstchain v0.5.2 improved results
+                    \begin{itemize}
+                        \item[\textbf{\textcolor{tugreen}{\to}}] Impact of other changes besides scaling of optical efficiency?
+                    \end{itemize}
+                \item<2-> Optimisation of event pre-selection
+                \item<2-> Energy dependent $\theta^2_\text{max}$ and $t_\gamma$ cuts optimised on simulations
+                \item<2-> Wobble mode observations of the Crab Nebula
+            \end{itemize}
+        \end{column}
+        \begin{column}[T]{0.55\textwidth}
+            \vspace{-1cm}
+            \begin{tikzpicture}
+                \roundpic[xshift=0cm,yshift=0cm]{7.8cm}{14cm}{images/LST_1.jpg}{2}{1.5}
+                \node[circle, fill, color=white, minimum width = 4.2cm] at (-3.6,3.3){};
+                \roundpic[xshift=-.2cm,yshift=-.2cm]{4.2cm}{4.25cm}{../build/plot_talk_1.pdf}{-3.6}{3.3}
+                \node[circle, fill, color=white, minimum width = 4.9cm] at (-1,0){};
+                \roundpic[xshift=-.2cm,yshift=-.2cm]{4.9cm}{4.95cm}{../HDD/build_scaling_300/plots_crab/plot_2.pdf}{-1}{0}
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+
+    \note[item]{Gute Ergebnisse für LST-1 mit aict-tools möglich}
+    \note[item]{Verbesserung mit lstchain v0.5.2
+        \newline $\to$ Andere Änderungen vgl. mit v0.5.1?
+    }
+    \note<2->[item]{Nur 3 Parameter für Eventselektion $\to$ Optimierbar!}
+    \note<2->[item]{$\theta^2_\text{max}$ Radius und $t_\gamma$ Schwellwert besser auf Simulation optimieren!}
+    \note<2->[item]{Krebsnebeldaten alt $\to$ neue (wobble!) Daten vermutlich besser!}
+\end{frame}
