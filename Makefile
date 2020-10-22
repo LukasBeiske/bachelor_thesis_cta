@@ -45,8 +45,7 @@ all: $(OUTDIR)/cv_separation.h5 \
 	$(OUTDIR)/dl2_$(GAMMA_DIFFUSE_FILE)_testing.h5 \
 	$(OUTDIR)/dl2_$(PROTON_FILE)_testing.h5 \
 	$(OUTDIR)/theta2_plot.pdf \
-	$(OUTDIR)/mrk421_plot.pdf \
-	$(OUTDIR)/thesis.pdf
+	$(OUTDIR)/mrk421_plot.pdf 
 	
 
 #file convert
