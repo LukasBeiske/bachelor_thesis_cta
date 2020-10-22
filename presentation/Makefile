@@ -7,6 +7,7 @@ texoptions = \
 	     --output-directory=build
 
 build/presentation.pdf: FORCE | build
+	python ../plot_talk.py
 	latexmk $(texoptions) presentation.tex
 
 preview: FORCE | build

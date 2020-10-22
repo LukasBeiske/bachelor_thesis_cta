@@ -6,7 +6,7 @@ import pandas as pd
 import plotting
 
 # some plots for the presentation
-# bad code and hardcoded paths (had to be fast) !!!
+# bad code (had to be fast)
 
 def plot_bias_resolution(
         performance_df,
@@ -59,10 +59,10 @@ def plot_bias_resolution(
 
     return ax
 
-gamma_2_150 = read_h5py('build/dl2_gamma_south_pointing_20200706_v0.5.2_local_DL1_testing.h5', key = 'events')
-gamma_2_300 = read_h5py('HDD/build_scaling_300/dl2_gamma_south_pointing_20200706_v0.5.2_local_DL1_testing.h5', key = 'events')
-gamma_1_150 = read_h5py('HDD/build_noscaling/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
-gamma_1_300 = read_h5py('HDD/build_noscaling_300/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
+gamma_2_150 = read_h5py('../build/dl2_gamma_south_pointing_20200706_v0.5.2_local_DL1_testing.h5', key = 'events')
+gamma_2_300 = read_h5py('../HDD/build_scaling_300/dl2_gamma_south_pointing_20200706_v0.5.2_local_DL1_testing.h5', key = 'events')
+gamma_1_150 = read_h5py('../HDD/build_noscaling/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
+gamma_1_300 = read_h5py('../HDD/build_noscaling_300/dl2_gamma_south_pointing_20200514_v0.5.1_v01_DL1_testing.h5', key = 'events')
 
 gammaness_threshold = 0.6
 
@@ -103,10 +103,10 @@ plotting.angular_res(gamma_2_300_cuts, 'mc_energy', ax, label='v0.5.2 and intens
 
 
 # energy perfromance
-energy_2_150 = read_data('build/cv_regressor.h5', key='data')
-energy_2_300 = read_data('HDD/build_scaling_300/cv_regressor.h5', key = 'data')
-energy_1_150 = read_data('HDD/build_noscaling/cv_regressor.h5', key = 'data')
-energy_1_300 = read_data('HDD/build_noscaling_300/cv_regressor.h5', key = 'data')
+energy_2_150 = read_data('../build/cv_regressor.h5', key='data')
+energy_2_300 = read_data('../HDD/build_scaling_300/cv_regressor.h5', key = 'data')
+energy_1_150 = read_data('../HDD/build_noscaling/cv_regressor.h5', key = 'data')
+energy_1_300 = read_data('../HDD/build_noscaling_300/cv_regressor.h5', key = 'data')
 
 figures.append(plt.figure())
 ax = figures[-1].add_subplot(1, 1, 1)
