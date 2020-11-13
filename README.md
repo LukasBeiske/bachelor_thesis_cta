@@ -16,23 +16,29 @@ The [`aict-tools`](https://github.com/fact-project/aict-tools) are used to train
 
 3. All data (MCs and observations) was processed up to image parameter level (DL1) using [`lstchain`](https://github.com/cta-observatory/cta-lstchain) (not part of this thesis).
 
-## How to build this thesis (if necessary software is installed)
+## How to build this thesis
 
-1. Download input files and store in `data` in the root of this repository:
+1. Create a new conda environment and install the necessary python packages defined in environment.yaml:
+    ```
+    $ conda env create -n bachelor_thesis_lbeiske -f environment.yaml
+    $ conda activate bachelor_thesis_lbeiske
+    ```
+
+2. Download input files and store in `data` in the root of this repository:
     * Simulations: `/net/cta-tank/POOL/projects/cta/LST/Simulations/DL1/20190415` (only `%_v0.5.1_%` and `%_v0.5.2_%` files necessary)
     * Observational data: `/net/cta-tank/POOL/projects/cta/LST/Data/DL1/v0.5.1`
 
-2. ```
+3. ```
     $ make
     ```
 
-3. ```
+4. ```
     $ mkdir HDD
     $ make OUTDIR=HDD/build_scaling_300 \
     CUTS_CONFIG=config/quality_cuts_300.yaml
     ```
 
-4. ```
+5. ```
     $ make OUTDIR=HDD/build_noscaling_300 \
     GAMMA_FILE=gamma_south_pointing_20200514_v0.5.1_v01_DL1 \
     GAMMA_DIFFUSE_FILE=gamma-diffuse_south_pointing_20200514_v0.5.1_v01_DL1 \
@@ -40,18 +46,18 @@ The [`aict-tools`](https://github.com/fact-project/aict-tools) are used to train
     CUTS_CONFIG=config/quality_cuts_300.yaml
     ```
 
-5. ```
+6. ```
     $ make OUTDIR=HDD/build_noscaling \
     GAMMA_FILE=gamma_south_pointing_20200514_v0.5.1_v01_DL1 \
     GAMMA_DIFFUSE_FILE=gamma-diffuse_south_pointing_20200514_v0.5.1_v01_DL1 \
     PROTON_FILE=proton_south_pointing_20200514_v0.5.1_v01_DL1 
     ```
 
-6. ``` 
+7. ``` 
     $ make build/thesis.pdf
     ```
 
-7. Build the presentation:
+8. Build the presentation:
     ```
     $ cd presentation
     $ make

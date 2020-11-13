@@ -1,0 +1,24 @@
+channels:
+  - default
+dependencies:
+  - python=3.7.6
+  - astropy=4
+  - h5py=2.10
+  - hdf5=1.10.4
+  - ipython=7.16.1
+  - joblib=0.16.0
+  - matplotlib=3.2.2
+  - numpy=1.18.5
+  - pandas=1.0.5
+  - pip>=20.1.1
+  - qt=5.9.7
+  - scikit-learn=0.23.1
+  - scipy=1.5
+  - tqdm=4.47
+  - pytables=3.6.1
+  - numba
+  - pip:
+    - aict-tools==0.25.0
+    - ctapipe==0.8.0
+    - pyfact==0.26.1
+    - eventio==1.4.1
