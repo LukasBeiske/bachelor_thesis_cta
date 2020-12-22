@@ -6,6 +6,8 @@ The [`aict-tools`](https://github.com/fact-project/aict-tools) are used to train
 * Energy Regression
 * Reconstruction of origin
 
+### An updated and improved version of the analysis performed here can be found in the [`LST_mono_analysis`](https://github.com/tudo-astroparticlephysics/LST_mono_analysis) repository.
+
 ## Data used
 
 1. The models are trained on Monte Carlo simulations of diffuse protons, diffuse gamma-rays and gamma-rays from a point-like source (prod3b).
